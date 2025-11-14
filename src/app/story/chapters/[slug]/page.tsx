@@ -1,27 +1,24 @@
 import { notFound } from "next/navigation";
+import { chapterMetaBySlug } from "@/config/story";
+import { GraphNotesPanel } from "@/components/story/GraphNotesPanel";
+import { PrologueContent } from "@/components/story/PrologueContent";
+import { ChapterTOC } from "@/components/story/ChapterTOC";
 
-const chapterMeta: Record<
-  string,
-  { title: string; number?: number; notes?: string }
-> = {
-  prologue: {
-    title: "Prologue",
-    notes: "Opening fracture of Wolves in the Echo House.",
-  },
-  epilogue: {
-    title: "Epilogue",
-    notes: "Where the echoes settle, for now.",
-  },
-  // later: "chapter-1": { title: "Chapter 1", number: 1, ... }
-};
-
-export default function ChapterPage({
+export default async function ChapterPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const meta = chapterMeta[params.slug];
-  if (!meta) return notFound();
+  const { slug } = await params;
+
+  const chapter = chapterMetaBySlug[slug];
+
+  if (!chapter) {
+    return notFound();
+  }
+
+  const isPrologue = chapter.kind === "prologue";
+  const isNumbered = chapter.kind === "chapter";
 
   return (
     <article className="space-y-4">
@@ -30,30 +27,30 @@ export default function ChapterPage({
           Wolves in the Echo House
         </p>
         <h1 className="text-xl font-semibold">
-          {meta.title}
-          {meta.number ? ` (Chapter ${meta.number})` : null}
+          {chapter.title}
+          {isNumbered && chapter.number
+            ? ` (Chapter ${chapter.number})`
+            : null}
         </h1>
-        {meta.notes && (
-          <p className="text-xs text-zinc-500 max-w-xl">{meta.notes}</p>
+        {chapter.notes && (
+          <p className="text-xs text-zinc-500 max-w-xl">{chapter.notes}</p>
         )}
       </header>
 
       <section className="prose prose-invert prose-sm max-w-none">
-        <p className="text-zinc-400 text-sm">
-          This is a placeholder for the chapter text. Adam will paste the actual
-          prose here, and later well add cross-links and echo graph notes.
-        </p>
+        {isPrologue ? (
+          <PrologueContent />
+        ) : (
+          <p className="text-zinc-400 text-sm">
+            This is a placeholder for the chapter text. Adam will paste the
+            actual prose here later, and we&apos;ll attach echo graph links once the
+            Narrative OS evolves.
+          </p>
+        )}
       </section>
 
-      <aside className="border border-white/10 rounded-2xl bg-black/20 p-3">
-        <h2 className="text-xs font-semibold text-zinc-300 mb-1">
-          Links & Notes
-        </h2>
-        <p className="text-xs text-zinc-500">
-          Future: connections to characters, locations, and artifacts will appear
-          here as graph-like links.
-        </p>
-      </aside>
+      <GraphNotesPanel chapter={chapter} />
+      <ChapterTOC currentSlug={slug} />
     </article>
   );
 }

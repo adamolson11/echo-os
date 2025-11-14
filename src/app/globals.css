@@ -10,7 +10,9 @@
 }
 
 body {
-  @apply bg-ink text-zinc-100 antialiased;
+  background-color: #050814;
+  color: #e4e4e7;
+  -webkit-font-smoothing: antialiased;
 }
 
 .prose {
