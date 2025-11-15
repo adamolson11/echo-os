@@ -54,17 +54,15 @@ export default function HomePage() {
                 other. Enter the Codex that&apos;s writing you back.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
-                <Link
-                  href="/story/chapters/prologue"
-                  className="rounded-full border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.18em] backdrop-blur-sm hover:bg-white hover:text-black transition"
-                >
-                  Enter Echo OS
+                <Link href="/story">
+                  <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.18em] backdrop-blur-sm hover:bg-white hover:text-black transition">
+                    Enter Echo OS
+                  </span>
                 </Link>
-                <Link
-                  href="/story"
-                  className="rounded-full border border-white/10 px-6 py-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-200 hover:bg-white/5 transition"
-                >
-                  Open Story Mode
+                <Link href="/story">
+                  <span className="inline-flex rounded-full border border-white/10 px-6 py-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-200 hover:bg-white/5 transition">
+                    Watch Prologue
+                  </span>
                 </Link>
               </div>
             </div>
@@ -75,33 +73,37 @@ export default function HomePage() {
         <aside className="flex-1 bg-gradient-to-b from-black via-slate-950 to-black p-4 md:p-6 lg:p-8">
           <div className="mx-auto flex h-full max-w-md flex-col gap-4 md:gap-6">
             {/* Top tile: secondary video */}
-            <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
-              <video
-                className="h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                src="/motion2Fast_LEONARDO_VIDEO_PROMPT__Silas_at_the_Edge_of_the_Ec_0.mp4"
-              />
-              <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
-                Psyntuum Logs · Prison Yard Feed
-              </figcaption>
-            </figure>
+            <Link href="/story">
+              <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
+                <video
+                  className="h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  src="/motion2Fast_LEONARDO_VIDEO_PROMPT__Silas_at_the_Edge_of_the_Ec_0.mp4"
+                />
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
+                  Psyntuum Logs · Prison Yard Feed
+                </figcaption>
+              </figure>
+            </Link>
 
             {/* Bottom tile: sharp still image */}
-            <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
-              <Image
-                src="/images/echo-hero.jpg"
-                alt="Silas and Davinci facing off in the hurricane-lit yard"
-                fill
-                className="object-cover"
-                priority
-              />
-              <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
-                Chapter One · The Hurricane Yard
-              </figcaption>
-            </figure>
+            <Link href="/story">
+              <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
+                <Image
+                  src="/images/echo-hero.jpg"
+                  alt="Silas and Davinci facing off in the hurricane-lit yard"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
+                  Chapter One · The Hurricane Yard
+                </figcaption>
+              </figure>
+            </Link>
           </div>
         </aside>
       </section>
@@ -128,6 +130,37 @@ export default function HomePage() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Simple band for Story vs Codex */}
+      <section className="border-t border-white/10 bg-black/80 py-10">
+        <div className="mx-auto flex max-w-4xl flex-col gap-4 px-4 md:flex-row">
+          <Link
+            href="/story"
+            className="flex-1 rounded-2xl border border-slate-700/80 bg-slate-900/60 p-5 transition hover:border-slate-300 hover:bg-slate-900"
+          >
+            <h2 className="text-sm font-semibold tracking-wide text-slate-100">
+              Read the Story
+            </h2>
+            <p className="mt-2 text-xs text-slate-300">
+              Enter the main narrative: Silas, Davinci, the hurricane, and the
+              Echo House.
+            </p>
+          </Link>
+
+          <Link
+            href="/codex"
+            className="flex-1 rounded-2xl border border-slate-700/80 bg-slate-900/60 p-5 transition hover:border-slate-300 hover:bg-slate-900"
+          >
+            <h2 className="text-sm font-semibold tracking-wide text-slate-100">
+              Explore the Codex
+            </h2>
+            <p className="mt-2 text-xs text-slate-300">
+              A growing wiki of characters, locations, tech, and theology behind
+              the Echo House.
+            </p>
+          </Link>
         </div>
       </section>
     </main>
