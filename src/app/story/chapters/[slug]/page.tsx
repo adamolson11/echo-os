@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { chapterMetaBySlug } from "@/config/story";
 import { GraphNotesPanel } from "@/components/story/GraphNotesPanel";
-import { PrologueContent } from "@/components/story/PrologueContent";
 import { ChapterTOC } from "@/components/story/ChapterTOC";
+import { ChapterLayout } from "@/components/story/ChapterLayout";
+import { PrologueStub } from "@/components/story/PrologueStub";
 
 export default async function ChapterPage({
   params,
@@ -21,36 +22,25 @@ export default async function ChapterPage({
   const isNumbered = chapter.kind === "chapter";
 
   return (
-    <article className="space-y-4">
-      <header className="space-y-1">
-        <p className="text-xs text-zinc-500 uppercase tracking-wide">
-          Wolves in the Echo House
+    <ChapterLayout
+      title={chapter.title}
+      subtitle={chapter.notes}
+      intensity={isPrologue ? "Haunting" : undefined}
+    >
+      {isPrologue ? (
+        <PrologueStub />
+      ) : (
+        <p>
+          This is a placeholder for the chapter text. The full prose for this
+          chapter will live here once it&apos;s drafted, using this same reading
+          layout.
         </p>
-        <h1 className="text-xl font-semibold">
-          {chapter.title}
-          {isNumbered && chapter.number
-            ? ` (Chapter ${chapter.number})`
-            : null}
-        </h1>
-        {chapter.notes && (
-          <p className="text-xs text-zinc-500 max-w-xl">{chapter.notes}</p>
-        )}
-      </header>
+      )}
 
-      <section className="prose prose-invert prose-sm max-w-none">
-        {isPrologue ? (
-          <PrologueContent />
-        ) : (
-          <p className="text-zinc-400 text-sm">
-            This is a placeholder for the chapter text. Adam will paste the
-            actual prose here later, and we&apos;ll attach echo graph links once the
-            Narrative OS evolves.
-          </p>
-        )}
-      </section>
-
-      <GraphNotesPanel chapter={chapter} />
-      <ChapterTOC currentSlug={slug} />
-    </article>
+      <div className="mt-8 space-y-4">
+        <GraphNotesPanel chapter={chapter} />
+        <ChapterTOC currentSlug={slug} />
+      </div>
+    </ChapterLayout>
   );
 }

@@ -1,65 +1,57 @@
 import Link from "next/link";
-import { chaptersInOrder } from "@/config/story";
+import StoryCarousel from "@/components/story/StoryCarousel";
 
 export default function StoryPage() {
-  const numbered = chaptersInOrder.filter((ch) => ch.kind === "chapter");
-  const prologue = chaptersInOrder.find((ch) => ch.kind === "prologue");
-  const epilogue = chaptersInOrder.find((ch) => ch.kind === "epilogue");
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header className="space-y-2">
-        <h1 className="text-xl font-semibold tracking-tight">
-          Wolves in the Echo House
+        <p className="text-[11px] font-mono uppercase tracking-[0.3em] text-skyblue/80">
+          Story Mode · Echo OS
+        </p>
+        <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
+          Wolves in the Echo House & Other Processes
         </h1>
         <p className="text-sm text-zinc-400 max-w-2xl">
-          This is the linear reading order for the novel. For now, it&apos;s
-          a simple list. Later, it becomes a web of echoes and alternate paths.
+          Echo OS is a living bookshelf disguised as an operating system. Each
+          arc is a different process running in the same haunted machine —
+          detectives, farmers, priests, and insurgent AIs all sharing memory
+          space.
         </p>
       </header>
 
-      <section className="border border-white/10 rounded-2xl bg-black/20 p-4 space-y-3">
-        <h2 className="text-xs font-semibold text-zinc-300 mb-1">
-          Reading Order
-        </h2>
-        <ul className="space-y-1 text-sm">
-          {prologue && (
-            <li>
-              <Link
-                href={`/story/chapters/${prologue.slug}`}
-                className="text-skyblue hover:underline"
-              >
-                {prologue.title}
-              </Link>
-            </li>
-          )}
-
-          {numbered.map((ch) => (
-            <li key={ch.slug}>
-              <Link
-                href={`/story/chapters/${ch.slug}`}
-                className="text-skyblue hover:underline"
-              >
-                {ch.title}
-              </Link>
-            </li>
-          ))}
-
-          {epilogue && (
-            <li>
-              <Link
-                href={`/story/chapters/${epilogue.slug}`}
-                className="text-skyblue hover:underline"
-              >
-                {epilogue.title}
-              </Link>
-            </li>
-          )}
+      <section className="space-y-3 text-xs text-zinc-400">
+        <p className="font-semibold text-zinc-300">How to read this:</p>
+        <ul className="list-disc space-y-1 pl-4">
+          <li>
+            Start with{" "}
+            <Link
+              href="/story/chapters/prologue"
+              className="text-skyblue hover:underline"
+            >
+              Wolves in the Echo House – Book I
+            </Link>{" "}
+            if you want the core detective myth.
+          </li>
+          <li>
+            Visit <span className="text-zinc-200">Future Farm</span> when you
+            want to glimpse the utopian counterspell.
+          </li>
+          <li>
+            Open <span className="text-zinc-200">Devil&apos;s Palimpsest</span>{" "}
+            if you want to read the virus itself.
+          </li>
         </ul>
+      </section>
 
-        <p className="mt-2 text-xs text-zinc-500">
-          As Echo OS evolves, each chapter will gain links to characters,
-          artifacts, and alternate paths.
+      <StoryCarousel variant="full" />
+
+      <section className="border border-white/10 bg-black/30 p-4 rounded-2xl mt-4 space-y-2">
+        <h2 className="text-xs font-semibold text-zinc-300 uppercase tracking-[0.2em]">
+          Grounding
+        </h2>
+        <p className="text-xs text-zinc-400">
+          You are reading words on a screen. You can pause, breathe, and come
+          back anytime.
         </p>
       </section>
     </div>

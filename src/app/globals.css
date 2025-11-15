@@ -18,3 +18,24 @@ body {
 .prose {
   @apply text-sm leading-relaxed text-zinc-200;
 }
+
+/* Simple scanline overlay for hero / console panels */
+.scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.09) 1px,
+    transparent 1px
+  );
+  background-size: 100% 3px;
+  mix-blend-mode: soft-light;
+}
