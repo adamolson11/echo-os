@@ -20,7 +20,7 @@ export function EchoCarousel() {
 
           let classes =
             "absolute top-1/2 -translate-y-1/2 rounded-2xl bg-cover bg-center shadow-xl transition-all duration-500 ease-out";
-          let style = { backgroundImage: `url(${arc.imageUrl})` };
+          const style = { backgroundImage: `url(${arc.imageUrl})` };
 
           if (offset === 0) {
             classes +=
