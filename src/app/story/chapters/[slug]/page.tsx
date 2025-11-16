@@ -19,7 +19,6 @@ export default async function ChapterPage({
   }
 
   const isPrologue = chapter.kind === "prologue";
-  const isNumbered = chapter.kind === "chapter";
 
   return (
     <ChapterLayout
