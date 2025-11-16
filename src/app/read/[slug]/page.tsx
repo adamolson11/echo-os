@@ -4,28 +4,21 @@ import {
   getChapterBySlug,
   type ChapterMeta,
 } from "@/data/chapters";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
 type ReaderPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Dynamic MDX import by slug (declare outside render)
-const PrologueMDX = dynamic(() => import("@/content/chapters/prologue.mdx"));
-const ChapterOneMDX = dynamic(() => import("@/content/chapters/chapter-one.mdx"));
-
 export default async function ReaderPage({ params }: ReaderPageProps) {
   const { slug } = await params;
   const chapter: ChapterMeta | undefined = getChapterBySlug(slug);
   const { previous, next } = getAdjacentChapters(slug);
   const title = chapter?.title ?? "Chapter coming soon";
+  // For Phase 2 we avoid importing MDX modules at build time to keep the
+  // production build simple. The reader will show either a wired chapter
+  // (when available in the chapter metadata) or a small placeholder.
   let Content: React.ComponentType | null = null;
-  if (chapter?.slug === "prologue") {
-    Content = PrologueMDX;
-  } else if (chapter?.slug === "chapter-one") {
-    Content = ChapterOneMDX;
-  }
 
   return (
     <main className="min-h-screen bg-black text-slate-100">
