@@ -37,20 +37,9 @@ export function getCodexSlugs(): string[] {
 }
 
 export async function getCodexNode(slug: string): Promise<CodexNode> {
-  // Debugging: log incoming slugs during build to trace undefined cases.
-  // (This will be removed once the root cause is confirmed.)
-  try {
-    // eslint-disable-next-line no-console
-    console.log(`[codex] getCodexNode called with slug:`, slug);
-  } catch (e) {}
-  if (!slug) {
-    try {
-      // eslint-disable-next-line no-console
-      console.warn('[codex] getCodexNode received falsy slug; stack:');
-      // eslint-disable-next-line no-console
-      console.warn(new Error().stack);
-    } catch (e) {}
-  }
+  // NOTE: temporary debug logging removed. Keep the minimal falsy-slug
+  // guard below to avoid hard prerender failures if runtime unexpectedly
+  // calls this with an undefined slug during metadata collection.
 
   // Minimal guard: if slug is falsy, return a harmless stub node so
   // prerendering doesn't fail hard. This avoids build breakages when
