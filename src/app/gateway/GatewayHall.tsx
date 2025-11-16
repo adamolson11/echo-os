@@ -20,9 +20,9 @@ export default function GatewayHall() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      {/* Fixed-aspect container so hotspots always match the image */}
+      {/* Fixed-aspect container so hotspots stay aligned with the image */}
       <div
-        className="relative w-full max-w-6xl aspect-[934/425] overflow-hidden rounded-2xl"
+        className="relative w-full max-w-6xl aspect-[21/9] overflow-hidden rounded-2xl"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -40,7 +40,56 @@ export default function GatewayHall() {
           }}
         />
 
-        {/* STORY door */}
+        {/* ----- GLOW LAYERS (TV-style light from each doorway) ----- */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* STORY warm glow */}
+          <div
+            className="absolute door-glow-warm"
+            style={{
+              left: "3%",
+              top: "5%",
+              width: "22%",
+              height: "90%",
+            }}
+          />
+
+          {/* CODEX cyan glow */}
+          <div
+            className="absolute door-glow-cyan"
+            style={{
+              left: "30%",
+              top: "8%",
+              width: "24%",
+              height: "88%",
+            }}
+          />
+
+          {/* ARCHIVE cool glow */}
+          <div
+            className="absolute door-glow-archive"
+            style={{
+              left: "56%",
+              top: "15%",
+              width: "18%",
+              height: "75%",
+            }}
+          />
+
+          {/* LAB glitchy glow */}
+          <div
+            className="absolute door-glow-lab"
+            style={{
+              left: "75%",
+              top: "8%",
+              width: "20%",
+              height: "88%",
+            }}
+          />
+        </div>
+
+        {/* ----- CLICKABLE HOTSPOTS ----- */}
+
+        {/* STORY */}
         <Link
           href="/story"
           className="absolute block"
@@ -51,10 +100,10 @@ export default function GatewayHall() {
             height: "73%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-all duration-200 hover:ring-4 hover:ring-orange-400/70 hover:shadow-[0_0_40px_rgba(251,146,60,0.7)]" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-orange-400/80" />
         </Link>
 
-        {/* CODEX door – gets a faint breathing glow */}
+        {/* CODEX */}
         <Link
           href="/codex"
           className="absolute block"
@@ -65,10 +114,10 @@ export default function GatewayHall() {
             height: "76%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-all duration-200 hover:ring-4 hover:ring-cyan-400/80 hover:shadow-[0_0_45px_rgba(34,211,238,0.8)] animate-pulse" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-cyan-400/80" />
         </Link>
 
-        {/* ARCHIVE door */}
+        {/* ARCHIVE */}
         <Link
           href="/archive"
           className="absolute block"
@@ -79,10 +128,10 @@ export default function GatewayHall() {
             height: "65%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-all duration-200 hover:ring-4 hover:ring-sky-300/70 hover:shadow-[0_0_35px_rgba(125,211,252,0.7)]" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-sky-300/80" />
         </Link>
 
-        {/* LAB door – slight glitchy feel via faster pulse */}
+        {/* LAB */}
         <Link
           href="/lab"
           className="absolute block"
@@ -93,7 +142,7 @@ export default function GatewayHall() {
             height: "74%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-all duration-150 hover:ring-4 hover:ring-indigo-400/80 hover:shadow-[0_0_45px_rgba(129,140,248,0.9)] animate-pulse" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-indigo-400/80" />
         </Link>
       </div>
     </div>

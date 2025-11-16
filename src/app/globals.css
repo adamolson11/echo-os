@@ -39,3 +39,59 @@ body {
   background-size: 100% 3px;
   mix-blend-mode: soft-light;
 }
+
+/* Door glow animations and tints (TV-style, subtle) */
+.door-glow-warm,
+.door-glow-cyan,
+.door-glow-archive,
+.door-glow-lab {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.5), transparent 65%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+}
+
+@keyframes doorGlowWarm {
+  0%, 12%, 20%, 38%, 100% { opacity: 0.18; }
+  13%, 19% { opacity: 0.42; }
+  39%, 42% { opacity: 0.55; }
+}
+
+@keyframes doorGlowCyan {
+  0%, 15%, 40%, 70%, 100% { opacity: 0.25; }
+  16%, 18% { opacity: 0.55; }
+  41%, 43% { opacity: 0.6; }
+  71%, 73% { opacity: 0.5; }
+}
+
+@keyframes doorGlowArchive {
+  0%, 100% { opacity: 0.15; }
+  40%, 60% { opacity: 0.3; }
+}
+
+@keyframes doorGlowLab {
+  0%, 100% { opacity: 0.2; }
+  10%, 12% { opacity: 0.55; }
+  30%, 32% { opacity: 0.4; }
+  50%, 52% { opacity: 0.6; }
+  70%, 72% { opacity: 0.35; }
+}
+
+.door-glow-warm {
+  animation: doorGlowWarm 3.8s ease-in-out infinite;
+  background-color: rgba(251, 146, 60, 0.9);
+}
+
+.door-glow-cyan {
+  animation: doorGlowCyan 4.1s ease-in-out infinite;
+  background-color: rgba(34, 211, 238, 0.9);
+}
+
+.door-glow-archive {
+  animation: doorGlowArchive 5.2s ease-in-out infinite;
+  background-color: rgba(125, 211, 252, 0.8);
+}
+
+.door-glow-lab {
+  animation: doorGlowLab 2.5s ease-in-out infinite;
+  background-color: rgba(129, 140, 248, 0.95);
+}
