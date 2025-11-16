@@ -29,6 +29,9 @@ function NavLink({ href, label }: { href: string; label: string }) {
 }
 
 export function ShellLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   return (
     <div className="min-h-screen bg-ink text-zinc-100 flex flex-col">
       {/* Header */}
@@ -55,29 +58,33 @@ export function ShellLayout({ children }: { children: ReactNode }) {
 
       {/* Body */}
       <div className="flex-1">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex gap-6">
-          {/* Sidebar */}
-          <aside className="hidden md:flex w-56 flex-col gap-4">
-            <nav className="border border-white/10 rounded-2xl bg-black/20 p-3 space-y-1">
-              {navItems.map((item) => (
-                <NavLink key={item.href} href={item.href} label={item.label} />
-              ))}
-            </nav>
+        {isHome ? (
+          <div className="w-full">{/* full-bleed home view without sidebar */}
+            <main className="min-w-0">{children}</main>
+          </div>
+        ) : (
+          <div className="max-w-6xl mx-auto px-4 py-6 flex gap-6">
+            {/* Sidebar */}
+            <aside className="hidden md:flex w-56 flex-col gap-4">
+              <nav className="border border-white/10 rounded-2xl bg-black/20 p-3 space-y-1">
+                {navItems.map((item) => (
+                  <NavLink key={item.href} href={item.href} label={item.label} />
+                ))}
+              </nav>
 
-            <div className="border border-white/10 rounded-2xl bg-black/30 p-3">
-              <h2 className="text-xs font-semibold text-zinc-300 mb-1">
-                Studio Status
-              </h2>
-              <p className="text-xs text-zinc-500">
-                Echo OS is in <span className="text-skyblue">MVP shell</span> mode.
-                Stories, notes, and experiments dock here.
-              </p>
-            </div>
-          </aside>
+              <div className="border border-white/10 rounded-2xl bg-black/30 p-3">
+                <h2 className="text-xs font-semibold text-zinc-300 mb-1">Studio Status</h2>
+                <p className="text-xs text-zinc-500">
+                  Echo OS is in <span className="text-skyblue">MVP shell</span> mode.
+                  Stories, notes, and experiments dock here.
+                </p>
+              </div>
+            </aside>
 
-          {/* Main content */}
-          <main className="flex-1 min-w-0">{children}</main>
-        </div>
+            {/* Main content */}
+            <main className="flex-1 min-w-0">{children}</main>
+          </div>
+        )}
       </div>
     </div>
   );
