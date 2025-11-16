@@ -95,6 +95,26 @@ body {
   background-color: rgba(129, 140, 248, 0.95);
 }
 
+/* Story room extra helpers */
+@keyframes storyDarkSweep {
+  0%, 100% {
+    transform: translateX(-20px);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(20px);
+    opacity: 0.5;
+  }
+}
+
+.animate-storyDarkSweep {
+  animation: storyDarkSweep 22s ease-in-out infinite;
+}
+
+.animate-storyStormPulse {
+  animation: storyStormPulse 14s ease-in-out infinite;
+}
+
 /* Cyan volumetric beam coming out of CODEX door */
 .codex-ray {
   background: radial-gradient(
