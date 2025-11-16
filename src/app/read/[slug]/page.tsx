@@ -18,7 +18,9 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
   // For Phase 2 we avoid importing MDX modules at build time to keep the
   // production build simple. The reader will show either a wired chapter
   // (when available in the chapter metadata) or a small placeholder.
-  let Content: React.ComponentType | null = null;
+  // Use a permissive type here for Phase 2 so build doesn't fail
+  // if MDX components are not wired. We'll refine typing later.
+  let Content: any = null;
 
   return (
     <main className="min-h-screen bg-black text-slate-100">
