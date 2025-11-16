@@ -62,13 +62,37 @@ export async function getCodexNode(slug: string): Promise<CodexNode> {
   } = data as {
     title?: string;
     type?: CodexNodeType;
-    tags?: string[];
+    tags?: string[] | string;
     obsidianFile?: string;
     obsidianVault?: string;
     slug?: string;
   };
 
   const effectiveSlug = frontmatterSlug || slug;
+
+  // Normalize tags: accept array or comma-separated string
+  let normalizedTags: string[] = [];
+  if (Array.isArray(tags)) {
+    normalizedTags = tags.map((t) => String(t).trim()).filter(Boolean);
+  } else if (typeof tags === "string") {
+    normalizedTags = tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+
+  // Validate type; default to 'meta' if unknown
+  const allowedTypes: CodexNodeType[] = [
+    "index",
+    "story",
+    "log",
+    "theory",
+    "character",
+    "meta",
+  ];
+  const effectiveType: CodexNodeType = allowedTypes.includes(type as CodexNodeType)
+    ? (type as CodexNodeType)
+    : "meta";
 
   if (!title) {
     throw new Error(`Codex node "${slug}" is missing a 'title' in frontmatter.`);
@@ -77,8 +101,8 @@ export async function getCodexNode(slug: string): Promise<CodexNode> {
   return {
     slug: effectiveSlug,
     title,
-    type,
-    tags,
+    type: effectiveType,
+    tags: normalizedTags,
     obsidianFile,
     obsidianVault,
     contentHtml,
