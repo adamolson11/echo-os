@@ -1,3 +1,10 @@
+export default function ArchiveRoom() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-black text-white">
+      <h1 className="text-3xl font-semibold">Archive Room</h1>
+    </main>
+  );
+}
 export default function ArchivePage() {
   return (
     <div className="space-y-4">

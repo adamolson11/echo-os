@@ -1,3 +1,10 @@
+export default function StoryRoom() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-black text-white">
+      <h1 className="text-3xl font-semibold">Story Library Room</h1>
+    </main>
+  );
+}
 import Link from "next/link";
 import StoryCarousel from "@/components/story/StoryCarousel";
 import { chapters } from "@/data/chapters";

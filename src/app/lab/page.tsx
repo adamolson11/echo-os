@@ -1,3 +1,10 @@
+export default function LabRoom() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-black text-white">
+      <h1 className="text-3xl font-semibold">Lab Room</h1>
+    </main>
+  );
+}
 const experiments = [
   {
     name: "Echo OS MVP",
