@@ -1,6 +1,6 @@
 // src/components/story/PrologueStub.tsx
 
-export function PrologueStub() {
+export default function PrologueStub() {
   return (
     <>
       <p>
