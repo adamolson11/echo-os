@@ -1,97 +1,61 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { portals, type Portal } from "@/data/portals";
-import {
-  chapters,
-  type ChapterMeta,
-  getChaptersForPortal,
-} from "@/data/chapters";
-import ChapterCard from "@/components/story/ChapterCard";
+import Link from "next/link";
+import { portals } from "@/data/portals";
 
-type BookPageProps = {
-  params: Promise<{ slug: string }>;
-};
-
-function getFirstChapterForPortal(slug: string): ChapterMeta | undefined {
-  if (slug === "wolves") {
-    return chapters[0];
-  }
-
-  return undefined;
+interface BookPageProps {
+  params: { slug: string };
 }
 
-export default async function BookPage({ params }: BookPageProps) {
-  const { slug } = await params;
-  const portal: Portal | undefined = portals.find((p) => p.slug === slug);
+const FIRST_CHAPTER_BY_PORTAL: Record<string, string | undefined> = {
+  wolves: "prologue",
+};
 
-  if (!portal) {
-    return notFound();
-  }
+export default function BookPage({ params }: BookPageProps) {
+  const portal = portals.find((p) => p.slug === params.slug);
 
-  const firstChapter: ChapterMeta | undefined = getFirstChapterForPortal(
-    portal.slug,
-  );
+  if (!portal) return notFound();
 
-  const bookChapters = getChaptersForPortal(portal.slug);
+  const firstChapterSlug = FIRST_CHAPTER_BY_PORTAL[portal.slug];
+  const isLive = portal.slug === "wolves";
 
   return (
     <main className="min-h-screen bg-black text-slate-100">
-      <section className="mx-auto max-w-3xl px-4 py-16 space-y-6">
-        <header className="space-y-2">
-          <p className="text-[11px] font-mono uppercase tracking-[0.3em] text-slate-500">
-            Echo OS · Story Portal
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            {portal.title}
-          </h1>
-          {portal.bookLabel && (
-            <p className="text-xs font-medium text-slate-400">
-              {portal.bookLabel}
-            </p>
-          )}
-          <p className="text-sm text-slate-300 md:text-base">{portal.tagline}</p>
+      <div className="mx-auto max-w-3xl px-4 py-12">
+        <nav className="mb-4">
+          <Link href="/hub" className="text-slate-400 hover:text-slate-200">← Back to Portal Hub</Link>
+        </nav>
+
+        <header className="mb-6">
+          <h1 className="text-3xl font-semibold">{portal.title}</h1>
+          <p className="mt-2 text-sm text-slate-400">{portal.tagline}</p>
         </header>
 
-        <section className="space-y-3 text-sm text-slate-300">
-          <p>
-            This is a portal landing page for this arc. As the universe
-            expands, this screen will collect chapters, codex entries, and
-            related media for this book.
-          </p>
-          {firstChapter && (
-            <p>
-              You can start reading at the beginning of this arc:
-              <br />
-              <Link
-                href={`/read/${firstChapter.slug}`}
-                className="mt-1 inline-flex text-sky-300 hover:text-sky-200 hover:underline"
-              >
-                Start with {firstChapter.title}
-              </Link>
-            </p>
+        <section>
+          {isLive ? (
+            <>
+              <p className="text-slate-200">This book is live. You can start reading now.</p>
+              {firstChapterSlug && (
+                <p className="mt-3">
+                  <Link href={`/read/${firstChapterSlug}`} className="text-sky-300 hover:underline">Start with the Prologue</Link>
+                </p>
+              )}
+
+              <h2 className="mt-6 text-sm font-semibold text-slate-300">Main Spine</h2>
+              <ul className="mt-2 space-y-2">
+                <li>
+                  <Link href="/read/prologue" className="text-slate-100 hover:underline">Prologue — The Hurricane Yard</Link>
+                </li>
+                <li>
+                  <Link href="/read/chapter-one" className="text-slate-100 hover:underline">Chapter One — Wolves in the Echo House</Link>
+                </li>
+                {/* Future: more chapters */}
+              </ul>
+            </>
+          ) : (
+            <p className="text-slate-400">This portal is not live yet. The book is still being written and structured in the Codex.</p>
           )}
         </section>
-
-        {bookChapters.length > 0 && (
-          <section className="space-y-3">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-              Chapters in this book
-            </h2>
-            <div className="grid gap-3 md:grid-cols-2">
-              {bookChapters.map((chapter) => (
-                <ChapterCard key={chapter.slug} chapter={chapter} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        <footer className="mt-8 flex justify-between border-t border-slate-800 pt-4 text-xs text-slate-500">
-          <Link href="/story" className="hover:text-slate-200 transition">
-            ← Back to Portal Hub
-          </Link>
-          <span>Book portal · Early draft</span>
-        </footer>
-      </section>
+      </div>
     </main>
   );
 }

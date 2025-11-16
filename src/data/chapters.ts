@@ -43,12 +43,10 @@ export const chapters: ChapterMeta[] = [
     slug: "chapter-one",
     order: 2,
     title: "Chapter One — Wolves in the Echo House",
-    subtitle:
-      "The house that edits memories, and the man who hunts ghosts.",
+    subtitle: "The house that edits memories, and the man who hunts ghosts.",
     bookLabel: "Book I · Wolves in the Echo House",
     status: "stub",
-    blurb:
-      "Inside the Echo House, memories can be traded, edited, or erased. Silas follows the scent of a vanished life into the corridors of the Psyntuum.",
+    blurb: "Silas leaves the yard behind and walks into the Echo House proper, where memories are currency.",
     portalSlug: "wolves",
   },
   {

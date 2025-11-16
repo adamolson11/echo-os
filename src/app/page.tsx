@@ -92,12 +92,10 @@ export default function HomePage() {
             {/* Bottom tile: sharp still image */}
             <Link href="/story">
               <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
-                <Image
+                <img
                   src="/images/echo-hero.jpg"
                   alt="Silas and Davinci facing off in the hurricane-lit yard"
-                  fill
-                  className="object-cover"
-                  priority
+                  className="h-full w-full object-cover"
                 />
                 <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
                   Chapter One · The Hurricane Yard

@@ -3,7 +3,6 @@ import {
   getAdjacentChapters,
   getChapterBySlug,
   type ChapterMeta,
-  type ChapterSlug,
 } from "@/data/chapters";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
@@ -14,6 +13,7 @@ type ReaderPageProps = {
 
 // Dynamic MDX import by slug (declare outside render)
 const PrologueMDX = dynamic(() => import("@/content/chapters/prologue.mdx"));
+const ChapterOneMDX = dynamic(() => import("@/content/chapters/chapter-one.mdx"));
 
 export default async function ReaderPage({ params }: ReaderPageProps) {
   const { slug } = await params;
@@ -23,6 +23,8 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
   let Content: React.ComponentType | null = null;
   if (chapter?.slug === "prologue") {
     Content = PrologueMDX;
+  } else if (chapter?.slug === "chapter-one") {
+    Content = ChapterOneMDX;
   }
 
   return (
