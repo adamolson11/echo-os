@@ -86,19 +86,32 @@ export default function GatewayPage() {
                     aria-label={`${door.label} door — ${door.subtitle}`}
                     className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
                   >
-                    <div
-                      className={`relative flex h-72 w-48 flex-col items-center justify-end overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b ${styles.panel} shadow-[0_30px_60px_rgba(0,0,0,0.6)] transform transition duration-200 ease-out will-change-transform group-hover:scale-105 group-hover:-translate-y-2 group-hover:shadow-2xl focus-visible:scale-105`}
-                    > 
-                      <div className="absolute inset-x-0 top-6 flex items-center justify-center">
-                        <span className="text-sm tracking-widest text-white/90">{door.label}</span>
-                      </div>
+                    {/* door frame */}
+                    <div className="relative rounded-2xl p-3 bg-black/40 shadow-inner border border-black/40">
+                      <div
+                        className={`relative flex h-96 w-56 flex-col items-center justify-end overflow-hidden rounded-xl border-2 border-white/5 bg-gradient-to-b ${styles.panel} shadow-[0_40px_80px_rgba(0,0,0,0.7)] transform transition duration-220 ease-out will-change-transform group-hover:scale-103 group-hover:-translate-y-3 group-hover:shadow-2xl focus-visible:scale-105`}
+                      >
+                        {/* door label */}
+                        <div className="absolute inset-x-0 top-8 flex items-center justify-center">
+                          <span className="text-sm tracking-widest text-white/90">{door.label}</span>
+                        </div>
 
-                      <div className="absolute inset-x-0 bottom-8 px-3 text-center">
-                        <p className="text-xs text-white/80">{door.subtitle}</p>
-                      </div>
+                        {/* subtitle */}
+                        <div className="absolute inset-x-0 bottom-10 px-3 text-center">
+                          <p className="text-sm text-white/80">{door.subtitle}</p>
+                        </div>
 
-                      {/* floor glow */}
-                      <div className={`absolute -bottom-8 h-24 w-full ${styles.glow} blur-3xl opacity-60 transition-opacity duration-200 group-hover:opacity-100`} />
+                        {/* doorknob */}
+                        <div className="absolute right-6 bottom-44 flex items-center justify-center">
+                          <div className="h-6 w-6 rounded-full bg-yellow-400/90 shadow-md ring-1 ring-black/30 transform transition duration-200 group-hover:scale-110" />
+                        </div>
+
+                        {/* subtle door seam line */}
+                        <div className="absolute right-0 top-6 h-[80%] w-px bg-white/5" />
+
+                        {/* floor glow */}
+                        <div className={`absolute -bottom-8 h-28 w-full ${styles.glow} blur-3xl opacity-60 transition-opacity duration-200 group-hover:opacity-100`} />
+                      </div>
                     </div>
                   </Link>
                 </div>
