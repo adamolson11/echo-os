@@ -12,6 +12,25 @@ Frontmatter recommended fields:
 - `obsidianVault`: (optional) the Obsidian vault name (used for deep-links)
 - `slug`: (optional) custom slug override (otherwise filename is used)
 
+---
+title: "Codex - Phase 1 (Obsidian Drop Zone)"
+type: meta
+---
+
+Codex - Phase 1 (Obsidian Drop Zone)
+===================================
+
+Drop exported Obsidian `.md` files here. Files will be read at build time and appear under `/codex`.
+
+Frontmatter recommended fields:
+
+- `title`: (required) Display title for the node
+- `type`: (optional) One of `index`, `story`, `log`, `theory`, `character`, `meta` (defaults to `meta`)
+- `tags`: (optional) array of strings or comma-separated string
+- `obsidianFile`: (optional) the exact Obsidian filename (used for deep-links)
+- `obsidianVault`: (optional) the Obsidian vault name (used for deep-links)
+- `slug`: (optional) custom slug override (otherwise filename is used)
+
 Example:
 
 ```
