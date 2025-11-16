@@ -94,3 +94,118 @@ body {
   animation: doorGlowLab 8s ease-in-out infinite;
   background-color: rgba(129, 140, 248, 0.95);
 }
+
+/* Cyan volumetric beam coming out of CODEX door */
+.codex-ray {
+  background: radial-gradient(
+      circle at 0% 0%,
+      rgba(255, 255, 255, 0.55),
+      transparent 65%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(34, 211, 238, 0.7),
+      rgba(34, 211, 238, 0.0)
+    );
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  opacity: 0.25;
+  animation: codexRaySweep 12s ease-in-out infinite;
+}
+
+@keyframes codexRaySweep {
+  0%, 100% {
+    opacity: 0.16;
+    transform: translateY(6px);
+  }
+  45%, 55% {
+    opacity: 0.36;
+    transform: translateY(-4px);
+  }
+}
+
+/* Vertical digital tearing near LAB */
+.lab-glitch-strip {
+  background: linear-gradient(
+    to bottom,
+    rgba(129, 140, 248, 0.0),
+    rgba(129, 140, 248, 0.85),
+    rgba(129, 140, 248, 0.0)
+  );
+  mix-blend-mode: screen;
+  filter: blur(6px);
+  opacity: 0.55;
+  animation: labGlitch 2.4s steps(4, end) infinite;
+}
+
+@keyframes labGlitch {
+  0% {
+    opacity: 0.3;
+    transform: translateX(0px);
+  }
+  10% {
+    opacity: 0.7;
+    transform: translateX(-3px);
+  }
+  20% {
+    opacity: 0.6;
+    transform: translateX(2px);
+  }
+  40% {
+    opacity: 0.8;
+    transform: translateX(-2px);
+  }
+  60% {
+    opacity: 0.4;
+    transform: translateX(1px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(0px);
+  }
+}
+
+/* Overall moving darkness on floor (like something passing in front of light) */
+.floor-shadow {
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(0, 0, 0, 0.7),
+    transparent 70%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  animation: floorShadowDrift 18s ease-in-out infinite;
+}
+
+@keyframes floorShadowDrift {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translateX(-10px);
+  }
+  50% {
+    opacity: 0.45;
+    transform: translateX(10px);
+  }
+}
+
+/* Brighter reflection patch under CODEX beam */
+.floor-reflect {
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(34, 211, 238, 0.45),
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: 0.28;
+  animation: floorReflectPulse 11s ease-in-out infinite;
+}
+
+@keyframes floorReflectPulse {
+  0%, 100% {
+    opacity: 0.18;
+  }
+  45%, 55% {
+    opacity: 0.4;
+  }
+}
