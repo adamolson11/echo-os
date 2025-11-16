@@ -124,10 +124,14 @@ The user wants offline-friendly, simple storage. Markdown is preferred here.
 **Status**  
 - [ ] Open
 - [ ] In progress
-- [ ] Answered
+- [x] Answered
 
 **Notes / Proposed Answer**  
 - Use plain Markdown in `docs/GROUP_QUESTIONS.md` as the canonical source. If programmatic access is needed later, add JSON/YAML export.
+
+**Decision logged**
+
+- Questions will live in the repo under `docs/` in Markdown format. `docs/GROUP_QUESTIONS.md` is canonical for now. Add new question entries as new numbered sections and keep statuses updated.
 
 ---
 
