@@ -2,6 +2,81 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
+export default function GatewayHall() {
+  return (
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Background Image */}
+      <Image
+        src="/images/hallway-art.png"  // <-- Rename your file to this for consistency
+        alt="Echo House Hallway"
+        fill
+        priority
+        className="object-cover"
+      />
+
+      {/* STORY Door Hotspot */}
+      <Link
+        href="/story"
+        className="absolute block"
+        style={{
+          left: "7%",
+          top: "28%",
+          width: "18%",
+          height: "45%",
+        }}
+      >
+        <div className="w-full h-full hover:ring-4 hover:ring-orange-400/60 transition-all duration-200 cursor-pointer" />
+      </Link>
+
+      {/* CODEX Door Hotspot */}
+      <Link
+        href="/codex"
+        className="absolute block"
+        style={{
+          left: "33%",
+          top: "30%",
+          width: "21%",
+          height: "48%",
+        }}
+      >
+        <div className="w-full h-full hover:ring-4 hover:ring-cyan-400/60 transition-all duration-200 cursor-pointer" />
+      </Link>
+
+      {/* ARCHIVE Door Hotspot */}
+      <Link
+        href="/archive"
+        className="absolute block"
+        style={{
+          left: "62%",
+          top: "33%",
+          width: "14%",
+          height: "40%",
+        }}
+      >
+        <div className="w-full h-full hover:ring-4 hover:ring-blue-300/50 transition-all duration-200 cursor-pointer" />
+      </Link>
+
+      {/* LAB Door Hotspot */}
+      <Link
+        href="/lab"
+        className="absolute block"
+        style={{
+          left: "79%",
+          top: "25%",
+          width: "16%",
+          height: "52%",
+        }}
+      >
+        <div className="w-full h-full hover:ring-4 hover:ring-indigo-400/60 transition-all duration-200 cursor-pointer" />
+      </Link>
+    </div>
+  );
+}
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function GatewayHall() {
