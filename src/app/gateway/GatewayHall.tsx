@@ -100,7 +100,7 @@ export default function GatewayHall() {
             height: "73%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-orange-400/80" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-300 hover:scale-[1.03]" />
         </Link>
 
         {/* CODEX */}
@@ -114,7 +114,7 @@ export default function GatewayHall() {
             height: "76%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-cyan-400/80" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-300 hover:scale-[1.03]" />
         </Link>
 
         {/* ARCHIVE */}
@@ -128,7 +128,7 @@ export default function GatewayHall() {
             height: "65%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-sky-300/80" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-300 hover:scale-[1.03]" />
         </Link>
 
         {/* LAB */}
@@ -142,7 +142,7 @@ export default function GatewayHall() {
             height: "74%",
           }}
         >
-          <div className="w-full h-full cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:ring-2 hover:ring-indigo-400/80" />
+          <div className="w-full h-full cursor-pointer transition-transform duration-300 hover:scale-[1.03]" />
         </Link>
       </div>
     </div>

@@ -50,48 +50,47 @@ body {
   mix-blend-mode: screen;
 }
 
+/* STORY – very gentle warm breathing */
 @keyframes doorGlowWarm {
-  0%, 12%, 20%, 38%, 100% { opacity: 0.18; }
-  13%, 19% { opacity: 0.42; }
-  39%, 42% { opacity: 0.55; }
+  0%, 100%   { opacity: 0.16; }
+  40%, 60%   { opacity: 0.30; }
 }
 
+/* CODEX – slow, deep cyan pulse */
 @keyframes doorGlowCyan {
-  0%, 15%, 40%, 70%, 100% { opacity: 0.25; }
-  16%, 18% { opacity: 0.55; }
-  41%, 43% { opacity: 0.6; }
-  71%, 73% { opacity: 0.5; }
+  0%, 100%   { opacity: 0.22; }
+  45%, 55%   { opacity: 0.38; }
 }
 
+/* ARCHIVE – barely-there long wave */
 @keyframes doorGlowArchive {
-  0%, 100% { opacity: 0.15; }
-  40%, 60% { opacity: 0.3; }
+  0%, 100%   { opacity: 0.10; }
+  50%        { opacity: 0.22; }
 }
 
+/* LAB – a bit more active, but still smooth */
 @keyframes doorGlowLab {
-  0%, 100% { opacity: 0.2; }
-  10%, 12% { opacity: 0.55; }
-  30%, 32% { opacity: 0.4; }
-  50%, 52% { opacity: 0.6; }
-  70%, 72% { opacity: 0.35; }
+  0%, 100%   { opacity: 0.20; }
+  30%, 70%   { opacity: 0.40; }
 }
 
+/* Attach animations + tint colors, with longer durations */
 .door-glow-warm {
-  animation: doorGlowWarm 3.8s ease-in-out infinite;
+  animation: doorGlowWarm 9s ease-in-out infinite;
   background-color: rgba(251, 146, 60, 0.9);
 }
 
 .door-glow-cyan {
-  animation: doorGlowCyan 4.1s ease-in-out infinite;
+  animation: doorGlowCyan 11s ease-in-out infinite;
   background-color: rgba(34, 211, 238, 0.9);
 }
 
 .door-glow-archive {
-  animation: doorGlowArchive 5.2s ease-in-out infinite;
+  animation: doorGlowArchive 13s ease-in-out infinite;
   background-color: rgba(125, 211, 252, 0.8);
 }
 
 .door-glow-lab {
-  animation: doorGlowLab 2.5s ease-in-out infinite;
+  animation: doorGlowLab 8s ease-in-out infinite;
   background-color: rgba(129, 140, 248, 0.95);
 }
