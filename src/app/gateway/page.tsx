@@ -1,43 +1,106 @@
 "use client";
 
-import React, { useState } from "react";
-import TunnelOverlay from "../../components/TunnelOverlay";
+import Link from "next/link";
 
-type Door = { label: string; route: string; variant: "story" | "codex" | "archive" | "lab" };
-
-const DOORS: Door[] = [
-  { label: "Story", route: "/story", variant: "story" },
-  { label: "Codex", route: "/codex", variant: "codex" },
-  { label: "Archive", route: "/archive", variant: "archive" },
-  { label: "Lab", route: "/lab", variant: "lab" },
+const doors = [
+  {
+    id: "story",
+    label: "STORY",
+    subtitle: "Enter the narrative.",
+    href: "/story",
+    variant: "story",
+  },
+  {
+    id: "codex",
+    label: "CODEX",
+    subtitle: "See the mind-map.",
+    href: "/codex",
+    variant: "codex",
+  },
+  {
+    id: "archive",
+    label: "ARCHIVE",
+    subtitle: "Evidence & logs.",
+    href: "/archive",
+    variant: "archive",
+  },
+  {
+    id: "lab",
+    label: "LAB",
+    subtitle: "Experiments & tech.",
+    href: "/lab",
+    variant: "lab",
+  },
 ];
 
+function doorVariantStyles(variant: string) {
+  switch (variant) {
+    case "story":
+      return {
+        panel: "from-amber-700 to-amber-900",
+        glow: "bg-gradient-to-t from-amber-400/40 to-transparent",
+      };
+    case "codex":
+      return {
+        panel: "from-cyan-700 to-sky-900",
+        glow: "bg-gradient-to-t from-cyan-400/40 to-transparent",
+      };
+    case "archive":
+      return {
+        panel: "from-slate-700 to-slate-900",
+        glow: "bg-gradient-to-t from-white/20 to-transparent",
+      };
+    case "lab":
+      return {
+        panel: "from-emerald-800 to-emerald-900",
+        glow: "bg-gradient-to-t from-emerald-400/30 to-transparent",
+      };
+    default:
+      return {
+        panel: "from-white/5 to-black/80",
+        glow: "bg-gradient-to-t from-white/10 to-transparent",
+      };
+  }
+}
+
 export default function GatewayPage() {
-  const [overlay, setOverlay] = useState<{ route: string; variant: Door["variant"] } | null>(null);
-
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white flex items-center justify-center">
-      <div className="w-full max-w-5xl px-6 py-16">
-        <h1 className="text-4xl font-semibold text-center mb-10">Door Hallway</h1>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_0%,#101623_0,#05070b_45%,#020309_100%)] text-white">
+      <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-wider text-white/60">THE ECHO HOUSE</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight">Choose a door</h2>
+            <p className="mt-2 text-sm text-white/60">Choose a door. Each path leads deeper into the system.</p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-          {DOORS.map((d) => (
-            <button
-              key={d.label}
-              onClick={() => setOverlay({ route: d.route, variant: d.variant })}
-              disabled={!!overlay}
-              className={`group relative rounded-xl border border-white/15 bg-black/40 px-6 py-8 backdrop-blur-md transition-all duration-200 ease-out
-                 hover:border-cyan-300/70 hover:bg-cyan-500/10 hover:shadow-[0_0_40px_rgba(34,211,238,0.18)]
-                 flex flex-col items-center justify-center focus:outline-none ${overlay ? "opacity-60 cursor-not-allowed" : ""}`}
-            >
-              <span className="text-sm uppercase tracking-[0.2em] text-slate-200 group-hover:text-cyan-100">{d.label}</span>
-              <div className="mt-3 text-xs text-zinc-400">Enter</div>
-            </button>
-          ))}
+        <div className="mt-12 flex w-full items-end justify-center">
+          <div className="flex -mx-3 items-end">
+            {doors.map((door) => {
+              const styles = doorVariantStyles(door.variant);
+              return (
+                <div key={door.id} className="px-3">
+                  <Link href={door.href} className="group block">
+                    <div className={`relative flex h-72 w-48 flex-col items-center justify-end overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b ${styles.panel} shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-transform hover:-translate-y-2`}> 
+                      <div className="absolute inset-x-0 top-6 flex items-center justify-center">
+                        <span className="text-sm tracking-widest text-white/90">{door.label}</span>
+                      </div>
+
+                      <div className="absolute inset-x-0 bottom-8 px-3 text-center">
+                        <p className="text-xs text-white/80">{door.subtitle}</p>
+                      </div>
+
+                      {/* floor glow */}
+                      <div className={`absolute -bottom-8 h-24 w-full ${styles.glow} blur-3xl opacity-80`} />
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-
-      {overlay && <TunnelOverlay targetRoute={overlay.route} variant={overlay.variant} onFinish={() => setOverlay(null)} />}
     </main>
   );
 }
