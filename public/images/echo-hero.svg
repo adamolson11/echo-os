@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#0b1220" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)" />
+  <g fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="42">
+    <text x="50%" y="44%" text-anchor="middle">Wolves in the Echo House</text>
+    <text x="50%" y="54%" text-anchor="middle" font-size="20">Chapter One · The Hurricane Yard</text>
+  </g>
+</svg>

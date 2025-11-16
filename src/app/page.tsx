@@ -1,4 +1,4 @@
-// Removed unused `Image` import to silence lint warning; restore when hero media is added
+import Image from "next/image";
 import StoryCarousel from "@/components/story/StoryCarousel";
 import Link from "next/link";
 
@@ -92,10 +92,12 @@ export default function HomePage() {
             {/* Bottom tile: sharp still image */}
             <Link href="/story">
               <figure className="relative flex-1 overflow-hidden rounded-3xl border border-white/10">
-                <img
-                  src="/images/echo-hero.jpg"
+                <Image
+                  src="/images/echo-hero.svg"
                   alt="Silas and Davinci facing off in the hurricane-lit yard"
-                  className="h-full w-full object-cover"
+                  width={600}
+                  height={360}
+                  className="object-cover"
                 />
                 <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-xs tracking-wide text-slate-200">
                   Chapter One · The Hurricane Yard
