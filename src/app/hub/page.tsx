@@ -13,12 +13,12 @@ export default function PortalHubPage() {
         </nav>
       </header>
 
-      <section className="mx-auto max-w-3xl px-4 pb-16">
+      <section className="mx-auto max-w-6xl px-4 pb-16">
         <p className="text-center text-sm text-slate-400 mb-6">Choose a book-world to enter.</p>
-        <ul className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {portals.map((portal) => (
-            <li key={portal.slug} className="rounded-md border border-slate-800 bg-slate-900/50 p-4">
-              <Link href={`/book/${portal.slug}`} className="block">
+            <Link key={portal.slug} href={`/book/${portal.slug}`} className="block">
+              <div className="h-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 hover:border-slate-300 transition">
                 <div className="flex items-start justify-between">
                   <div>
                     <strong className="text-slate-100">{portal.title}</strong>
@@ -32,10 +32,10 @@ export default function PortalHubPage() {
                     )}
                   </div>
                 </div>
-              </Link>
-            </li>
+              </div>
+            </Link>
           ))}
-        </ul>
+        </div>
       </section>
     </main>
   );
