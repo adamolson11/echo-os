@@ -62,30 +62,8 @@ function Door({ variant, className = "", label }: DoorProps) {
   );
 }
 
+import GatewayHall from "./GatewayHall";
+
 export default function GatewayPage() {
-  return (
-    <main className="min-h-screen w-full relative bg-[#05070b] flex items-center justify-center overflow-hidden text-white">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-black/80 to-transparent" />
-        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-black/80 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/80 to-transparent" />
-      </div>
-
-      <div className="relative w-full max-w-6xl h-[520px]">
-        <div className="absolute left-6 top-6">
-          <p className="text-xs uppercase tracking-wider text-white/60">THE ECHO HOUSE</p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight">Choose a door</h2>
-          <p className="mt-2 text-sm text-white/60">Choose a door. Each path leads deeper into the system.</p>
-        </div>
-
-        {doorPositions.map((d) => (
-          <Link key={d.id} href={d.href} aria-label={`${d.label} door`}>
-            <div className={`absolute ${d.className}`}>
-              <Door variant={d.variant as any} className="" label={d.label} />
-            </div>
-          </Link>
-        ))}
-      </div>
-    </main>
-  );
+  return <GatewayHall />;
 }
