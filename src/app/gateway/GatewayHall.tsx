@@ -1,12 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 export default function GatewayHall() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* Background Image (plain <img> so page renders even if image isn't present yet) */}
-      <img src="/images/hallway-art.png" alt="Echo House Hallway" className="object-cover absolute inset-0 w-full h-full" />
+      {/* Background Image */}
+      <Image
+        src="/images/portal-doors.jpg"
+        alt="Echo OS hallway of doors"
+        fill
+        priority
+        className="object-cover absolute inset-0 w-full h-full"
+      />
 
       {/* STORY Door Hotspot */}
       <Link
