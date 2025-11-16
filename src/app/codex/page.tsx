@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import ReactMarkdown from "react-markdown";
 import dynamic from "next/dynamic";
 
 // react-force-graph uses window, so load it on client only
@@ -54,6 +55,9 @@ export default function CodexPage() {
     location: true,
     stub: true,
   });
+  const [selectedNoteMarkdown, setSelectedNoteMarkdown] = useState<string | null>(null);
+  const [isLoadingNote, setIsLoadingNote] = useState(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/codex.json")
@@ -99,6 +103,28 @@ export default function CodexPage() {
 
     return { nodes: nodes.map((n) => ({ ...n })), links: links.map((l) => ({ ...l })) };
   }, [data, activeTypes]);
+
+  async function loadFullNote(node: CodexNode) {
+    if (!node?.id) return;
+    setIsLoadingNote(true);
+    setNoteError(null);
+
+    try {
+      const res = await fetch(`/api/codex?id=${encodeURIComponent(node.id)}`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `Request failed with ${res.status}`);
+      }
+      const data = await res.json();
+      setSelectedNoteMarkdown(data.markdown || "");
+    } catch (err: any) {
+      console.error("Failed to load note", err);
+      setNoteError(err?.message ?? "Failed to load note");
+      setSelectedNoteMarkdown(null);
+    } finally {
+      setIsLoadingNote(false);
+    }
+  }
 
   if (!graphData) {
     return (
@@ -208,7 +234,22 @@ export default function CodexPage() {
                 </div>
               )}
 
-              <p className="mt-4 text-[10px] text-gray-500 italic">(Later: click to open full markdown in a reading pane.)</p>
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.18em]"
+                  onClick={() => selectedNode && loadFullNote(selectedNode)}
+                  disabled={isLoadingNote}
+                >
+                  {isLoadingNote ? "Loading…" : "Open full note"}
+                </button>
+                {noteError && <span className="text-[10px] text-red-400">{noteError}</span>}
+              </div>
+
+              {selectedNoteMarkdown && (
+                <div className="mt-3 max-h-64 overflow-y-auto rounded-lg border border-white/10 bg-black/50 p-3 text-[11px] leading-relaxed prose prose-invert prose-p:my-1 prose-li:my-0">
+                  <ReactMarkdown>{selectedNoteMarkdown}</ReactMarkdown>
+                </div>
+              )}
             </>
           ) : (
             <p className="text-[11px] text-gray-500">Click a node in the graph to see its details here.</p>
@@ -218,7 +259,7 @@ export default function CodexPage() {
 
       {/* Graph */}
       <div className="h-screen w-full pr-80"> {/* leave room for sidebar */}
-        <ForceGraph2D
+          <ForceGraph2D
           graphData={graphData}
           backgroundColor="#05050a"
           cooldownTime={3000}
@@ -227,7 +268,11 @@ export default function CodexPage() {
           linkWidth={() => 0.4}
           linkColor={() => "rgba(255,255,255,0.08)"}
           onNodeHover={(node: any) => setHoverNode(node || null)}
-          onNodeClick={(node: any) => setSelectedNode(node || null)}
+          onNodeClick={(node: any) => {
+            setSelectedNode(node || null);
+            setSelectedNoteMarkdown(null);
+            setNoteError(null);
+          }}
           nodeCanvasObjectMode={() => "before"}
           nodeCanvasObject={(
             node: any,
