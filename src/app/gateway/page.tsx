@@ -26,10 +26,12 @@ export default function GatewayPage() {
               key={d.label}
               onClick={() => setOverlay({ route: d.route, variant: d.variant })}
               disabled={!!overlay}
-              className="rounded-lg py-8 px-4 bg-zinc-800/60 hover:bg-zinc-700/70 transition-shadow shadow-sm flex flex-col items-center justify-center focus:outline-none"
+              className={`group relative rounded-xl border border-white/15 bg-black/40 px-6 py-8 backdrop-blur-md transition-all duration-200 ease-out
+                 hover:border-cyan-300/70 hover:bg-cyan-500/10 hover:shadow-[0_0_40px_rgba(34,211,238,0.18)]
+                 flex flex-col items-center justify-center focus:outline-none ${overlay ? "opacity-60 cursor-not-allowed" : ""}`}
             >
-              <div className="text-xl font-medium mb-1">{d.label}</div>
-              <div className="text-sm text-zinc-400">Enter</div>
+              <span className="text-sm uppercase tracking-[0.2em] text-slate-200 group-hover:text-cyan-100">{d.label}</span>
+              <div className="mt-3 text-xs text-zinc-400">Enter</div>
             </button>
           ))}
         </div>
