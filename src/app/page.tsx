@@ -1,4 +1,4 @@
-import Image from "next/image";
+// Removed unused `Image` import to silence lint warning; restore when hero media is added
 import StoryCarousel from "@/components/story/StoryCarousel";
 import Link from "next/link";
 
