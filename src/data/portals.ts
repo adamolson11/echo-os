@@ -13,6 +13,7 @@ export interface Portal {
   slug: PortalSlug;
   title: string;
   tagline: string;
+  live?: boolean;
 }
 
 export const portals: Portal[] = [
@@ -20,6 +21,7 @@ export const portals: Portal[] = [
     slug: "wolves",
     title: "The Wolves in the Echo House",
     tagline: "Glitch-noir hurricane prison and echoing minds.",
+    live: true,
   },
   {
     slug: "devils-palimpsest",

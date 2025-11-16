@@ -19,8 +19,19 @@ export default function PortalHubPage() {
           {portals.map((portal) => (
             <li key={portal.slug} className="rounded-md border border-slate-800 bg-slate-900/50 p-4">
               <Link href={`/book/${portal.slug}`} className="block">
-                <strong className="text-slate-100">{portal.title}</strong>
-                <div className="mt-1 text-sm text-slate-400">{portal.tagline}</div>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <strong className="text-slate-100">{portal.title}</strong>
+                    <div className="mt-1 text-sm text-slate-400">{portal.tagline}</div>
+                  </div>
+                  <div>
+                    {portal.live ? (
+                      <span className="inline-block rounded-full bg-emerald-600/80 px-2 py-0.5 text-[11px] font-medium text-black">Live</span>
+                    ) : (
+                      <span className="inline-block rounded-full bg-slate-700 px-2 py-0.5 text-[11px] text-slate-300">Not live</span>
+                    )}
+                  </div>
+                </div>
               </Link>
             </li>
           ))}
