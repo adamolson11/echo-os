@@ -209,3 +209,109 @@ body {
     opacity: 0.4;
   }
 }
+
+/* LAB — subtle chromatic aberration aura (cyberpunk lens warp) */
+.lab-aberration {
+  background:
+    radial-gradient(circle at 10% 0%,
+      rgba(56, 189, 248, 0.7),
+      transparent 60%),
+    radial-gradient(circle at 90% 0%,
+      rgba(248, 113, 113, 0.6),
+      transparent 60%);
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: 0.35;
+  animation: labAberrationShift 7s ease-in-out infinite;
+}
+
+@keyframes labAberrationShift {
+  0%, 100% {
+    opacity: 0.28;
+    transform: translateX(0px) translateY(2px);
+  }
+  40% {
+    opacity: 0.42;
+    transform: translateX(-3px) translateY(0px);
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateX(2px) translateY(-2px);
+  }
+}
+
+/* Shared dust mote look */
+.dust-mote {
+  background: radial-gradient(circle,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.0) 60%);
+  mix-blend-mode: screen;
+  filter: blur(2px);
+  opacity: 0.2;
+}
+
+.dust-mote-1 {
+  animation: dustDrift1 18s ease-in-out infinite;
+}
+.dust-mote-2 {
+  animation: dustDrift2 22s ease-in-out infinite;
+}
+.dust-mote-3 {
+  animation: dustDrift3 20s ease-in-out infinite;
+}
+
+@keyframes dustDrift1 {
+  0%, 100% {
+    opacity: 0.12;
+    transform: translate(-5px, 8px);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate(8px, -6px);
+  }
+}
+
+@keyframes dustDrift2 {
+  0%, 100% {
+    opacity: 0.1;
+    transform: translate(4px, -6px);
+  }
+  50% {
+    opacity: 0.26;
+    transform: translate(-6px, 6px);
+  }
+}
+
+@keyframes dustDrift3 {
+  0%, 100% {
+    opacity: 0.14;
+    transform: translate(0px, 10px);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate(6px, -4px);
+  }
+}
+
+/* Soft noir "shutter" shadow, like something passing in front of a high window */
+.noir-slice {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0.0)
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  animation: noirSliceSweep 24s ease-in-out infinite;
+}
+
+@keyframes noirSliceSweep {
+  0%, 100% {
+    opacity: 0.18;
+    transform: translateX(-20px) translateY(0px);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateX(20px) translateY(4px);
+  }
+}

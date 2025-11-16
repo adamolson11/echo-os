@@ -145,6 +145,57 @@ export default function GatewayHall() {
               height: "30%",
             }}
           />
+
+        {/* ===== LAB CHROMATIC ABERRATION AURA ===== */}
+        <div
+          className="absolute lab-aberration"
+          style={{
+            left: "76%",
+            top: "18%",
+            width: "16%",
+            height: "60%",
+          }}
+        />
+
+        {/* ===== DUST MOTES IN LIGHT BEAMS ===== */}
+        <div
+          className="absolute dust-mote dust-mote-1"
+          style={{
+            left: "40%",
+            top: "28%",
+            width: "6%",
+            height: "12%",
+          }}
+        />
+        <div
+          className="absolute dust-mote dust-mote-2"
+          style={{
+            left: "52%",
+            top: "32%",
+            width: "5%",
+            height: "10%",
+          }}
+        />
+        <div
+          className="absolute dust-mote dust-mote-3"
+          style={{
+            left: "32%",
+            top: "35%",
+            width: "7%",
+            height: "14%",
+          }}
+        />
+
+        {/* ===== NOIR SHADOW SLICE ACROSS HALLWAY ===== */}
+        <div
+          className="absolute noir-slice"
+          style={{
+            left: "-10%",
+            top: "8%",
+            width: "120%",
+            height: "28%",
+          }}
+        />
         </div>
 
         {/* ----- CLICKABLE HOTSPOTS ----- */}
