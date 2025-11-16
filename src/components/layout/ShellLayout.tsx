@@ -30,7 +30,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function ShellLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isFullBleed = pathname === "/" || pathname === "/gateway";
 
   return (
     <div className="min-h-screen bg-ink text-zinc-100 flex flex-col">
@@ -58,8 +58,8 @@ export function ShellLayout({ children }: { children: ReactNode }) {
 
       {/* Body */}
       <div className="flex-1">
-        {isHome ? (
-          <div className="w-full">{/* full-bleed home view without sidebar */}
+        {isFullBleed ? (
+          <div className="w-full">{/* full-bleed home/gateway view without sidebar */}
             <main className="min-w-0">{children}</main>
           </div>
         ) : (

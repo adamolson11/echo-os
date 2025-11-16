@@ -2,123 +2,89 @@
 
 import Link from "next/link";
 
-const doors = [
-  {
-    id: "story",
-    label: "STORY",
-    subtitle: "Enter the narrative.",
-    href: "/story",
-    variant: "story",
-  },
-  {
-    id: "codex",
-    label: "CODEX",
-    subtitle: "See the mind-map.",
-    href: "/codex",
-    variant: "codex",
-  },
-  {
-    id: "archive",
-    label: "ARCHIVE",
-    subtitle: "Evidence & logs.",
-    href: "/archive",
-    variant: "archive",
-  },
-  {
-    id: "lab",
-    label: "LAB",
-    subtitle: "Experiments & tech.",
-    href: "/lab",
-    variant: "lab",
-  },
+const doorPositions = [
+  { id: "story", label: "STORY", href: "/story", variant: "story", className: "left-[8%] top-[20%]" },
+  { id: "codex", label: "CODEX", href: "/codex", variant: "codex", className: "left-[32%] top-[18%]" },
+  { id: "archive", label: "ARCHIVE", href: "/archive", variant: "archive", className: "left-[58%] top-[24%]" },
+  { id: "lab", label: "LAB", href: "/lab", variant: "lab", className: "left-[78%] top-[20%]" },
 ];
 
-function doorVariantStyles(variant: string) {
-  switch (variant) {
-    case "story":
-      return {
-        panel: "from-amber-700 to-amber-900",
-        glow: "bg-gradient-to-t from-amber-400/40 to-transparent",
-      };
-    case "codex":
-      return {
-        panel: "from-cyan-700 to-sky-900",
-        glow: "bg-gradient-to-t from-cyan-400/40 to-transparent",
-      };
-    case "archive":
-      return {
-        panel: "from-slate-700 to-slate-900",
-        glow: "bg-gradient-to-t from-white/20 to-transparent",
-      };
-    case "lab":
-      return {
-        panel: "from-emerald-800 to-emerald-900",
-        glow: "bg-gradient-to-t from-emerald-400/30 to-transparent",
-      };
-    default:
-      return {
-        panel: "from-white/5 to-black/80",
-        glow: "bg-gradient-to-t from-white/10 to-transparent",
-      };
-  }
+const doorStyles = {
+  story: { bg: "from-[#b46b1b] to-[#3b260f]", glow: "rgba(255,180,100,0.7)" },
+  codex: { bg: "from-[#16d2ff] to-[#093b48]", glow: "rgba(80,220,255,0.9)" },
+  archive: { bg: "from-[#485a72] to-[#151b24]", glow: "rgba(160,180,200,0.6)" },
+  lab: { bg: "from-[#15c484] to-[#0a2b23]", glow: "rgba(80,255,170,0.8)" },
+} as const;
+
+type DoorProps = {
+  variant: keyof typeof doorStyles;
+  className?: string;
+  label: string;
+};
+
+function Door({ variant, className = "", label }: DoorProps) {
+  const { bg, glow } = doorStyles[variant];
+
+  return (
+    <div
+      className={`
+        ${className}
+        group
+        w-[180px] h-[320px]
+        rounded-md
+        border border-white/10
+        bg-gradient-to-b ${bg}
+        shadow-[0_0_40px_rgba(0,0,0,0.9)]
+        relative
+        cursor-pointer
+        transition
+        duration-200
+        ease-out
+        group-hover:scale-105
+      `}
+      style={{ boxShadow: `0 0 40px ${glow}` }}
+    >
+      <div className="absolute inset-[10px] border border-white/10 bg-black/10 rounded-sm" />
+
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 text-sm tracking-[0.3em] text-white/85">
+        {label}
+      </div>
+
+      <div className="absolute inset-y-10 left-1/2 w-px bg-white/10" />
+
+      <div className="absolute left-[62%] top-1/2 w-2.5 h-2.5 rounded-full bg-white/80 shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
+
+      <div
+        className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[140%] h-4 rounded-full blur-xl opacity-70 group-hover:opacity-100"
+        style={{ background: glow }}
+      />
+    </div>
+  );
 }
 
 export default function GatewayPage() {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_50%_0%,#101623_0,#05070b_45%,#020309_100%)] text-white">
-      <div className="mx-auto max-w-7xl px-6 py-20">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-white/60">THE ECHO HOUSE</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight">Choose a door</h2>
-            <p className="mt-2 text-sm text-white/60">Choose a door. Each path leads deeper into the system.</p>
-          </div>
+    <main className="min-h-screen w-full relative bg-[#05070b] flex items-center justify-center overflow-hidden text-white">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-black/80 to-transparent" />
+        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-black/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/80 to-transparent" />
+      </div>
+
+      <div className="relative w-full max-w-6xl h-[520px]">
+        <div className="absolute left-6 top-6">
+          <p className="text-xs uppercase tracking-wider text-white/60">THE ECHO HOUSE</p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight">Choose a door</h2>
+          <p className="mt-2 text-sm text-white/60">Choose a door. Each path leads deeper into the system.</p>
         </div>
 
-        <div className="mt-12 flex w-full items-end justify-center">
-          <div className="flex -mx-3 items-end">
-            {doors.map((door) => {
-              const styles = doorVariantStyles(door.variant);
-              return (
-                <div key={door.id} className="px-3">
-                  <Link
-                    href={door.href}
-                    aria-label={`${door.label} door — ${door.subtitle}`}
-                    className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
-                  >
-                    {/* door frame */}
-                    <div className="relative rounded-2xl p-3 bg-black/40 shadow-inner border border-black/40">
-                      <div
-                        className={`relative flex h-96 w-56 flex-col items-center justify-end overflow-hidden rounded-xl border-2 border-white/5 bg-gradient-to-b ${styles.panel} shadow-[0_40px_80px_rgba(0,0,0,0.7)] transform transition duration-220 ease-out will-change-transform group-hover:scale-103 group-hover:-translate-y-3 group-hover:shadow-2xl focus-visible:scale-105`}
-                      >
-                        {/* door label */}
-                        <div className="absolute inset-x-0 top-8 flex items-center justify-center">
-                          <span className="text-sm tracking-widest text-white/90">{door.label}</span>
-                        </div>
-
-                        {/* subtitle */}
-                        <div className="absolute inset-x-0 bottom-10 px-3 text-center">
-                          <p className="text-sm text-white/80">{door.subtitle}</p>
-                        </div>
-
-                        {/* doorknob */}
-                        <div className="absolute right-6 bottom-44 flex items-center justify-center">
-                          <div className="h-6 w-6 rounded-full bg-yellow-400/90 shadow-md ring-1 ring-black/30 transform transition duration-200 group-hover:scale-110" />
-                        </div>
-
-                        {/* subtle door seam line */}
-                        <div className="absolute right-0 top-6 h-[80%] w-px bg-white/5" />
-
-                        {/* floor glow */}
-                        <div className={`absolute -bottom-8 h-28 w-full ${styles.glow} blur-3xl opacity-60 transition-opacity duration-200 group-hover:opacity-100`} />
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {doorPositions.map((d) => (
+          <Link key={d.id} href={d.href} aria-label={`${d.label} door`}>
+            <div className={`absolute ${d.className}`}>
+              <Door variant={d.variant as any} className="" label={d.label} />
+            </div>
+          </Link>
+        ))}
       </div>
     </main>
   );
