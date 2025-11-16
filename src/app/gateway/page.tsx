@@ -81,8 +81,14 @@ export default function GatewayPage() {
               const styles = doorVariantStyles(door.variant);
               return (
                 <div key={door.id} className="px-3">
-                  <Link href={door.href} className="group block">
-                    <div className={`relative flex h-72 w-48 flex-col items-center justify-end overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b ${styles.panel} shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-transform hover:-translate-y-2`}> 
+                  <Link
+                    href={door.href}
+                    aria-label={`${door.label} door — ${door.subtitle}`}
+                    className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
+                  >
+                    <div
+                      className={`relative flex h-72 w-48 flex-col items-center justify-end overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b ${styles.panel} shadow-[0_30px_60px_rgba(0,0,0,0.6)] transform transition duration-200 ease-out will-change-transform group-hover:scale-105 group-hover:-translate-y-2 group-hover:shadow-2xl focus-visible:scale-105`}
+                    > 
                       <div className="absolute inset-x-0 top-6 flex items-center justify-center">
                         <span className="text-sm tracking-widest text-white/90">{door.label}</span>
                       </div>
@@ -92,7 +98,7 @@ export default function GatewayPage() {
                       </div>
 
                       {/* floor glow */}
-                      <div className={`absolute -bottom-8 h-24 w-full ${styles.glow} blur-3xl opacity-80`} />
+                      <div className={`absolute -bottom-8 h-24 w-full ${styles.glow} blur-3xl opacity-60 transition-opacity duration-200 group-hover:opacity-100`} />
                     </div>
                   </Link>
                 </div>
