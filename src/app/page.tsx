@@ -18,7 +18,7 @@ export default function HomePage() {
 
         <div className="mt-10 flex items-center justify-center gap-6">
           <Link href="/gateway" className="relative z-10">
-            <span className="relative inline-flex items-center rounded-full bg-skyblue px-8 py-3 text-sm font-semibold text-black shadow-lg hover:brightness-105 transition">
+            <span className="relative inline-flex items-center rounded-full bg-sky-400 px-8 py-3 text-sm font-semibold text-black shadow-lg hover:brightness-105 transform transition">
               Enter the House
             </span>
           </Link>
