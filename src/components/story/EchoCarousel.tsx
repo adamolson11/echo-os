@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { storyArcs } from "@/data/storyArcs";
+import { STORY_ARCS } from "@/data/storyArcs";
 
 export function EchoCarousel() {
   const [current, setCurrent] = useState(0);
-  const total = storyArcs.length;
+  const total = STORY_ARCS.length;
 
   const next = () => setCurrent((i) => (i + 1) % total);
   const prev = () => setCurrent((i) => (i - 1 + total) % total);
@@ -15,7 +15,7 @@ export function EchoCarousel() {
     <section className="mt-10 rounded-3xl border border-white/10 bg-ocean/80 overflow-hidden relative min-h-[380px] md:min-h-[460px] lg:min-h-[520px]">
       {/* Desktop stacking */}
       <div className="hidden md:block relative h-full">
-        {storyArcs.map((arc, index) => {
+        {STORY_ARCS.map((arc, index) => {
           const offset = (index - current + total) % total;
 
           let classes =
@@ -35,20 +35,20 @@ export function EchoCarousel() {
           }
 
           return (
-            <article key={arc.id} className={classes} style={style}>
+            <article key={arc.slug} className={classes} style={style}>
               {offset === 0 && (
                 <>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-2xl" />
                   <div className="relative h-full flex items-end">
                     <div className="p-6 md:p-8 space-y-3 max-w-md">
                       <p className="text-[11px] uppercase tracking-[0.2em] text-skyblue/80">
-                        {arc.label}
+                        {arc.tag}
                       </p>
                       <h3 className="text-lg md:text-2xl font-semibold">
                         {arc.title}
                       </h3>
                       <p className="text-xs md:text-sm text-zinc-200">
-                        {arc.description}
+                        {arc.blurb}
                       </p>
                       <Link
                         href={arc.href}
@@ -83,9 +83,9 @@ export function EchoCarousel() {
 
       {/* Mobile swipe */}
       <div className="md:hidden h-full px-4 py-6 overflow-x-auto flex gap-4 snap-x snap-mandatory">
-        {storyArcs.map((arc) => (
+        {STORY_ARCS.map((arc) => (
           <article
-            key={arc.id}
+            key={arc.slug}
             className="snap-center shrink-0 w-[80%] rounded-2xl bg-cover bg-center relative overflow-hidden"
             style={{ backgroundImage: `url(${arc.imageUrl})` }}
           >
@@ -93,11 +93,11 @@ export function EchoCarousel() {
             <div className="relative h-full flex items-end p-4 space-y-2">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-skyblue/80">
-                  {arc.label}
+                  {arc.tag}
                 </p>
                 <h3 className="text-sm font-semibold">{arc.title}</h3>
                 <p className="text-[11px] text-zinc-200 line-clamp-3">
-                  {arc.description}
+                  {arc.blurb}
                 </p>
                 <Link
                   href={arc.href}

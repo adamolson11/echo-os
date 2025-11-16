@@ -3,7 +3,7 @@ import { chapterMetaBySlug } from "@/config/story";
 import { GraphNotesPanel } from "@/components/story/GraphNotesPanel";
 import { ChapterTOC } from "@/components/story/ChapterTOC";
 import { ChapterLayout } from "@/components/story/ChapterLayout";
-import { PrologueStub } from "@/components/story/PrologueStub";
+import PrologueStub from "@/components/story/PrologueStub";
 
 export default async function ChapterPage({
   params,

@@ -10,7 +10,22 @@ type Props = {
 
 export async function generateStaticParams() {
   const slugs = getCodexSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const params: { slug: string }[] = [];
+
+  for (const s of slugs) {
+    try {
+      const node = await getCodexNode(s);
+      if (node && node.slug) {
+        params.push({ slug: node.slug });
+      }
+    } catch (err) {
+      // Skip files that fail to parse; they won't be prerendered.
+      // This keeps the build resilient to malformed frontmatter.
+      console.warn(`Skipping codex file for static params: ${s}`, err);
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

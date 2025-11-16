@@ -37,16 +37,74 @@ export function getCodexSlugs(): string[] {
 }
 
 export async function getCodexNode(slug: string): Promise<CodexNode> {
+  // Debugging: log incoming slugs during build to trace undefined cases.
+  // (This will be removed once the root cause is confirmed.)
+  try {
+    // eslint-disable-next-line no-console
+    console.log(`[codex] getCodexNode called with slug:`, slug);
+  } catch (e) {}
+  if (!slug) {
+    try {
+      // eslint-disable-next-line no-console
+      console.warn('[codex] getCodexNode received falsy slug; stack:');
+      // eslint-disable-next-line no-console
+      console.warn(new Error().stack);
+    } catch (e) {}
+  }
+
+  // Minimal guard: if slug is falsy, return a harmless stub node so
+  // prerendering doesn't fail hard. This avoids build breakages when
+  // the app runtime unexpectedly calls this with undefined during
+  // metadata collection. Keep this minimal and safe.
+  if (!slug) {
+    return {
+      slug: "unknown",
+      title: "Untitled",
+      type: "meta",
+      tags: [],
+      contentHtml: "",
+    } as CodexNode;
+  }
   const fullPathMd = path.join(codexDirectory, `${slug}.md`);
   const fullPathMdx = path.join(codexDirectory, `${slug}.mdx`);
 
   const fullPath = fs.existsSync(fullPathMd) ? fullPathMd : fullPathMdx;
 
-  if (!fullPath || !fs.existsSync(fullPath)) {
+  let resolvedPath = fullPath;
+
+  // If the direct path doesn't exist (for example when frontmatter defines
+  // a different slug than the filename), try to find a matching file by
+  // scanning the directory for a file whose frontmatter `slug` or
+  // filename (case-insensitive) matches the requested slug.
+  if (!resolvedPath || !fs.existsSync(resolvedPath)) {
+    const filenames = getAllCodexFilenames();
+    for (const filename of filenames) {
+      const candidatePath = path.join(codexDirectory, filename);
+      try {
+        const fileContents = fs.readFileSync(candidatePath, "utf8");
+        const { data } = matter(fileContents);
+        const fmSlug = data?.slug;
+        const filenameSlug = filename.replace(/\.mdx?$/, "");
+
+        if (
+          (typeof fmSlug === "string" && fmSlug === slug) ||
+          filenameSlug.toLowerCase() === String(slug).toLowerCase()
+        ) {
+          resolvedPath = candidatePath;
+          break;
+        }
+      } catch (err) {
+        // ignore parse errors here; we'll skip malformed files
+        continue;
+      }
+    }
+  }
+
+  if (!resolvedPath || !fs.existsSync(resolvedPath)) {
     throw new Error(`Codex node not found: ${slug}`);
   }
 
-  const fileContents = fs.readFileSync(fullPath, "utf8");
+  const fileContents = fs.readFileSync(resolvedPath, "utf8");
   const { data, content } = matter(fileContents);
 
   const processedContent = await remark().use(html).process(content);
@@ -112,12 +170,19 @@ export async function getCodexNode(slug: string): Promise<CodexNode> {
 export async function getAllCodexNodes(): Promise<CodexNode[]> {
   const filenames = getAllCodexFilenames();
 
-  const nodes = await Promise.all(
-    filenames.map((filename) => {
-      const slug = filename.replace(/\.mdx?$/, "");
-      return getCodexNode(slug);
-    })
-  );
+  const nodes: CodexNode[] = [];
+  for (const filename of filenames) {
+    const slug = filename.replace(/\.mdx?$/, "");
+    try {
+      const node = await getCodexNode(slug);
+      nodes.push(node);
+    } catch (err) {
+      // Skip malformed files instead of failing the entire build.
+      // eslint-disable-next-line no-console
+      console.warn(`[codex] skipping file during getAllCodexNodes: ${filename}`, err);
+      continue;
+    }
+  }
 
   return nodes.sort((a, b) => a.title.localeCompare(b.title));
 }
