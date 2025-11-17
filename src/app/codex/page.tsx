@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 
 import CodexGraph from "./CodexGraph";
@@ -75,7 +70,7 @@ export default function CodexPage() {
   const [indexSearch, setIndexSearch] = useState("");
 
   // Ref to the underlying ForceGraph instance (used for zoom/center)
-  const fgRef = useRef<ForceGraphMethods | undefined>();
+  const fgRef = useRef<ForceGraphMethods | null>(null);
 
   // Load codex.json from /public
   useEffect(() => {
@@ -233,7 +228,7 @@ export default function CodexPage() {
             nodeColor={nodeColor}
           />
 
-          <div className="mt-6 h-[520px] rounded-2xl border border-slate-800 bg-slate-950/60">
+          <div className="mt-6 h-[640px] w-full rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
             <CodexGraph
               ref={fgRef as any}
               graphData={filteredGraphData}
@@ -259,3 +254,21 @@ export default function CodexPage() {
     </div>
   );
 }
+
+// Center & fit graph when data changes
+useEffect(() => {
+  const api = fgRef.current;
+  if (!api) return;
+  if (!filteredGraphData?.nodes?.length) return;
+
+  const handle = setTimeout(() => {
+    try {
+      // animate fit to view
+      api.zoomToFit(400);
+    } catch (e) {
+      console.warn("zoomToFit failed:", e);
+    }
+  }, 120);
+
+  return () => clearTimeout(handle);
+}, [/* note: filteredGraphData is in scope above but not exported; leave dependency as string to avoid eslint issues */]);

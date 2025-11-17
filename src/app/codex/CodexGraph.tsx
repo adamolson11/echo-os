@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
+import type { ForceGraphMethods } from "react-force-graph-2d";
 import dynamic from "next/dynamic";
 import { seriesColorMap } from "../../config/codexColors";
 
@@ -14,7 +15,8 @@ type Props = {
   onNodeClick: (n: any) => void;
 };
 
-const CodexGraph = forwardRef<any, Props>(({ graphData, hoverNode, selectedNode, onNodeHover, onNodeClick }, ref) => {
+const CodexGraph = forwardRef<ForceGraphMethods, Props>(
+  ({ graphData, hoverNode, selectedNode, onNodeHover, onNodeClick }, ref) => {
   const nodeColor = (node: any): string => {
     if (node?.series) return seriesColorMap[node.series] || seriesColorMap.Default;
 
@@ -39,8 +41,9 @@ const CodexGraph = forwardRef<any, Props>(({ graphData, hoverNode, selectedNode,
   };
 
   return (
-    <ForceGraph2D
-      ref={ref}
+    <div className="w-full h-full">
+      <ForceGraph2D
+        ref={ref}
       graphData={graphData}
       backgroundColor="#05050a"
       cooldownTime={3000}
@@ -92,8 +95,13 @@ const CodexGraph = forwardRef<any, Props>(({ graphData, hoverNode, selectedNode,
           else if (isNeighbor) alpha = 0.8;
           else alpha = 0.07;
         }
+        style={{ width: "100%", height: "100%" }}
+        />
+      </div>
 
         const radiusBase = 2.5;
+
+  CodexGraph.displayName = "CodexGraph";
         const weight = typedNode.weight ?? 1;
         const radius = radiusBase * weight * (isHovered || isSelected ? 1.8 : isNeighbor ? 1.3 : 1);
 
