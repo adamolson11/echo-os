@@ -7,6 +7,7 @@ tags:
   - book1
   - mainline
 status: draft
+publish: true
 summary: "Silas walks to the Echo House; tensions with Paulo deepen and Helena-Vale appears."
 ---
 

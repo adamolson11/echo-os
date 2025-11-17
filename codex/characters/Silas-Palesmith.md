@@ -8,6 +8,7 @@ tags:
   - detective
   - echo-house
 status: canon
+publish: true
 summary: "Noir detective protagonist; haunted by prison-yard past and tied to Psyntuum's dream-camera tech."
 ---
 

@@ -56,21 +56,20 @@ export default function CodexPage() {
   const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
 
-  const [activeTypes, setActiveTypes] = useState<Set<string>>(
-    () =>
-      new Set<string>([
-        "chapter",
-        "character",
-        "theme",
-        "location",
-        "event",
-        "symbol",
-        "stub",
-      ])
+  const [activeTypes, setActiveTypes] = useState<Record<string, boolean>>(
+    () => ({
+      chapter: true,
+      character: true,
+      theme: true,
+      location: true,
+      event: true,
+      symbol: true,
+      stub: true,
+    })
   );
 
-  const [activeSeries, setActiveSeries] = useState<Set<string>>(
-    () => new Set<string>() // empty = show all
+  const [activeSeries, setActiveSeries] = useState<Record<string, boolean>>(
+    () => ({}) // empty = show all
   );
 
   const [indexSearch, setIndexSearch] = useState("");
@@ -101,16 +100,19 @@ export default function CodexPage() {
   const filteredGraphData = useMemo(() => {
     if (!graphData?.nodes?.length) return emptyGraph;
 
-    const typeSet = activeTypes;
-    const seriesSet = activeSeries;
+    const typeObj = activeTypes || {};
+    const seriesObj = activeSeries || {};
 
     const nodes = graphData.nodes.filter((node) => {
       const typeKey = String(node.type);
       const seriesKey = node.series;
 
-      const typeOk = typeSet.size === 0 || typeSet.has(typeKey);
+      const noTypeFilters = Object.keys(typeObj).length === 0;
+      const noSeriesFilters = Object.keys(seriesObj).length === 0;
+
+      const typeOk = noTypeFilters ? true : !!typeObj[typeKey];
       const seriesOk =
-        seriesSet.size === 0 || !seriesKey || seriesSet.has(seriesKey);
+        noSeriesFilters || !seriesKey ? true : !!seriesObj[seriesKey];
 
       return typeOk && seriesOk;
     });
@@ -139,6 +141,35 @@ export default function CodexPage() {
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   }, [graphData]);
+
+  // Build series legend array from the canonical seriesColorMap
+  const seriesLegend = useMemo(() => {
+    return Object.entries(seriesColorMap).map(([id, color]) => ({ id, label: id, color }));
+  }, []);
+
+  // Node color helper (mirrors CodexGraph nodeColor logic so HUD coloring matches)
+  const nodeColor = (node: any): string => {
+    if (node?.series) return seriesColorMap[node.series] || seriesColorMap.Default;
+
+    switch (node?.type) {
+      case "chapter":
+        return "#4fc3f7";
+      case "character":
+        return "#26c6da";
+      case "symbol":
+        return "#ffd54f";
+      case "event":
+        return "#f48fb1";
+      case "theme":
+        return "#ce93d8";
+      case "location":
+        return "#a5d6a7";
+      case "stub":
+        return "#9e9e9e";
+      default:
+        return seriesColorMap.Default;
+    }
+  };
 
   const filteredIndex = useMemo(() => {
     const q = indexSearch.trim().toLowerCase();
@@ -196,7 +227,10 @@ export default function CodexPage() {
             setActiveTypes={setActiveTypes}
             activeSeries={activeSeries}
             setActiveSeries={setActiveSeries}
-            seriesColorMap={seriesColorMap}
+            seriesLegend={seriesLegend}
+            fgRef={fgRef}
+            hoverNode={hoverNode}
+            nodeColor={nodeColor}
           />
 
           <div className="mt-6 h-[520px] rounded-2xl border border-slate-800 bg-slate-950/60">

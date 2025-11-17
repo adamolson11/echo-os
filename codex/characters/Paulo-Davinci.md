@@ -7,6 +7,7 @@ tags:
   - antagonist
   - entropy
 status: canon
+publish: true
 summary: "Antagonist and anarchist preacher of entropy; tied to the prison-yard violence and the Psyntuum conspiracy."
 ---
 

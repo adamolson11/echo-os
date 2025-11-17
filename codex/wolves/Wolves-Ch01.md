@@ -8,6 +8,7 @@ tags:
   - mainline
   - echo-house
 status: draft
+publish: true
 summary: "Opening hurricane + prison-yard memory; Silas wakes and we seed Psyntuum + Paulo."
 ---
 
