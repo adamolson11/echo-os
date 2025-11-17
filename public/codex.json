@@ -1,6 +1,21 @@
 {
   "nodes": [
     {
+      "id": "Wolves-Template-Chapter",
+      "label": "Wolves-Template-Chapter",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "{{SLUG}}",
+      "path": "codex/wolves/Wolves-Template-Chapter.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
       "id": "Silas-Palesmith",
       "label": "Silas Palesmith",
       "type": "character",
@@ -18,6 +33,73 @@
         "status": "canon",
         "summary": "Noir detective protagonist; haunted by prison-yard past and tied to Psyntuum's dream-camera tech.",
         "publish": true,
+        "private": false
+      }
+    },
+    {
+      "id": "Flamma-Radices",
+      "label": "Flamma-Radices",
+      "type": "stub",
+      "slug": "Flamma-Radices",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Meaning-Simulation",
+      "label": "Meaning-Simulation",
+      "type": "stub",
+      "slug": "Meaning-Simulation",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "{{PREV_FILE}}",
+      "label": "{{PREV_FILE}}",
+      "type": "stub",
+      "slug": "{{PREV_FILE}}",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "{{NEXT_FILE}}",
+      "label": "{{NEXT_FILE}}",
+      "type": "stub",
+      "slug": "{{NEXT_FILE}}",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Wolves-Prologue",
+      "label": "Wolves-Prologue",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-prologue",
+      "path": "codex/wolves/Wolves-Prologue.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "status": "stub",
+        "publish": false,
         "private": false
       }
     },
@@ -43,6 +125,64 @@
       }
     },
     {
+      "id": "Wolves-Epilogue",
+      "label": "Wolves-Epilogue",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-epilogue",
+      "path": "codex/wolves/Wolves-Epilogue.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Entropy-vs-Love",
+      "label": "Entropy-vs-Love",
+      "type": "stub",
+      "slug": "Entropy-vs-Love",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Wolves-Ch44",
+      "label": "Wolves-Ch44",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch44",
+      "path": "codex/wolves/Wolves-Ch44.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Codex-Index",
+      "label": "Wolves-Codex-Index",
+      "type": "index",
+      "series": "Wolves in the Echo House",
+      "slug": "Wolves-Codex-Index",
+      "path": "codex/wolves/Wolves-Codex-Index.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "publish": false,
+        "private": false
+      }
+    },
+    {
       "id": "Wolves-Ch02",
       "label": "Wolves in the Echo House — Chapter 02",
       "type": "chapter",
@@ -59,6 +199,662 @@
         "status": "draft",
         "summary": "Silas walks to the Echo House; tensions with Paulo deepen and Helena-Vale appears.",
         "publish": true,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch03",
+      "label": "Wolves-Ch03",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch03",
+      "path": "codex/wolves/Wolves-Ch03.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch04",
+      "label": "Wolves-Ch04",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch04",
+      "path": "codex/wolves/Wolves-Ch04.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch05",
+      "label": "Wolves-Ch05",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch05",
+      "path": "codex/wolves/Wolves-Ch05.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch06",
+      "label": "Wolves-Ch06",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch06",
+      "path": "codex/wolves/Wolves-Ch06.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch07",
+      "label": "Wolves-Ch07",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch07",
+      "path": "codex/wolves/Wolves-Ch07.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch08",
+      "label": "Wolves-Ch08",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch08",
+      "path": "codex/wolves/Wolves-Ch08.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch09",
+      "label": "Wolves-Ch09",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch09",
+      "path": "codex/wolves/Wolves-Ch09.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch10",
+      "label": "Wolves-Ch10",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch10",
+      "path": "codex/wolves/Wolves-Ch10.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch11",
+      "label": "Wolves-Ch11",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch11",
+      "path": "codex/wolves/Wolves-Ch11.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch12",
+      "label": "Wolves-Ch12",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch12",
+      "path": "codex/wolves/Wolves-Ch12.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch13",
+      "label": "Wolves-Ch13",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch13",
+      "path": "codex/wolves/Wolves-Ch13.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch14",
+      "label": "Wolves-Ch14",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch14",
+      "path": "codex/wolves/Wolves-Ch14.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch15",
+      "label": "Wolves-Ch15",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch15",
+      "path": "codex/wolves/Wolves-Ch15.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch16",
+      "label": "Wolves-Ch16",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch16",
+      "path": "codex/wolves/Wolves-Ch16.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch17",
+      "label": "Wolves-Ch17",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch17",
+      "path": "codex/wolves/Wolves-Ch17.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch18",
+      "label": "Wolves-Ch18",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch18",
+      "path": "codex/wolves/Wolves-Ch18.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch19",
+      "label": "Wolves-Ch19",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch19",
+      "path": "codex/wolves/Wolves-Ch19.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch20",
+      "label": "Wolves-Ch20",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch20",
+      "path": "codex/wolves/Wolves-Ch20.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch21",
+      "label": "Wolves-Ch21",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch21",
+      "path": "codex/wolves/Wolves-Ch21.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch22",
+      "label": "Wolves-Ch22",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch22",
+      "path": "codex/wolves/Wolves-Ch22.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch23",
+      "label": "Wolves-Ch23",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch23",
+      "path": "codex/wolves/Wolves-Ch23.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch24",
+      "label": "Wolves-Ch24",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch24",
+      "path": "codex/wolves/Wolves-Ch24.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch25",
+      "label": "Wolves-Ch25",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch25",
+      "path": "codex/wolves/Wolves-Ch25.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch26",
+      "label": "Wolves-Ch26",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch26",
+      "path": "codex/wolves/Wolves-Ch26.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch27",
+      "label": "Wolves-Ch27",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch27",
+      "path": "codex/wolves/Wolves-Ch27.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch28",
+      "label": "Wolves-Ch28",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch28",
+      "path": "codex/wolves/Wolves-Ch28.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch29",
+      "label": "Wolves-Ch29",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch29",
+      "path": "codex/wolves/Wolves-Ch29.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch30",
+      "label": "Wolves-Ch30",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch30",
+      "path": "codex/wolves/Wolves-Ch30.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch31",
+      "label": "Wolves-Ch31",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch31",
+      "path": "codex/wolves/Wolves-Ch31.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch32",
+      "label": "Wolves-Ch32",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch32",
+      "path": "codex/wolves/Wolves-Ch32.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch33",
+      "label": "Wolves-Ch33",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch33",
+      "path": "codex/wolves/Wolves-Ch33.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch34",
+      "label": "Wolves-Ch34",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch34",
+      "path": "codex/wolves/Wolves-Ch34.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch35",
+      "label": "Wolves-Ch35",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch35",
+      "path": "codex/wolves/Wolves-Ch35.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch36",
+      "label": "Wolves-Ch36",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch36",
+      "path": "codex/wolves/Wolves-Ch36.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch37",
+      "label": "Wolves-Ch37",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch37",
+      "path": "codex/wolves/Wolves-Ch37.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch38",
+      "label": "Wolves-Ch38",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch38",
+      "path": "codex/wolves/Wolves-Ch38.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch39",
+      "label": "Wolves-Ch39",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch39",
+      "path": "codex/wolves/Wolves-Ch39.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch40",
+      "label": "Wolves-Ch40",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch40",
+      "path": "codex/wolves/Wolves-Ch40.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch41",
+      "label": "Wolves-Ch41",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch41",
+      "path": "codex/wolves/Wolves-Ch41.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch42",
+      "label": "Wolves-Ch42",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch42",
+      "path": "codex/wolves/Wolves-Ch42.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
+        "private": false
+      }
+    },
+    {
+      "id": "Wolves-Ch43",
+      "label": "Wolves-Ch43",
+      "type": "chapter",
+      "series": "Wolves in the Echo House",
+      "slug": "wolves-ch43",
+      "path": "codex/wolves/Wolves-Ch43.md",
+      "tags": [],
+      "weight": 1,
+      "meta": {
+        "stub": true,
+        "status": "stub",
+        "publish": false,
         "private": false
       }
     },
@@ -81,12 +877,1771 @@
         "publish": true,
         "private": false
       }
+    },
+    {
+      "id": "Dr-Helena-Vale",
+      "label": "Dr-Helena-Vale",
+      "type": "stub",
+      "slug": "Dr-Helena-Vale",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Hurricanes",
+      "label": "Hurricanes",
+      "type": "stub",
+      "slug": "Hurricanes",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Doors-and-Keys",
+      "label": "Doors-and-Keys",
+      "type": "stub",
+      "slug": "Doors-and-Keys",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Wolves-Timeline",
+      "label": "Wolves-Timeline",
+      "type": "stub",
+      "slug": "Wolves-Timeline",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Psyntuum-Project",
+      "label": "Psyntuum-Project",
+      "type": "stub",
+      "slug": "Psyntuum-Project",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Helena-Vale",
+      "label": "Helena-Vale",
+      "type": "stub",
+      "slug": "Helena-Vale",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
+    },
+    {
+      "id": "Clarity",
+      "label": "Clarity",
+      "type": "stub",
+      "slug": "Clarity",
+      "tags": [
+        "stub"
+      ],
+      "weight": 0.8,
+      "meta": {
+        "stub": true
+      }
     }
   ],
   "links": [
     {
+      "source": "Wolves-Template-Chapter",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Template-Chapter",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Template-Chapter",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Template-Chapter",
+      "target": "{{PREV_FILE}}",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Template-Chapter",
+      "target": "{{NEXT_FILE}}",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Prologue",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Prologue",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Prologue",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Prologue",
+      "target": "Wolves-Ch01",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Epilogue",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Epilogue",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Epilogue",
+      "target": "Entropy-vs-Love",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Epilogue",
+      "target": "Wolves-Ch44",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Prologue",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch01",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch02",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch03",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch04",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch05",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch06",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch07",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch08",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch09",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch10",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch11",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch12",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch13",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch14",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch15",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch16",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch17",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch18",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch19",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch20",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch21",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch22",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch23",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch24",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch25",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch26",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch27",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch28",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch29",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch30",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch31",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch32",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch33",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch34",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch35",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch36",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch37",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch38",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch39",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch40",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch41",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch42",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch43",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Ch44",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Epilogue",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Paulo-Davinci",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Dr-Helena-Vale",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Hurricanes",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Doors-and-Keys",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Codex-Index",
+      "target": "Wolves-Timeline",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch44",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch44",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch44",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch44",
+      "target": "Wolves-Ch43",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch44",
+      "target": "Wolves-Epilogue",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch43",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch43",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch43",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch43",
+      "target": "Wolves-Ch42",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch43",
+      "target": "Wolves-Ch44",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch42",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch42",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch42",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch42",
+      "target": "Wolves-Ch41",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch42",
+      "target": "Wolves-Ch43",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch41",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch41",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch41",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch41",
+      "target": "Wolves-Ch40",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch41",
+      "target": "Wolves-Ch42",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch40",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch40",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch40",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch40",
+      "target": "Wolves-Ch39",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch40",
+      "target": "Wolves-Ch41",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch39",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch39",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch39",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch39",
+      "target": "Wolves-Ch38",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch39",
+      "target": "Wolves-Ch40",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch38",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch38",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch38",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch38",
+      "target": "Wolves-Ch37",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch38",
+      "target": "Wolves-Ch39",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch37",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch37",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch37",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch37",
+      "target": "Wolves-Ch36",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch37",
+      "target": "Wolves-Ch38",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch36",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch36",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch36",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch36",
+      "target": "Wolves-Ch35",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch36",
+      "target": "Wolves-Ch37",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch35",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch35",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch35",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch35",
+      "target": "Wolves-Ch34",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch35",
+      "target": "Wolves-Ch36",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch34",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch34",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch34",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch34",
+      "target": "Wolves-Ch33",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch34",
+      "target": "Wolves-Ch35",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch33",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch33",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch33",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch33",
+      "target": "Wolves-Ch32",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch33",
+      "target": "Wolves-Ch34",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch32",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch32",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch32",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch32",
+      "target": "Wolves-Ch31",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch32",
+      "target": "Wolves-Ch33",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch31",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch31",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch31",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch31",
+      "target": "Wolves-Ch30",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch31",
+      "target": "Wolves-Ch32",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch30",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch30",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch30",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch30",
+      "target": "Wolves-Ch29",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch30",
+      "target": "Wolves-Ch31",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch29",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch29",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch29",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch29",
+      "target": "Wolves-Ch28",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch29",
+      "target": "Wolves-Ch30",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch28",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch28",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch28",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch28",
+      "target": "Wolves-Ch27",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch28",
+      "target": "Wolves-Ch29",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch27",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch27",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch27",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch27",
+      "target": "Wolves-Ch26",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch27",
+      "target": "Wolves-Ch28",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch26",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch26",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch26",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch26",
+      "target": "Wolves-Ch25",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch26",
+      "target": "Wolves-Ch27",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch25",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch25",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch25",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch25",
+      "target": "Wolves-Ch24",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch25",
+      "target": "Wolves-Ch26",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch24",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch24",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch24",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch24",
+      "target": "Wolves-Ch23",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch24",
+      "target": "Wolves-Ch25",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch23",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch23",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch23",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch23",
+      "target": "Wolves-Ch22",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch23",
+      "target": "Wolves-Ch24",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch22",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch22",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch22",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch22",
+      "target": "Wolves-Ch21",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch22",
+      "target": "Wolves-Ch23",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch21",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch21",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch21",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch21",
+      "target": "Wolves-Ch20",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch21",
+      "target": "Wolves-Ch22",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch20",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch20",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch20",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch20",
+      "target": "Wolves-Ch19",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch20",
+      "target": "Wolves-Ch21",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch19",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch19",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch19",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch19",
+      "target": "Wolves-Ch18",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch19",
+      "target": "Wolves-Ch20",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch18",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch18",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch18",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch18",
+      "target": "Wolves-Ch17",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch18",
+      "target": "Wolves-Ch19",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch17",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch17",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch17",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch17",
+      "target": "Wolves-Ch16",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch17",
+      "target": "Wolves-Ch18",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch16",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch16",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch16",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch16",
+      "target": "Wolves-Ch15",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch16",
+      "target": "Wolves-Ch17",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch15",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch15",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch15",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch15",
+      "target": "Wolves-Ch14",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch15",
+      "target": "Wolves-Ch16",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch14",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch14",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch14",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch14",
+      "target": "Wolves-Ch13",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch14",
+      "target": "Wolves-Ch15",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch13",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch13",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch13",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch13",
+      "target": "Wolves-Ch12",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch13",
+      "target": "Wolves-Ch14",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch12",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch12",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch12",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch12",
+      "target": "Wolves-Ch11",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch12",
+      "target": "Wolves-Ch13",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch11",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch11",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch11",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch11",
+      "target": "Wolves-Ch10",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch11",
+      "target": "Wolves-Ch12",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch10",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch10",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch10",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch10",
+      "target": "Wolves-Ch09",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch10",
+      "target": "Wolves-Ch11",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch09",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch09",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch09",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch09",
+      "target": "Wolves-Ch08",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch09",
+      "target": "Wolves-Ch10",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch08",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch08",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch08",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch08",
+      "target": "Wolves-Ch07",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch08",
+      "target": "Wolves-Ch09",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch07",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch07",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch07",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch07",
+      "target": "Wolves-Ch06",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch07",
+      "target": "Wolves-Ch08",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch06",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch06",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch06",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch06",
+      "target": "Wolves-Ch05",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch06",
+      "target": "Wolves-Ch07",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch05",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch05",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch05",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch05",
+      "target": "Wolves-Ch04",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch05",
+      "target": "Wolves-Ch06",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch04",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch04",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch04",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch04",
+      "target": "Wolves-Ch03",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch04",
+      "target": "Wolves-Ch05",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch03",
+      "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch03",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch03",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch03",
+      "target": "Wolves-Ch02",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch03",
+      "target": "Wolves-Ch04",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
+      "target": "Psyntuum-Project",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
       "source": "Wolves-Ch02",
       "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
+      "target": "Helena-Vale",
       "type": "wikilink",
       "strength": 1
     },
@@ -116,13 +2671,37 @@
     },
     {
       "source": "Wolves-Ch02",
+      "target": "Helena-Vale",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
       "target": "Silas-Palesmith",
       "type": "wikilink",
       "strength": 1
     },
     {
       "source": "Wolves-Ch02",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
       "target": "Wolves-Ch01",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch02",
+      "target": "Wolves-Ch03",
       "type": "wikilink",
       "strength": 1
     },
@@ -135,6 +2714,12 @@
     {
       "source": "Wolves-Ch01",
       "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch01",
+      "target": "Psyntuum-Project",
       "type": "wikilink",
       "strength": 1
     },
@@ -158,7 +2743,31 @@
     },
     {
       "source": "Wolves-Ch01",
+      "target": "Psyntuum-Project",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch01",
       "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch01",
+      "target": "Flamma-Radices",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch01",
+      "target": "Meaning-Simulation",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Wolves-Ch01",
+      "target": "Wolves-Prologue",
       "type": "wikilink",
       "strength": 1
     },
@@ -170,6 +2779,18 @@
     },
     {
       "source": "Silas-Palesmith",
+      "target": "Psyntuum-Project",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Silas-Palesmith",
+      "target": "Helena-Vale",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Silas-Palesmith",
       "target": "Paulo-Davinci",
       "type": "wikilink",
       "strength": 1
@@ -189,6 +2810,12 @@
     {
       "source": "Silas-Palesmith",
       "target": "Paulo-Davinci",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Silas-Palesmith",
+      "target": "Psyntuum-Project",
       "type": "wikilink",
       "strength": 1
     },
@@ -200,6 +2827,18 @@
     },
     {
       "source": "Paulo-Davinci",
+      "target": "Clarity",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Paulo-Davinci",
+      "target": "Psyntuum-Project",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Paulo-Davinci",
       "target": "Wolves-Ch01",
       "type": "wikilink",
       "strength": 1
@@ -213,6 +2852,12 @@
     {
       "source": "Paulo-Davinci",
       "target": "Silas-Palesmith",
+      "type": "wikilink",
+      "strength": 1
+    },
+    {
+      "source": "Paulo-Davinci",
+      "target": "Clarity",
       "type": "wikilink",
       "strength": 1
     }

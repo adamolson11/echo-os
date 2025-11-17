@@ -30,7 +30,8 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function ShellLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isFullBleed = pathname === "/" || pathname === "/gateway";
+  const isFullBleed =
+    pathname === "/" || pathname === "/gateway" || pathname?.startsWith("/codex");
 
   return (
     <div className="min-h-screen bg-ink text-zinc-100 flex flex-col">

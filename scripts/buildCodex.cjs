@@ -106,8 +106,9 @@ function buildCodex() {
 
   const nodes = Object.values(nodesById);
 
-  // Filter nodes: only include nodes that are explicitly published and not private
-  const publishedNodes = nodes.filter((n) => (n.meta && n.meta.publish) === true && (n.meta && n.meta.private) !== true);
+  // Filter nodes: TEMPORARILY include all non-private nodes for visualization
+  // (was: only include nodes with meta.publish === true)
+  const publishedNodes = nodes.filter((n) => (n.meta && n.meta.private) !== true);
 
   const publishedIds = new Set(publishedNodes.map((n) => n.id));
 
@@ -126,6 +127,7 @@ function buildCodex() {
   const skippedPaths = skipped.slice(0, 25).map((s) => s.path).filter(Boolean);
 
   console.log(`[buildCodex] Scanned ${totalFiles} files`);
+  console.log(`[buildCodex] included ${publishedNodes.length} nodes and ${publishedLinks.length} links`);
   console.log(`[buildCodex] Wrote ${publishedNodes.length} nodes and ${publishedLinks.length} links to ${OUTPUT_PATH}`);
   console.log(`[buildCodex] Skipped ${skippedCount} files (private/unpublished). ${
     skippedPaths.length ? "Examples: " + skippedPaths.join(", ") : "No skipped paths to show"
