@@ -55,6 +55,8 @@ function buildCodex() {
     const series = frontmatter && frontmatter.series;
     const tags = Array.isArray(frontmatter && frontmatter.tags) ? frontmatter.tags : [];
     const weight = typeof (frontmatter && frontmatter.weight) === "number" ? frontmatter.weight : 1;
+    const publish = !!(frontmatter && frontmatter.publish);
+    const isPrivate = !!(frontmatter && frontmatter.private);
 
     // Merge or overwrite any existing stub node so real frontmatter takes precedence
     const existing = nodesById[id] || {};
@@ -72,6 +74,8 @@ function buildCodex() {
         arc: frontmatter && frontmatter.arc,
         createdAt: frontmatter && frontmatter.createdAt,
         summary: frontmatter && frontmatter.summary,
+        publish: publish,
+        private: isPrivate,
       }),
     });
 
@@ -102,11 +106,30 @@ function buildCodex() {
 
   const nodes = Object.values(nodesById);
 
-  const graphData = { nodes, links };
+  // Filter nodes: only include nodes that are explicitly published and not private
+  const publishedNodes = nodes.filter((n) => (n.meta && n.meta.publish) === true && (n.meta && n.meta.private) !== true);
+
+  const publishedIds = new Set(publishedNodes.map((n) => n.id));
+
+  // Filter links so both ends exist in the published set
+  const publishedLinks = links.filter((l) => publishedIds.has(l.source) && publishedIds.has(l.target));
+
+  const graphData = { nodes: publishedNodes, links: publishedLinks };
 
   writeJson(OUTPUT_PATH, graphData);
 
-  console.log(`[buildCodex] Wrote ${nodes.length} nodes and ${links.length} links to ${OUTPUT_PATH}`);
+  // Logging summary
+  const totalFiles = files.length;
+  // Skipped files: those with a path and not in publishedIds
+  const skipped = nodes.filter((n) => n.path && !publishedIds.has(n.id));
+  const skippedCount = skipped.length;
+  const skippedPaths = skipped.slice(0, 25).map((s) => s.path).filter(Boolean);
+
+  console.log(`[buildCodex] Scanned ${totalFiles} files`);
+  console.log(`[buildCodex] Wrote ${publishedNodes.length} nodes and ${publishedLinks.length} links to ${OUTPUT_PATH}`);
+  console.log(`[buildCodex] Skipped ${skippedCount} files (private/unpublished). ${
+    skippedPaths.length ? "Examples: " + skippedPaths.join(", ") : "No skipped paths to show"
+  }`);
 }
 
 buildCodex();

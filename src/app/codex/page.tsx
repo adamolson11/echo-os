@@ -1,13 +1,221 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import ReactMarkdown from "react-markdown";
-import dynamic from "next/dynamic";
+import { useEffect, useMemo, useRef, useState } from "react";
+import CodexHUD from "./CodexHUD";
+import CodexGraph from "./CodexGraph";
+import CodexSidebar from "./CodexSidebar";
+import { seriesColorMap } from "../../config/codexColors";
 
-// react-force-graph uses window, so load it on client only
-const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
-  ssr: false,
-});
+type CodexNodeType = "chapter" | "character" | "symbol" | "event" | "theme" | "location" | "stub";
+
+type CodexNode = {
+  id: string;
+  label?: string;
+  type?: string;
+  series?: string;
+  path?: string;
+  tags?: string[];
+  weight?: number;
+  meta?: Record<string, any>;
+  x?: number;
+  y?: number;
+};
+
+type CodexLink = { source: string; target: string; type?: string; strength?: number };
+
+type CodexGraphData = { nodes: CodexNode[]; links: CodexLink[] } | null;
+
+export default function CodexPage() {
+  const [data, setData] = useState<CodexGraphData>(null);
+  const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
+  const [activeTypes, setActiveTypes] = useState<Record<string, boolean>>({
+    chapter: true,
+    character: true,
+    symbol: true,
+    event: true,
+    theme: true,
+    location: true,
+    stub: true,
+  });
+
+  const [activeSeries, setActiveSeries] = useState<Record<string, boolean>>({
+    "Wolves in the Echo House": true,
+    "The Devil's Palimpsest": true,
+    "The Devil's Codex": true,
+    "The Devil's Manuscript": true,
+    "Future Farm I": true,
+    "Future Farm II": true,
+    "Future Farm III": true,
+    __Unknown: true,
+  });
+
+  const [indexSearch, setIndexSearch] = useState("");
+  const [selectedNoteMarkdown, setSelectedNoteMarkdown] = useState<string | null>(null);
+  const [isLoadingNote, setIsLoadingNote] = useState(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
+
+  const fgRef = useRef<any>(null);
+
+  useEffect(() => {
+    fetch("/codex.json")
+      .then((r) => r.json())
+      .then((json) => setData(json))
+      .catch((err) => console.error("Failed to load codex.json", err));
+  }, []);
+
+  const nodeColor = (node: CodexNode | null) => {
+    if (!node) return seriesColorMap.Default;
+    if (node.series) return seriesColorMap[node.series] || seriesColorMap.Default;
+    switch (node.type) {
+      case "chapter":
+        return "#4fc3f7";
+      case "character":
+        return "#26c6da";
+      case "symbol":
+        return "#ffd54f";
+      case "event":
+        return "#f48fb1";
+      case "theme":
+        return "#ce93d8";
+      case "location":
+        return "#a5d6a7";
+      case "stub":
+        return "#9e9e9e";
+      default:
+        return seriesColorMap.Default;
+    }
+  };
+
+  const graphData = useMemo(() => {
+    if (!data) return null;
+    const allowedTypes = activeTypes;
+    const allowedSeries = activeSeries;
+
+    const nodes = data.nodes.filter((n) => {
+      const t = (n.type as string) || "chapter";
+      if (allowedTypes[t] === false) return false;
+      const seriesKey = n.series || "__Unknown";
+      if (allowedSeries[seriesKey] === false) return false;
+      return true;
+    });
+
+    const nodeIds = new Set(nodes.map((n) => n.id));
+    const links = data.links.filter((l) => nodeIds.has(l.source as string) && nodeIds.has(l.target as string));
+    return { nodes: nodes.map((n) => ({ ...n })), links: links.map((l) => ({ ...l })) };
+  }, [data, activeTypes, activeSeries]);
+
+  const seriesLegend = [
+    { id: "Wolves in the Echo House", label: "Wolves", color: seriesColorMap["Wolves in the Echo House"] },
+    { id: "The Devil's Palimpsest", label: "Palimpsest", color: seriesColorMap["The Devil's Palimpsest"] },
+    { id: "The Devil's Codex", label: "Codex", color: seriesColorMap["The Devil's Codex"] },
+    { id: "The Devil's Manuscript", label: "Manuscript", color: seriesColorMap["The Devil's Manuscript"] },
+    { id: "Future Farm I", label: "Future I", color: seriesColorMap["Future Farm I"] },
+    { id: "Future Farm II", label: "Future II", color: seriesColorMap["Future Farm II"] },
+    { id: "Future Farm III", label: "Future III", color: seriesColorMap["Future Farm III"] },
+  ];
+
+  const indexedNodes = useMemo(() => {
+    if (!graphData) return [] as CodexNode[];
+    const q = indexSearch.toLowerCase().trim();
+    return graphData.nodes
+      .slice()
+      .sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id))
+      .filter((n) => {
+        if (!q) return true;
+        const hay = `${n.label || n.id} ${n.series || ""} ${(n.type as string) || ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+  }, [graphData, indexSearch]);
+
+  async function loadFullNote(node: CodexNode | null) {
+    if (!node?.id) return;
+    setIsLoadingNote(true);
+    setNoteError(null);
+    try {
+      const res = await fetch(`/api/codex?id=${encodeURIComponent(node.id)}`);
+      if (!res.ok) throw new Error(`Request failed ${res.status}`);
+      const body = await res.json();
+      setSelectedNoteMarkdown(body.markdown || "");
+    } catch (err: any) {
+      setNoteError(err?.message || String(err));
+      setSelectedNoteMarkdown(null);
+    } finally {
+      setIsLoadingNote(false);
+    }
+  }
+
+  function handleSelectNode(node: CodexNode) {
+    setSelectedNode(node);
+    setHoverNode(node);
+    // center + zoom
+    if (fgRef.current && node.x != null && node.y != null) {
+      try {
+        fgRef.current.centerAt(node.x, node.y, 400);
+        fgRef.current.zoom(4, 400);
+      } catch (err) {}
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-[#05050a] text-gray-100 relative">
+      <CodexHUD
+        activeTypes={activeTypes}
+        setActiveTypes={setActiveTypes}
+        seriesLegend={seriesLegend}
+        activeSeries={activeSeries}
+        setActiveSeries={setActiveSeries}
+        fgRef={fgRef}
+        hoverNode={hoverNode}
+        nodeColor={nodeColor}
+      />
+
+      <div className="mt-20 px-4">
+        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,2.4fr)_260px]">
+          <div className="hidden lg:block">{/* left nav placeholder */}</div>
+
+          <div className="min-w-0">
+            <div className="h-[calc(100vh-6rem)] w-full">
+              <CodexGraph
+                ref={fgRef}
+                graphData={graphData}
+                hoverNode={hoverNode}
+                selectedNode={selectedNode}
+                onNodeHover={(n) => setHoverNode(n || null)}
+                onNodeClick={(n) => {
+                  setSelectedNode(n || null);
+                  setSelectedNoteMarkdown(null);
+                  setNoteError(null);
+                }}
+              />
+            </div>
+          </div>
+
+          <CodexSidebar
+            selectedNode={selectedNode}
+            onSelectNode={(n) => handleSelectNode(n)}
+            indexedNodes={indexedNodes}
+            indexSearch={indexSearch}
+            setIndexSearch={setIndexSearch}
+            loadFullNote={loadFullNote}
+            isLoadingNote={isLoadingNote}
+            noteError={noteError}
+            selectedNoteMarkdown={selectedNoteMarkdown}
+            nodeColor={nodeColor}
+            fgRef={fgRef}
+          />
+        </div>
+      </div>
+    </main>
+  );
+}
+"use client";
+
+import { useEffect, useState, useMemo, useRef } from "react";
+import CodexHUD from "./CodexHUD";
+import CodexSidebar from "./CodexSidebar";
+import CodexGraph from "./CodexGraph";
+import { seriesColorMap } from "../../config/codexColors";
 
 type CodexNodeType =
   | "chapter"
@@ -22,146 +230,125 @@ interface CodexNode {
   id: string;
   label: string;
   type: CodexNodeType | string;
-  series?: string;
-  slug?: string;
-  path?: string;
-  tags?: string[];
-  weight?: number;
-  meta?: Record<string, any>;
-}
+      </div>
 
-interface CodexLink {
-  source: string;
-  target: string;
-  type?: string;
-  strength?: number;
-}
+      {/* Page layout: left placeholder (nav), main graph, right sidebar */}
+      <div className="mt-20 px-4">
+        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,2.4fr)_260px]">
+          <div className="hidden lg:block">{/* left nav placeholder */}</div>
 
-interface CodexGraphData {
-  nodes: CodexNode[];
-  links: CodexLink[];
-}
+          <div className="min-w-0">
+            <div className="h-[calc(100vh-6rem)] w-full">{/* graph area */}
+              <CodexGraph
+                ref={fgRef}
+                graphData={graphData}
+                hoverNode={hoverNode}
+                selectedNode={selectedNode}
+                onNodeHover={(node: any) => setHoverNode(node || null)}
+                onNodeClick={(node: any) => {
+                  setSelectedNode(node || null);
+                  setSelectedNoteMarkdown(null);
+                  setNoteError(null);
+                }}
+              />
+            </div>
+          </div>
 
-export default function CodexPage() {
-  const [data, setData] = useState<CodexGraphData | null>(null);
-  const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
-  const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
-  const [activeTypes, setActiveTypes] = useState<Record<string, boolean>>({
-    chapter: true,
-    character: true,
-    symbol: true,
-    event: true,
-    theme: true,
-    location: true,
-    stub: true,
-  });
-  const [selectedNoteMarkdown, setSelectedNoteMarkdown] = useState<string | null>(null);
-  const [isLoadingNote, setIsLoadingNote] = useState(false);
-  const [noteError, setNoteError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/codex.json")
-      .then((res) => res.json())
-      .then((json: CodexGraphData) => setData(json))
-      .catch((err) => console.error("Failed to load codex.json", err));
-  }, []);
-
-  const nodeColor = (node: CodexNode): string => {
-    switch (node.type) {
-      case "chapter":
-        return "#4fc3f7"; // blue
-      case "character":
-        return "#26c6da"; // teal
-      case "symbol":
-        return "#ffd54f"; // gold
-      case "event":
-        return "#f48fb1"; // magenta
-      case "theme":
-        return "#ce93d8"; // purple
-      case "location":
-        return "#a5d6a7"; // green
-      case "stub":
-        return "#9e9e9e"; // gray for stubs
-      default:
-        return "#ffffff";
-    }
-  };
-
-  const graphData = useMemo(() => {
-    if (!data) return null;
-
-    const allowed = activeTypes;
-
+          <div>
+            {/* Sidebar will be mounted here as CodexSidebar */}
+            <div id="codex-sidebar-root" />
+          </div>
+        </div>
+      </div>
     const nodes = data.nodes.filter((n) => {
       const t = (n.type as string) || "chapter";
-      return allowed[t] !== false;
-    });
+      {/* HUD (extracted to CodexHUD) */}
+      <div>
+        {/* placeholder for HUD component mount */}
+      </div>
+                      : "border-white/10 bg-black/30 text-gray-500"
+                  }`}
+                >
+                  {type}
+                </button>
+              );
+            })}
+          </div>
 
-    const nodeIds = new Set(nodes.map((n) => n.id));
-
-    const links = data.links.filter((l) => nodeIds.has(l.source as string) && nodeIds.has(l.target as string));
-
-    return { nodes: nodes.map((n) => ({ ...n })), links: links.map((l) => ({ ...l })) };
-  }, [data, activeTypes]);
-
-  async function loadFullNote(node: CodexNode) {
-    if (!node?.id) return;
-    setIsLoadingNote(true);
-    setNoteError(null);
-
-    try {
-      const res = await fetch(`/api/codex?id=${encodeURIComponent(node.id)}`);
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.error || `Request failed with ${res.status}`);
-      }
-      const data = await res.json();
-      setSelectedNoteMarkdown(data.markdown || "");
-    } catch (err: any) {
-      console.error("Failed to load note", err);
-      setNoteError(err?.message ?? "Failed to load note");
-      setSelectedNoteMarkdown(null);
-    } finally {
-      setIsLoadingNote(false);
-    }
-  }
-
-  if (!graphData) {
-    return (
-      <main className="min-h-screen bg-[#05050a] text-gray-200 flex items-center justify-center">
-        <p className="text-sm tracking-wide text-gray-400">Loading Living Codex…</p>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-[#05050a] text-gray-100 relative">
-      {/* HUD */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-4 text-xs uppercase tracking-[0.24em] text-gray-400">
-        <span className="pointer-events-auto rounded-full border border-white/10 bg-black/60 px-3 py-1">
-          Echo OS / Living Codex
-        </span>
+          {/* Series legend / filters */}
+          <div className="pointer-events-auto mt-2 flex flex-wrap gap-2 text-[10px]">
+            {seriesLegend.map((item) => {
+              const isOn = activeSeries[item.id] ?? true;
+              return (
+                <button
+                  key={item.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveSeries((prev) => ({ ...prev, [item.id]: !isOn }));
+                  }}
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 transition ${
+                    isOn
+                      ? "border-white/40 bg-white/10 text-gray-100"
+                      : "border-white/10 bg-black/30 text-gray-500"
+                  }`}
+                >
+                  <span
+                    className="inline-block h-2 w-2 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <div className="pointer-events-auto flex gap-2 text-[10px]">
-          {["chapter", "character", "theme", "location", "event", "symbol", "stub"].map((type) => {
-            const isOn = activeTypes[type] ?? true;
-            return (
-              <button
-                key={type}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTypes((prev) => ({ ...prev, [type]: !isOn }));
-                }}
-                className={`rounded-full border px-2 py-1 capitalize ${
-                  isOn
-                    ? "border-white/40 bg-white/10 text-gray-100"
-                    : "border-white/10 bg-black/30 text-gray-500"
-                }`}
-              >
-                {type}
-              </button>
-            );
-          })}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!fgRef.current) return;
+              try {
+                const current = fgRef.current.zoom();
+                fgRef.current.zoom(current * 1.2, 200);
+              } catch (err) {
+                // some versions expose camera methods differently; ignore silently
+              }
+            }}
+            className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
+            title="Zoom in"
+          >
+            +
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!fgRef.current) return;
+              try {
+                const current = fgRef.current.zoom();
+                fgRef.current.zoom(current / 1.2, 200);
+              } catch (err) {}
+            }}
+            className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
+            title="Zoom out"
+          >
+            −
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!fgRef.current) return;
+              try {
+                fgRef.current.zoomToFit(400, 40);
+              } catch (err) {}
+            }}
+            className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
+            title="Reset zoom / fit"
+          >
+            Reset
+          </button>
         </div>
 
         {hoverNode && (
@@ -189,7 +376,7 @@ export default function CodexPage() {
       </div>
 
       {/* Right-side details panel */}
-      <aside className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-80 flex-col border-l border-white/10 bg-black/70 backdrop-blur">
+      <aside className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-64 flex-col border-l border-white/10 bg-black/70 backdrop-blur">
         <div className="pointer-events-auto flex-1 overflow-y-auto px-4 py-4 text-xs">
           <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-500">
             Node Details
@@ -254,105 +441,66 @@ export default function CodexPage() {
           ) : (
             <p className="text-[11px] text-gray-500">Click a node in the graph to see its details here.</p>
           )}
+
+          {/* Node Index */}
+          <div className="mt-6 border-t border-white/10 pt-3">
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-500">
+              Index
+            </div>
+
+            <input
+              value={indexSearch}
+              onChange={(e) => setIndexSearch(e.target.value)}
+              placeholder="Search nodes…"
+              className="mb-2 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1 text-[11px] text-gray-100 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-300"
+            />
+
+            <div className="max-h-48 space-y-1 overflow-y-auto text-[11px]">
+              {indexedNodes.map((node) => (
+                <button
+                  key={node.id}
+                  onClick={() => {
+                    setSelectedNode(node as any);
+                    setHoverNode(node as any);
+                    if (fgRef.current && (node as any).x != null && (node as any).y != null) {
+                      const { x, y } = node as any;
+                      try {
+                        fgRef.current.centerAt(x, y, 400);
+                        fgRef.current.zoom(4, 400);
+                      } catch (err) {}
+                    }
+                  }}
+                  className="flex w-full items-center justify-between rounded-md px-2 py-1 text-left transition hover:bg-white/5"
+                >
+                  <span className="truncate">{node.label || node.id}</span>
+                  {node.series && (
+                    <span
+                      className="ml-2 inline-block h-2 w-2 flex-shrink-0 rounded-full"
+                      style={{
+                        backgroundColor: seriesColorMap[node.series] || seriesColorMap.Default,
+                      }}
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
       </aside>
 
       {/* Graph */}
-      <div className="h-screen w-full pr-80"> {/* leave room for sidebar */}
-          <ForceGraph2D
+      <div className="h-screen w-full pr-64"> {/* leave room for sidebar */}
+        <CodexGraph
+          ref={fgRef}
           graphData={graphData}
-          backgroundColor="#05050a"
-          cooldownTime={3000}
-          linkDistance={40}
-          nodeRelSize={4}
-          linkWidth={() => 0.4}
-          linkColor={() => "rgba(255,255,255,0.08)"}
+          hoverNode={hoverNode}
+          selectedNode={selectedNode}
           onNodeHover={(node: any) => setHoverNode(node || null)}
           onNodeClick={(node: any) => {
             setSelectedNode(node || null);
             setSelectedNoteMarkdown(null);
             setNoteError(null);
-          }}
-          nodeCanvasObjectMode={() => "before"}
-          nodeCanvasObject={(
-            node: any,
-            ctx: CanvasRenderingContext2D,
-            globalScale: number
-          ) => {
-            const typedNode = node as CodexNode & { x?: number; y?: number };
-
-            const isHovered = hoverNode && hoverNode.id === typedNode.id;
-            const isSelected = selectedNode && selectedNode.id === typedNode.id;
-
-            const isNeighbor =
-              hoverNode &&
-              graphData.links.some(
-                (l: any) =>
-                  (l.source.id === hoverNode.id && l.target.id === typedNode.id) ||
-                  (l.target.id === hoverNode.id && l.source.id === typedNode.id)
-              );
-
-            let alpha = 0.35;
-            if (hoverNode || selectedNode) {
-              if (isHovered || isSelected) alpha = 1;
-              else if (isNeighbor) alpha = 0.8;
-              else alpha = 0.07;
-            }
-
-            const radiusBase = 2.5;
-            const weight = typedNode.weight ?? 1;
-            const radius =
-              radiusBase *
-              weight *
-              (isHovered || isSelected ? 1.8 : isNeighbor ? 1.3 : 1);
-
-            const color = nodeColor(typedNode);
-
-            if (typedNode.x == null || typedNode.y == null) return;
-
-            // Glow halo
-            const gradientRadius = radius * 4;
-            const gradient = ctx.createRadialGradient(
-              typedNode.x,
-              typedNode.y,
-              radius,
-              typedNode.x,
-              typedNode.y,
-              gradientRadius
-            );
-            gradient.addColorStop(0, `${color}aa`);
-            gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-            ctx.save();
-            ctx.globalAlpha = alpha * 0.7;
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(typedNode.x, typedNode.y, gradientRadius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
-
-            // Core node
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(typedNode.x, typedNode.y, radius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
-
-            // Tiny labels when zoomed in
-            const label = typedNode.label || typedNode.id;
-            const fontSize = 10 / globalScale;
-            if (globalScale > 3) {
-              ctx.save();
-              ctx.globalAlpha = alpha;
-              ctx.font = `${fontSize}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
-              ctx.textAlign = "left";
-              ctx.textBaseline = "middle";
-              ctx.fillStyle = "rgba(255,255,255,0.8)";
-              ctx.fillText(label, typedNode.x + radius + 2, typedNode.y);
-              ctx.restore();
-            }
           }}
         />
       </div>
