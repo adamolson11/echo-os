@@ -1,55 +1,227 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import CodexHUD from "./CodexHUD";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ForceGraphMethods } from "react-force-graph-2d";
+
 import CodexGraph from "./CodexGraph";
+import CodexHUD from "./CodexHUD";
 import CodexSidebar from "./CodexSidebar";
-import { seriesColorMap } from "../../config/codexColors";
+import { seriesColorMap } from "@/config/codexColors";
 
-type CodexNodeType = "chapter" | "character" | "symbol" | "event" | "theme" | "location" | "stub";
+type CodexNodeType =
+  | "chapter"
+  | "character"
+  | "theme"
+  | "location"
+  | "event"
+  | "symbol"
+  | "stub";
 
-type CodexNode = {
+export type CodexNode = {
   id: string;
-  label?: string;
-  type?: string;
+  label: string;
+  type: CodexNodeType | string;
   series?: string;
-  path?: string;
-  tags?: string[];
-  weight?: number;
   meta?: Record<string, any>;
+  // Force-graph runtime props (added at runtime, so optional)
   x?: number;
   y?: number;
 };
 
-type CodexLink = { source: string; target: string; type?: string; strength?: number };
+export type CodexLink = {
+  source: string | CodexNode;
+  target: string | CodexNode;
+};
 
-type CodexGraphData = { nodes: CodexNode[]; links: CodexLink[] } | null;
+type CodexGraphData = {
+  nodes: CodexNode[];
+  links: CodexLink[];
+};
+
+type CodexIndexedNode = {
+  id: string;
+  label: string;
+  type: CodexNodeType | string;
+};
+
+const emptyGraph: CodexGraphData = { nodes: [], links: [] };
 
 export default function CodexPage() {
-  const [data, setData] = useState<CodexGraphData>(null);
+  const [graphData, setGraphData] = useState<CodexGraphData>(emptyGraph);
   const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
-  const fgRef = useRef<any>(null);
 
+  const [activeTypes, setActiveTypes] = useState<Set<string>>(
+    () =>
+      new Set<string>([
+        "chapter",
+        "character",
+        "theme",
+        "location",
+        "event",
+        "symbol",
+        "stub",
+      ])
+  );
+
+  const [activeSeries, setActiveSeries] = useState<Set<string>>(
+    () => new Set<string>() // empty = show all
+  );
+
+  const [indexSearch, setIndexSearch] = useState("");
+
+  // Ref to the underlying ForceGraph instance (used for zoom/center)
+  const fgRef = useRef<ForceGraphMethods | undefined>();
+
+  // Load codex.json from /public
   useEffect(() => {
-    fetch("/codex.json").then((r) => r.json()).then(setData).catch(() => {});
+    async function loadCodex() {
+      try {
+        const res = await fetch("/codex.json");
+        if (!res.ok) {
+          console.error("Failed to fetch codex.json:", res.status);
+          return;
+        }
+        const json = (await res.json()) as CodexGraphData;
+        setGraphData(json);
+      } catch (err) {
+        console.error("Error loading codex.json", err);
+      }
+    }
+
+    loadCodex();
   }, []);
 
-  const graphData = useMemo(() => data, [data]);
+  // Apply type + series filters to graph data
+  const filteredGraphData = useMemo(() => {
+    if (!graphData?.nodes?.length) return emptyGraph;
+
+    const typeSet = activeTypes;
+    const seriesSet = activeSeries;
+
+    const nodes = graphData.nodes.filter((node) => {
+      const typeKey = String(node.type);
+      const seriesKey = node.series;
+
+      const typeOk = typeSet.size === 0 || typeSet.has(typeKey);
+      const seriesOk =
+        seriesSet.size === 0 || !seriesKey || seriesSet.has(seriesKey);
+
+      return typeOk && seriesOk;
+    });
+
+    const nodeIds = new Set(nodes.map((n) => n.id));
+
+    const links = graphData.links.filter((link) => {
+      const srcId =
+        typeof link.source === "string" ? link.source : link.source.id;
+      const tgtId =
+        typeof link.target === "string" ? link.target : link.target.id;
+      return nodeIds.has(srcId) && nodeIds.has(tgtId);
+    });
+
+    return { nodes, links };
+  }, [graphData, activeTypes, activeSeries]);
+
+  // Build index list
+  const indexedNodes: CodexIndexedNode[] = useMemo(() => {
+    if (!graphData?.nodes) return [];
+    return graphData.nodes
+      .map((n) => ({
+        id: n.id,
+        label: n.label || n.id,
+        type: n.type,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [graphData]);
+
+  const filteredIndex = useMemo(() => {
+    const q = indexSearch.trim().toLowerCase();
+    if (!q) return indexedNodes;
+    return indexedNodes.filter((n) =>
+      n.label.toLowerCase().includes(q)
+    );
+  }, [indexedNodes, indexSearch]);
+
+  // When a node is clicked (graph or index)
+  const focusNode = (node: CodexNode) => {
+    setSelectedNode(node);
+    const api = fgRef.current;
+    if (!api) return;
+
+    const { x, y } = node;
+    if (typeof x === "number" && typeof y === "number") {
+      api.centerAt(x, y, 300);
+      api.zoom(3, 300);
+    }
+  };
+
+  const handleGraphNodeClick = (node: CodexNode) => {
+    if (!node) return;
+    focusNode(node);
+  };
+
+  const handleIndexSelect = (id: string) => {
+    const node = graphData.nodes.find((n) => n.id === id);
+    if (node) focusNode(node);
+  };
 
   return (
-    <main className="min-h-screen bg-[#05050a] text-gray-100 relative">
-      <div className="mt-20 px-4">
-        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,2.4fr)_260px]">
-          <div className="hidden lg:block">{/* left nav placeholder */}</div>
-          <div className="min-w-0">
-            <div className="h-[calc(100vh-6rem)] w-full">
-              <CodexGraph ref={fgRef} graphData={graphData} hoverNode={hoverNode} selectedNode={selectedNode} onNodeHover={(n)=>setHoverNode(n||null)} onNodeClick={()=>{}} />
-            </div>
+    <div className="mt-20 px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl lg:grid lg:grid-cols-[220px_minmax(0,2.4fr)_260px] lg:gap-8">
+        {/* Left column: simple nav / explainer */}
+        <div className="mb-8 lg:mb-0">
+          <h1 className="text-xs font-semibold tracking-[0.25em] text-slate-400">
+            ECHO OS
+          </h1>
+          <p className="mt-3 text-sm text-slate-300">
+            Living Codex — a graph of chapters, characters, themes, and devices
+            across the Wolves, Devil&apos;s Trilogy, and Future Farm universes.
+          </p>
+          <p className="mt-4 text-xs text-slate-500">
+            Use the filters above the graph to toggle types and series. Hover
+            nodes to see connections; click to inspect details.
+          </p>
+        </div>
+
+        {/* Middle column: HUD + Graph */}
+        <div className="mb-8 lg:mb-0">
+          <CodexHUD
+            activeTypes={activeTypes}
+            setActiveTypes={setActiveTypes}
+            activeSeries={activeSeries}
+            setActiveSeries={setActiveSeries}
+            seriesColorMap={seriesColorMap}
+          />
+
+          <div className="mt-6 h-[520px] rounded-2xl border border-slate-800 bg-slate-950/60">
+            <CodexGraph
+              ref={fgRef as any}
+              graphData={filteredGraphData}
+              hoverNode={hoverNode}
+              selectedNode={selectedNode}
+              onNodeHover={setHoverNode}
+              onNodeClick={handleGraphNodeClick}
+            />
           </div>
-          <CodexSidebar selectedNode={selectedNode} onSelectNode={()=>{}} indexedNodes={[]} indexSearch="" setIndexSearch={()=>{}} loadFullNote={()=>{}} isLoadingNote={false} noteError={null} selectedNoteMarkdown={null} nodeColor={()=>seriesColorMap.Default} fgRef={fgRef} />
+        </div>
+
+        {/* Right column: Node details + Index */}
+        <div className="space-y-4">
+          <CodexSidebar
+            selectedNode={selectedNode}
+            indexedNodes={filteredIndex}
+            indexSearch={indexSearch}
+            setIndexSearch={setIndexSearch}
+            onSelectNode={handleIndexSelect}
+          />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
