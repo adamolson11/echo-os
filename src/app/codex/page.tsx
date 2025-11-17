@@ -148,6 +148,427 @@ export default function CodexPage() {
   function handleSelectNode(node: CodexNode) {
     setSelectedNode(node);
     setHoverNode(node);
+    if (fgRef.current && node.x != null && node.y != null) {
+      try {
+        fgRef.current.centerAt(node.x, node.y, 400);
+        fgRef.current.zoom(4, 400);
+      } catch (err) {}
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-[#05050a] text-gray-100 relative">
+      <CodexHUD
+        activeTypes={activeTypes}
+        setActiveTypes={setActiveTypes}
+        seriesLegend={seriesLegend}
+        activeSeries={activeSeries}
+        setActiveSeries={setActiveSeries}
+        fgRef={fgRef}
+        hoverNode={hoverNode}
+        nodeColor={nodeColor}
+      />
+
+      <div className="mt-20 px-4">
+        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,2.4fr)_260px]">
+          <div className="hidden lg:block">{/* left nav placeholder */}</div>
+
+          <div className="min-w-0">
+            <div className="h-[calc(100vh-6rem)] w-full">
+              <CodexGraph
+                ref={fgRef}
+                graphData={graphData}
+                hoverNode={hoverNode}
+                selectedNode={selectedNode}
+                onNodeHover={(n) => setHoverNode(n || null)}
+                onNodeClick={(n) => {
+                  setSelectedNode(n || null);
+                  setSelectedNoteMarkdown(null);
+                  setNoteError(null);
+                }}
+              />
+            </div>
+          </div>
+
+          <CodexSidebar
+            selectedNode={selectedNode}
+            onSelectNode={(n) => handleSelectNode(n)}
+            indexedNodes={indexedNodes}
+            indexSearch={indexSearch}
+            setIndexSearch={setIndexSearch}
+            loadFullNote={loadFullNote}
+            isLoadingNote={isLoadingNote}
+            noteError={noteError}
+            selectedNoteMarkdown={selectedNoteMarkdown}
+            nodeColor={nodeColor}
+            fgRef={fgRef}
+          />
+        </div>
+      </div>
+    </main>
+  );
+}
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import CodexHUD from "./CodexHUD";
+import CodexGraph from "./CodexGraph";
+import CodexSidebar from "./CodexSidebar";
+import { seriesColorMap } from "../../config/codexColors";
+
+type CodexNodeType = "chapter" | "character" | "symbol" | "event" | "theme" | "location" | "stub";
+
+type CodexNode = {
+  id: string;
+  label?: string;
+  type?: string;
+  series?: string;
+  path?: string;
+  tags?: string[];
+  weight?: number;
+  meta?: Record<string, any>;
+  x?: number;
+  y?: number;
+};
+
+type CodexLink = { source: string; target: string; type?: string; strength?: number };
+
+type CodexGraphData = { nodes: CodexNode[]; links: CodexLink[] } | null;
+
+export default function CodexPage() {
+  const [data, setData] = useState<CodexGraphData>(null);
+  const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
+  const [activeTypes, setActiveTypes] = useState<Record<string, boolean>>({
+    chapter: true,
+    character: true,
+    symbol: true,
+    event: true,
+    theme: true,
+    location: true,
+    stub: true,
+  });
+
+  const [activeSeries, setActiveSeries] = useState<Record<string, boolean>>({
+    "Wolves in the Echo House": true,
+    "The Devil's Palimpsest": true,
+    "The Devil's Codex": true,
+    "The Devil's Manuscript": true,
+    "Future Farm I": true,
+    "Future Farm II": true,
+    "Future Farm III": true,
+    __Unknown: true,
+  });
+
+  const [indexSearch, setIndexSearch] = useState("");
+  const [selectedNoteMarkdown, setSelectedNoteMarkdown] = useState<string | null>(null);
+  const [isLoadingNote, setIsLoadingNote] = useState(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
+
+  const fgRef = useRef<any>(null);
+
+  useEffect(() => {
+    fetch("/codex.json")
+      .then((r) => r.json())
+      .then((json) => setData(json))
+      .catch((err) => console.error("Failed to load codex.json", err));
+  }, []);
+
+  const nodeColor = (node: CodexNode | null) => {
+    if (!node) return seriesColorMap.Default;
+    if (node.series) return seriesColorMap[node.series] || seriesColorMap.Default;
+    switch (node.type) {
+      case "chapter":
+        return "#4fc3f7";
+      case "character":
+        return "#26c6da";
+      case "symbol":
+        return "#ffd54f";
+      case "event":
+        return "#f48fb1";
+      case "theme":
+        return "#ce93d8";
+      case "location":
+        return "#a5d6a7";
+      case "stub":
+        return "#9e9e9e";
+      default:
+        return seriesColorMap.Default;
+    }
+  };
+
+  const graphData = useMemo(() => {
+    if (!data) return null;
+    const allowedTypes = activeTypes;
+    const allowedSeries = activeSeries;
+
+    const nodes = data.nodes.filter((n) => {
+      const t = (n.type as string) || "chapter";
+      if (allowedTypes[t] === false) return false;
+      const seriesKey = n.series || "__Unknown";
+      if (allowedSeries[seriesKey] === false) return false;
+      return true;
+    });
+
+    const nodeIds = new Set(nodes.map((n) => n.id));
+    const links = data.links.filter((l) => nodeIds.has(l.source as string) && nodeIds.has(l.target as string));
+    return { nodes: nodes.map((n) => ({ ...n })), links: links.map((l) => ({ ...l })) };
+  }, [data, activeTypes, activeSeries]);
+
+  const seriesLegend = [
+    { id: "Wolves in the Echo House", label: "Wolves", color: seriesColorMap["Wolves in the Echo House"] },
+    { id: "The Devil's Palimpsest", label: "Palimpsest", color: seriesColorMap["The Devil's Palimpsest"] },
+    { id: "The Devil's Codex", label: "Codex", color: seriesColorMap["The Devil's Codex"] },
+    { id: "The Devil's Manuscript", label: "Manuscript", color: seriesColorMap["The Devil's Manuscript"] },
+    { id: "Future Farm I", label: "Future I", color: seriesColorMap["Future Farm I"] },
+    { id: "Future Farm II", label: "Future II", color: seriesColorMap["Future Farm II"] },
+    { id: "Future Farm III", label: "Future III", color: seriesColorMap["Future Farm III"] },
+  ];
+
+  const indexedNodes = useMemo(() => {
+    if (!graphData) return [] as CodexNode[];
+    const q = indexSearch.toLowerCase().trim();
+    return graphData.nodes
+      .slice()
+      .sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id))
+      .filter((n) => {
+        if (!q) return true;
+        const hay = `${n.label || n.id} ${n.series || ""} ${(n.type as string) || ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+  }, [graphData, indexSearch]);
+
+  async function loadFullNote(node: CodexNode | null) {
+    if (!node?.id) return;
+    setIsLoadingNote(true);
+    setNoteError(null);
+    try {
+      const res = await fetch(`/api/codex?id=${encodeURIComponent(node.id)}`);
+      if (!res.ok) throw new Error(`Request failed ${res.status}`);
+      const body = await res.json();
+      setSelectedNoteMarkdown(body.markdown || "");
+    } catch (err: any) {
+      setNoteError(err?.message || String(err));
+      setSelectedNoteMarkdown(null);
+    } finally {
+      setIsLoadingNote(false);
+    }
+  }
+
+  function handleSelectNode(node: CodexNode) {
+    setSelectedNode(node);
+    setHoverNode(node);
+    // center + zoom
+    if (fgRef.current && node.x != null && node.y != null) {
+      try {
+        fgRef.current.centerAt(node.x, node.y, 400);
+        fgRef.current.zoom(4, 400);
+      } catch (err) {}
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-[#05050a] text-gray-100 relative">
+      <CodexHUD
+        activeTypes={activeTypes}
+        setActiveTypes={setActiveTypes}
+        seriesLegend={seriesLegend}
+        activeSeries={activeSeries}
+        setActiveSeries={setActiveSeries}
+        fgRef={fgRef}
+        hoverNode={hoverNode}
+        nodeColor={nodeColor}
+      />
+
+      <div className="mt-20 px-4">
+        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,2.4fr)_260px]">
+          <div className="hidden lg:block">{/* left nav placeholder */}</div>
+
+          <div className="min-w-0">
+            <div className="h-[calc(100vh-6rem)] w-full">
+              <CodexGraph
+                ref={fgRef}
+                graphData={graphData}
+                hoverNode={hoverNode}
+                selectedNode={selectedNode}
+                onNodeHover={(n) => setHoverNode(n || null)}
+                onNodeClick={(n) => {
+                  setSelectedNode(n || null);
+                  setSelectedNoteMarkdown(null);
+                  setNoteError(null);
+                }}
+              />
+            </div>
+          </div>
+
+          <CodexSidebar
+            selectedNode={selectedNode}
+            onSelectNode={(n) => handleSelectNode(n)}
+            indexedNodes={indexedNodes}
+            indexSearch={indexSearch}
+            setIndexSearch={setIndexSearch}
+            loadFullNote={loadFullNote}
+            isLoadingNote={isLoadingNote}
+            noteError={noteError}
+            selectedNoteMarkdown={selectedNoteMarkdown}
+            nodeColor={nodeColor}
+            fgRef={fgRef}
+          />
+        </div>
+      </div>
+    </main>
+  );
+}
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import CodexHUD from "./CodexHUD";
+import CodexGraph from "./CodexGraph";
+import CodexSidebar from "./CodexSidebar";
+import { seriesColorMap } from "../../config/codexColors";
+
+type CodexNodeType = "chapter" | "character" | "symbol" | "event" | "theme" | "location" | "stub";
+
+type CodexNode = {
+  id: string;
+  label?: string;
+  type?: string;
+  series?: string;
+  path?: string;
+  tags?: string[];
+  weight?: number;
+  meta?: Record<string, any>;
+  x?: number;
+  y?: number;
+};
+
+type CodexLink = { source: string; target: string; type?: string; strength?: number };
+
+type CodexGraphData = { nodes: CodexNode[]; links: CodexLink[] } | null;
+
+export default function CodexPage() {
+  const [data, setData] = useState<CodexGraphData>(null);
+  const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
+  const [activeTypes, setActiveTypes] = useState<Record<string, boolean>>({
+    chapter: true,
+    character: true,
+    symbol: true,
+    event: true,
+    theme: true,
+    location: true,
+    stub: true,
+  });
+
+  const [activeSeries, setActiveSeries] = useState<Record<string, boolean>>({
+    "Wolves in the Echo House": true,
+    "The Devil's Palimpsest": true,
+    "The Devil's Codex": true,
+    "The Devil's Manuscript": true,
+    "Future Farm I": true,
+    "Future Farm II": true,
+    "Future Farm III": true,
+    __Unknown: true,
+  });
+
+  const [indexSearch, setIndexSearch] = useState("");
+  const [selectedNoteMarkdown, setSelectedNoteMarkdown] = useState<string | null>(null);
+  const [isLoadingNote, setIsLoadingNote] = useState(false);
+  const [noteError, setNoteError] = useState<string | null>(null);
+
+  const fgRef = useRef<any>(null);
+
+  useEffect(() => {
+    fetch("/codex.json")
+      .then((r) => r.json())
+      .then((json) => setData(json))
+      .catch((err) => console.error("Failed to load codex.json", err));
+  }, []);
+
+  const nodeColor = (node: CodexNode | null) => {
+    if (!node) return seriesColorMap.Default;
+    if (node.series) return seriesColorMap[node.series] || seriesColorMap.Default;
+    switch (node.type) {
+      case "chapter":
+        return "#4fc3f7";
+      case "character":
+        return "#26c6da";
+      case "symbol":
+        return "#ffd54f";
+      case "event":
+        return "#f48fb1";
+      case "theme":
+        return "#ce93d8";
+      case "location":
+        return "#a5d6a7";
+      case "stub":
+        return "#9e9e9e";
+      default:
+        return seriesColorMap.Default;
+    }
+  };
+
+  const graphData = useMemo(() => {
+    if (!data) return null;
+    const allowedTypes = activeTypes;
+    const allowedSeries = activeSeries;
+
+    const nodes = data.nodes.filter((n) => {
+      const t = (n.type as string) || "chapter";
+      if (allowedTypes[t] === false) return false;
+      const seriesKey = n.series || "__Unknown";
+      if (allowedSeries[seriesKey] === false) return false;
+      return true;
+    });
+
+    const nodeIds = new Set(nodes.map((n) => n.id));
+    const links = data.links.filter((l) => nodeIds.has(l.source as string) && nodeIds.has(l.target as string));
+    return { nodes: nodes.map((n) => ({ ...n })), links: links.map((l) => ({ ...l })) };
+  }, [data, activeTypes, activeSeries]);
+
+  const seriesLegend = [
+    { id: "Wolves in the Echo House", label: "Wolves", color: seriesColorMap["Wolves in the Echo House"] },
+    { id: "The Devil's Palimpsest", label: "Palimpsest", color: seriesColorMap["The Devil's Palimpsest"] },
+    { id: "The Devil's Codex", label: "Codex", color: seriesColorMap["The Devil's Codex"] },
+    { id: "The Devil's Manuscript", label: "Manuscript", color: seriesColorMap["The Devil's Manuscript"] },
+    { id: "Future Farm I", label: "Future I", color: seriesColorMap["Future Farm I"] },
+    { id: "Future Farm II", label: "Future II", color: seriesColorMap["Future Farm II"] },
+    { id: "Future Farm III", label: "Future III", color: seriesColorMap["Future Farm III"] },
+  ];
+
+  const indexedNodes = useMemo(() => {
+    if (!graphData) return [] as CodexNode[];
+    const q = indexSearch.toLowerCase().trim();
+    return graphData.nodes
+      .slice()
+      .sort((a, b) => (a.label || a.id).localeCompare(b.label || b.id))
+      .filter((n) => {
+        if (!q) return true;
+        const hay = `${n.label || n.id} ${n.series || ""} ${(n.type as string) || ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+  }, [graphData, indexSearch]);
+
+  async function loadFullNote(node: CodexNode | null) {
+    if (!node?.id) return;
+    setIsLoadingNote(true);
+    setNoteError(null);
+    try {
+      const res = await fetch(`/api/codex?id=${encodeURIComponent(node.id)}`);
+      if (!res.ok) throw new Error(`Request failed ${res.status}`);
+      const body = await res.json();
+      setSelectedNoteMarkdown(body.markdown || "");
+    } catch (err: any) {
+      setNoteError(err?.message || String(err));
+      setSelectedNoteMarkdown(null);
+    } finally {
+      setIsLoadingNote(false);
+    }
+  }
+
+  function handleSelectNode(node: CodexNode) {
+    setSelectedNode(node);
+    setHoverNode(node);
     // center + zoom
     if (fgRef.current && node.x != null && node.y != null) {
       try {
