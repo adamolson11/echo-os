@@ -48,3 +48,37 @@ Reporting protocol:
 - Yellow replies with either "Phase X OK" or "Phase X issues: ...".
 
 Director will be pulled in only when Green+Yellow agree "MVP ready".
+
+## Phase 1 - Audit Notes
+
+**How many doors are currently rendered?**
+- Four doors are rendered: Story Room, Living Codex, Lab, Archive.
+
+**What props does each door receive?**
+- `key` (string) — unique id used as React key.
+- `label` (string) — primary door label shown as bold text.
+- `eyebrow` (string) — small uppercase category text above the label.
+- `href` (string) — link destination (e.g. `/story`, `/codex`).
+- `image` (string) — image path used as background (falls back to `/images/portal-doors.jpg` in `DoorCard`).
+- `tagline` (string) — short descriptive line under the label.
+
+**Current layout grid classes**
+- Container uses `grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-4 md:px-0`.
+- Each card uses responsive aspect ratio `aspect-[9/16] sm:aspect-[2/3]` and `w-full` so cards fill their grid cell.
+
+**Obvious accessibility gaps**
+- `DoorCard` currently sets `aria-hidden` on the background image container (good for screen readers), but the Link does not include an explicit `aria-label` (the `href` is present). Consider adding `aria-label` to the Link with a short accessible name (e.g. `"Enter Story Room"`).
+- Background images are decorative but should have an accessible alternative where appropriate; adding `aria-label` or screen-reader-only text describing the door destination is recommended.
+- Keyboard focus styles exist in some forms (cards rely on `:focus` via Link) but explicit `focus-visible` utility classes would improve clarity.
+- Contrast: overlay is present (`bg-black/44`) but some combinations of placeholder art + overlay may reduce readability — test with Yellow for contrast problems.
+
+**Files inspected**
+- `src/components/gateway/DoorHallway.tsx` — centralized `DOORS` array and grid mapping
+- `src/components/gateway/DoorCard.tsx` — card component; background set via inline CSS `backgroundImage`, overlay, frame, knob, labels.
+
+**Quick notes / TODOs for Phase 2**
+- Add `aria-label` to the Link in `DoorCard`.
+- Ensure `next/image` usage is considered for better performance (but keep a fallback if image files missing).
+- Tune overlay opacity for legibility across placeholder images.
+
+Phase 1 audit complete.
