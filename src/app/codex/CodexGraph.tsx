@@ -20,6 +20,7 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     const internalRef = useRef<ForceGraphMethods | null>(null);
     useImperativeHandle(ref, () => internalRef.current as any, [internalRef]);
     const [localHover, setLocalHover] = useState<any | null>(null);
+    const hoverThrottleRef = useRef<number>(0);
     
     // activeHover: prefer local hover (from canvas events), fall back to prop
     const activeHover = localHover || hoverNode;
@@ -107,8 +108,13 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
           // store hovered node upstream and locally for more reliable rendering
           onNodeHover={(n, prev) => {
-            setLocalHover(n || null);
-            onNodeHover?.(n || null, prev || null as any);
+            // throttle hover updates to ~30fps to avoid excessive re-renders/paint
+            const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+            if (now - (hoverThrottleRef.current || 0) > 33) {
+              hoverThrottleRef.current = now as number;
+              setLocalHover(n || null);
+              onNodeHover?.(n || null, prev || null as any);
+            }
           }}
           onNodeClick={(n) => onNodeClick?.(n)}
 
@@ -151,13 +157,14 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
               // subtle time-based wobble to make hovered nodes 'dance'
               const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-              const freq = 0.0045; // speed of wobble
+              const freq = 0.003; // reduced wobble speed for lower CPU
               const idStr = String(node.id ?? '0');
               let idHash = 0;
               for (let i = 0; i < idStr.length; i++) idHash = (idHash * 31 + idStr.charCodeAt(i)) >>> 0;
               const phase = idHash % 1000;
+              // reduce amplitude by ~40% to lower motion and paint cost
               const ampBase = isHovered ? 2.0 : isNeighbor ? 0.9 : 0;
-              const amp = ampBase * Math.min(1, globalScale);
+              const amp = ampBase * 0.6 * Math.min(1, globalScale);
               const dx = Math.sin(now * freq + phase) * amp;
               const dy = Math.cos(now * freq + phase) * amp * 0.8;
 
@@ -192,8 +199,9 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.textAlign = "center";
               ctx.textBaseline = "middle";
 
-              ctx.shadowColor = "rgba(0,0,0,0.5)";
-              ctx.shadowBlur = isHovered ? 4 : 1;
+                // minimize shadow blur unless hovered and zoomed-in (expensive on some browsers)
+                ctx.shadowColor = "rgba(0,0,0,0.5)";
+                ctx.shadowBlur = isHovered && globalScale > 0.9 ? 4 : 0;
               ctx.fillText(label, node.x! + dx, node.y! + dy);
               ctx.shadowBlur = 0;
           }}
