@@ -3,6 +3,7 @@
 import React, { forwardRef, useEffect, useRef, useImperativeHandle, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { ForceGraphMethods } from "react-force-graph-2d";
+import { forceCollide } from 'd3-force';
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
@@ -48,19 +49,53 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
       const nodeCount = (graphData?.nodes?.length as number) || 1;
       const baseDistance = 80;
-      const scaledDistance = Math.min(260, baseDistance + Math.sqrt(nodeCount) * 8);
+      // increase link distance by ~20% for extra breathing room
+      const scaledDistance = Math.min(420, (baseDistance + Math.sqrt(nodeCount) * 8) * 1.2);
+
+      // stronger negative charge scaled by node count, clamped [-400, -200]
+      const computedCharge = -Math.min(400, Math.max(200, 80 + Math.round(nodeCount * 2)));
+
+      // collide radius scaled by sqrt(nodeCount), clamped
+      const collideRadius = Math.min(40, Math.max(6, Math.sqrt(nodeCount) * 3));
 
       try {
-        fg.d3Force && fg.d3Force("charge")?.strength(-80);
+        fg.d3Force && fg.d3Force("charge")?.strength(computedCharge);
         fg.d3Force && fg.d3Force("link")?.distance(scaledDistance);
+        // add a collide force to prevent hard overlap (helps initial packing)
+        try {
+          fg.d3Force && fg.d3Force("collide") && fg.d3Force("collide", forceCollide(collideRadius));
+        } catch (err) {
+          // some versions of react-force-graph expose d3Force differently; ignore if unavailable
+        }
+
         fg.d3AlphaDecay && fg.d3AlphaDecay(0.035);
-        fg.d3VelocityDecay && fg.d3VelocityDecay(0.5);
+        fg.d3VelocityDecay && fg.d3VelocityDecay(0.56);
         fg.d3ReheatSimulation && fg.d3ReheatSimulation();
 
         fg.zoomToFit && fg.zoomToFit(400, 50);
       } catch (e) {
         // ignore if methods unavailable
       }
+
+      // debounce resize -> zoomToFit
+      let resizeTimer: any = null;
+      const onResize = () => {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          try { fg.zoomToFit && fg.zoomToFit(400, 50); } catch (e) {}
+        }, 100);
+      };
+
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', onResize);
+      }
+
+      return () => {
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('resize', onResize);
+        }
+        if (resizeTimer) clearTimeout(resizeTimer);
+      };
     }, [graphData]);
 
     return (
