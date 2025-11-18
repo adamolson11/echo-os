@@ -1,0 +1,49 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/out": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/dist/**": true,
+    "**/.git/**": true,
+    "**/public/**": true,
+    "**/build/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/dist": true,
+    "**/public": false
+  },
+
+  "typescript.tsserver.maxTsServerMemory": 1536,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsc.autoDetect": "off",
+
+  "editor.semanticHighlighting.enabled": false,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": false
+  },
+
+  "eslint.run": "onSave",
+  "eslint.validate": ["javascript", "typescript", "javascriptreact", "typescriptreact"],
+
+  "files.maxMemoryForLargeFilesMB": 2048,
+  "search.followSymlinks": false,
+  "search.useGlobalIgnoreFiles": true,
+
+  "workbench.editor.enablePreview": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+
+  "git.autofetch": false,
+  "git.enableSmartCommit": false,
+
+  "extensions.ignoreRecommendations": true
+}
