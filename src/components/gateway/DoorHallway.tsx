@@ -6,7 +6,7 @@ const DOORS = [
     label: "Story Room",
     eyebrow: "Narrative",
     href: "/story",
-    image: "/images/doors/story-door.jpg",
+    image: "/images/doors/story-door.svg",
     tagline: "Enter the canon chapters.",
   },
   {
@@ -14,7 +14,7 @@ const DOORS = [
     label: "Living Codex",
     eyebrow: "Graph",
     href: "/codex",
-    image: "/images/doors/codex-door.jpg",
+    image: "/images/doors/codex-door.svg",
     tagline: "See the brain behind the stories.",
   },
   {
@@ -22,7 +22,7 @@ const DOORS = [
     label: "Lab",
     eyebrow: "Experiments",
     href: "/lab",
-    image: "/images/doors/lab-door.jpg",
+    image: "/images/doors/lab-door.svg",
     tagline: "Prototype, test, and break things.",
   },
   {
@@ -30,7 +30,7 @@ const DOORS = [
     label: "Archive",
     eyebrow: "Records",
     href: "/archive",
-    image: "/images/doors/archive-door.jpg",
+    image: "/images/doors/archive-door.svg",
     tagline: "Echoes, logs, and artifacts.",
   },
 ];
