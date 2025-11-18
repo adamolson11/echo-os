@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useImperativeHandle, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
+import CodexPerfOverlay from "@/components/codex/CodexPerfOverlay";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 import { forceCollide } from 'd3-force';
 
@@ -206,15 +207,24 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.fillStyle = color;
               ctx.fill();
 
-              // subtle halo stroke for hovered node
+              // subtle halo stroke for hovered node — skip complex halo in Firefox
+              const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
               if (isHovered) {
-                ctx.beginPath();
-                const haloRadius = radius + 2.5; // remove per-frame sin jitter to reduce paint
-                ctx.arc(node.x! + dx, node.y! + dy, haloRadius, 0, 2 * Math.PI);
-                // thinner, lower-opacity halo for lower cost
-                ctx.strokeStyle = "rgba(45,212,191,0.08)";
-                ctx.lineWidth = 3;
-                ctx.stroke();
+                if (!isFirefox) {
+                  ctx.beginPath();
+                  const haloRadius = radius + 2.5; // simple halo
+                  ctx.arc(node.x! + dx, node.y! + dy, haloRadius, 0, 2 * Math.PI);
+                  ctx.strokeStyle = "rgba(45,212,191,0.08)";
+                  ctx.lineWidth = 3;
+                  ctx.stroke();
+                } else {
+                  // Firefox: keep hover visuals minimal (color change only)
+                  ctx.beginPath();
+                  ctx.arc(node.x! + dx, node.y! + dy, radius + 1, 0, 2 * Math.PI);
+                  ctx.strokeStyle = "rgba(45,212,191,0.09)";
+                  ctx.lineWidth = 1.5;
+                  ctx.stroke();
+                }
               }
 
                 // --- label: always-on, but small and only when zoomed in enough ---
@@ -244,6 +254,10 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.shadowBlur = 0;
           }}
         />
+        {/* Dev-only perf overlay for QA */}
+        {typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? (
+          <CodexPerfOverlay nodeCount={(graphData?.nodes?.length as number) || 0} />
+        ) : null}
       </div>
     );
   }
