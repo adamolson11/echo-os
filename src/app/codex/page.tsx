@@ -215,7 +215,7 @@ export default function CodexPage() {
 
           {/* Graph card below the hero text */}
           <div className="mt-2">
-            <div className="aspect-[4/3] w-full rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+            <div className="w-full rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden h-[70vh] md:h-[75vh]">
               <CodexGraph
                 ref={fgRef as any}
                 graphData={graphDataForView ?? { nodes: [], links: [] }}

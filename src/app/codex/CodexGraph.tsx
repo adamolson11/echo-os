@@ -71,10 +71,11 @@ const CodexGraph = forwardRef<ForceGraphMethods, Props>(
 
       try {
         // link distance to reduce clustering
-        innerRef.current.d3Force && innerRef.current.d3Force("link", forceLink().distance(60).id((d: any) => d.id));
+        // increase link distance to give nodes more breathing room
+        innerRef.current.d3Force && innerRef.current.d3Force("link", forceLink().distance(100).id((d: any) => d.id));
 
-        // soften node charge to reduce jitter
-        innerRef.current.d3Force && innerRef.current.d3Force("charge", forceManyBody().strength(-25));
+        // soften node charge to reduce jitter (less aggressive repulsion)
+        innerRef.current.d3Force && innerRef.current.d3Force("charge", forceManyBody().strength(-15));
 
         // center force to improve centering behavior
         innerRef.current.d3Force && innerRef.current.d3Force("center", forceCenter(size.width / 2, size.height / 2));
@@ -251,8 +252,12 @@ const CodexGraph = forwardRef<ForceGraphMethods, Props>(
 
             // label visibility scales with zoom (globalScale) and distance from center
             const zoomFactor = Math.min(2, Math.max(0.6, globalScale));
-            const labelOpacity = Math.min(1, Math.max(0, ((globalScale - 1.2) / 2) * (1 - distanceFactor)));
-            const fontSize = Math.round(12 * zoomFactor);
+            // tighten fade-in: require slightly larger zoom to show labels
+            const fadeThreshold = 1.4; // labels start to appear above this globalScale
+            const rawOpacity = (globalScale - fadeThreshold) / (2 - fadeThreshold);
+            const labelOpacity = Math.min(1, Math.max(0, rawOpacity * (1 - distanceFactor)));
+            // clamp font size so labels remain legible but not huge
+            const fontSize = Math.min(18, Math.max(10, Math.round(12 * zoomFactor)));
 
             if (labelOpacity > 0.02) {
               ctx.save();
