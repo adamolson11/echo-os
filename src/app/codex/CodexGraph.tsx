@@ -22,6 +22,8 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     const [localHover, setLocalHover] = useState<any | null>(null);
     const [engineSettled, setEngineSettled] = useState<boolean>(false);
     const hoverThrottleRef = useRef<number>(0);
+    const hoverRAFRef = useRef<number | null>(null);
+    const pendingHoverRef = useRef<any | null>(null);
     
     // activeHover: prefer local hover (from canvas events), fall back to prop
     const activeHover = localHover || hoverNode;
@@ -127,12 +129,17 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
           // store hovered node upstream and locally for more reliable rendering
           onNodeHover={(n, prev) => {
-            // throttle hover updates to ~30fps to avoid excessive re-renders/paint
-            const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
-            if (now - (hoverThrottleRef.current || 0) > 33) {
-              hoverThrottleRef.current = now as number;
-              setLocalHover(n || null);
-              onNodeHover?.(n || null, prev || null as any);
+            // Batch hover updates via requestAnimationFrame for smoother rendering
+            // (reduces jank in Firefox by aligning to paint)
+            pendingHoverRef.current = n || null;
+            if (hoverRAFRef.current == null) {
+              hoverRAFRef.current = (typeof window !== 'undefined' ? window.requestAnimationFrame : (cb: any) => setTimeout(cb, 16))(() => {
+                hoverRAFRef.current = null;
+                const value = pendingHoverRef.current;
+                pendingHoverRef.current = null;
+                setLocalHover(value);
+                onNodeHover?.(value || null, prev || null as any);
+              });
             }
           }}
           onNodeClick={(n) => onNodeClick?.(n)}
@@ -176,15 +183,20 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
               // subtle time-based wobble to make hovered nodes 'dance'
               const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-              // micro-perf: lower wobble frequency and amplitude to reduce paint churn
-              const freq = 0.002; // slower wobble
-              const idStr = String(node.id ?? '0');
-              let idHash = 0;
-              for (let i = 0; i < idStr.length; i++) idHash = (idHash * 31 + idStr.charCodeAt(i)) >>> 0;
-              const phase = idHash % 1000;
-              // reduce amplitude to lower motion and paint cost
-              const ampBase = isHovered ? 1.6 : isNeighbor ? 0.6 : 0;
-              const amp = ampBase * 0.5 * Math.min(1, globalScale);
+              // micro-perf: even lower wobble frequency and amplitude
+              const freq = 0.0015;
+              // memoize per-node phase to avoid hash work every paint
+              let phase = (node as any).__wobblePhase;
+              if (phase == null) {
+                const idStr = String(node.id ?? '0');
+                let idHash = 0;
+                for (let i = 0; i < idStr.length; i++) idHash = (idHash * 31 + idStr.charCodeAt(i)) >>> 0;
+                phase = idHash % 1000;
+                (node as any).__wobblePhase = phase;
+              }
+              // reduce amplitude strongly; only small motion for hovered nodes
+              const ampBase = isHovered ? 1.0 : isNeighbor ? 0.35 : 0;
+              const amp = ampBase * 0.35 * Math.min(1, globalScale);
               const dx = Math.sin(now * freq + phase) * amp;
               const dy = Math.cos(now * freq + phase) * amp * 0.8;
 
@@ -197,10 +209,11 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               // subtle halo stroke for hovered node
               if (isHovered) {
                 ctx.beginPath();
-                const haloRadius = radius + 3 + Math.sin(now * (freq * 1.2) + phase) * 0.9;
+                const haloRadius = radius + 2.5; // remove per-frame sin jitter to reduce paint
                 ctx.arc(node.x! + dx, node.y! + dy, haloRadius, 0, 2 * Math.PI);
-                ctx.strokeStyle = "rgba(45,212,191,0.10)";
-                ctx.lineWidth = 4;
+                // thinner, lower-opacity halo for lower cost
+                ctx.strokeStyle = "rgba(45,212,191,0.08)";
+                ctx.lineWidth = 3;
                 ctx.stroke();
               }
 
