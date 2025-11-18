@@ -25,6 +25,7 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     const hoverThrottleRef = useRef<number>(0);
     const hoverRAFRef = useRef<number | null>(null);
     const pendingHoverRef = useRef<any | null>(null);
+    const [hoverOverlayPos, setHoverOverlayPos] = useState<{ x: number; y: number; node: any } | null>(null);
     
     // activeHover: prefer local hover (from canvas events), fall back to prop
     const activeHover = localHover || hoverNode;
@@ -140,6 +141,19 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
                 pendingHoverRef.current = null;
                 setLocalHover(value);
                 onNodeHover?.(value || null, prev || null as any);
+                // If Firefox, compute screen coords for a lightweight DOM overlay
+                try {
+                  const fg = internalRef.current as any;
+                  const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
+                  if (isFirefox && value && fg && typeof fg.graph2ScreenCoords === 'function') {
+                    const p = fg.graph2ScreenCoords(value.x, value.y);
+                    setHoverOverlayPos({ x: p.x, y: p.y, node: value });
+                  } else {
+                    setHoverOverlayPos(null);
+                  }
+                } catch (e) {
+                  setHoverOverlayPos(null);
+                }
               });
             }
           }}
@@ -257,6 +271,24 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
         {/* Dev-only perf overlay for QA */}
         {typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? (
           <CodexPerfOverlay nodeCount={(graphData?.nodes?.length as number) || 0} />
+        ) : null}
+
+        {/* DOM overlay fallback for Firefox hover to avoid expensive canvas halos */}
+        {hoverOverlayPos ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: hoverOverlayPos.x,
+              top: hoverOverlayPos.y,
+              transform: 'translate(-50%, -150%)',
+              pointerEvents: 'none',
+              zIndex: 60,
+            }}
+          >
+            <div className="bg-black/70 text-white text-xs rounded px-2 py-1 font-mono">
+              {String(hoverOverlayPos.node?.name ?? hoverOverlayPos.node?.id)}
+            </div>
+          </div>
         ) : null}
       </div>
     );
