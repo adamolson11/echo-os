@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:lite": "NEXT_DISABLE_TURBOPACK=1 next dev",
+    "dev:lite:win": "set \"NEXT_DISABLE_TURBOPACK=1\" && next dev",
     "build:codex": "node scripts/buildCodex.cjs",
     "build": "npm run build:codex && next build",
     "start": "next start",

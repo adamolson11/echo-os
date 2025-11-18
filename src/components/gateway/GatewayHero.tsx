@@ -1,34 +1,33 @@
 import Link from "next/link";
+import EchoPanel from "@/components/ui/EchoPanel";
 
 export default function GatewayHero() {
   return (
-    <section className="relative flex min-h-[60vh] flex-col justify-center overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-8 py-10">
-      {/* background layer (placeholder) */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-slate-900/40 to-black/40" />
+    <section className="py-16 px-6 sm:px-12 lg:px-20 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-8">
+        <div className="flex-1">
+          <p className="text-xs font-semibold tracking-[0.3em] text-amber-300/80">ECHO OS // LIVING CODEX</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">Step into the brain of your universes.</h1>
+          <p className="mt-4 text-lg sm:text-xl text-slate-300">Cinematic entry to stories, codex, lab and archives — choose a door and begin.</p>
 
-      <div className="relative z-10 max-w-xl space-y-4 mx-auto text-center sm:text-left">
-        <p className="text-xs font-semibold tracking-[0.3em] text-sky-400/80">ECHO OS // LIVING CODEX</p>
-        <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
-          Step into the brain of your universes.
-        </h1>
-        <p className="text-sm md:text-base text-slate-300/80">
-          Enter the Codex graph, step through the Wolves doorway, or descend into the Lab.
-        </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <Link href="/gateway" className="inline-block bg-amber-400 text-slate-900 font-semibold px-5 py-3 rounded-md shadow hover:scale-105 transition-transform">Enter the Hall</Link>
+            <Link href="/read/wolves" className="inline-block border border-slate-300 text-white px-5 py-3 rounded-md hover:bg-slate-700 transition-colors">Read Wolves</Link>
+          </div>
+        </div>
 
-        <div className="mt-4 flex flex-col sm:flex-row gap-3 items-center sm:items-start">
-          <Link
-            href="/codex"
-            className="inline-flex items-center rounded-full bg-sky-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition"
-          >
-            Enter the Codex
-          </Link>
-
-          <Link
-            href="/story/wolves"
-            className="inline-flex items-center rounded-full border border-slate-500/70 px-4 py-2 text-sm font-medium text-slate-200 hover:border-sky-400/70 hover:text-sky-200 transition"
-          >
-            Read Wolves in the Echo House
-          </Link>
+        <div className="w-full sm:w-1/2 lg:w-2/5">
+          <EchoPanel>
+            <div className="aspect-[16/9] bg-[url('/images/echo-hero.jpg')] bg-cover bg-center rounded-lg shadow-2xl opacity-95 overflow-hidden">
+              <div className="w-full h-full bg-gradient-to-b from-transparent to-black/40 rounded-lg flex items-end p-6">
+                <div>
+                  <div className="text-sm uppercase tracking-widest text-amber-300">Featured</div>
+                  <h3 className="text-2xl font-bold">Wolves — Prologue</h3>
+                  <p className="mt-2 text-sm text-slate-200">A Floridian Gothic entrance into the story room.</p>
+                </div>
+              </div>
+            </div>
+          </EchoPanel>
         </div>
       </div>
     </section>

@@ -26,6 +26,10 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     const hoverRAFRef = useRef<number | null>(null);
     const pendingHoverRef = useRef<any | null>(null);
     const [hoverOverlayPos, setHoverOverlayPos] = useState<{ x: number; y: number; node: any } | null>(null);
+    // compute node-count based tuning values so we can pass them as props
+    const nodeCount = (graphData?.nodes?.length as number) || 1;
+    const scaledDistance = Math.min(420, 120 + Math.sqrt(nodeCount) * 4);
+    const computedCharge = -Math.max(400, Math.min(500, Math.round(nodeCount * 2)));
     
     // activeHover: prefer local hover (from canvas events), fall back to prop
     const activeHover = localHover || hoverNode;
@@ -182,8 +186,14 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
           }}
           linkOpacity={1}
 
-          // custom node rendering: always-on tiny labels that scale inversely with zoom
+          // physics/spacing tuned per node count
+          linkDistance={scaledDistance}
+          nodeRelSize={4}
+          nodeVal={(n: any) => 1}
+          cooldownTicks={80}
 
+          // custom node rendering: Obsidian-style tiny labels that scale with zoom
+            // and avoid drawing until nodes and engine are stable.
             nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
               // compute hovered/neighbour status
               const hover = localHover || hoverNode;
@@ -243,21 +253,26 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
                 }
               }
 
-                // --- label: always-on, but small and only when zoomed in enough ---
+                  // --- label: always-on-ish, but small and only when zoomed in enough ---
               const label = node.name ?? node.id;
-              if (!label) return;
+                  if (!label) return;
 
                   // Prevent label flash: only render labels after physics engine has settled
                   if (!engineSettled) return;
 
+                  // guard: ensure node coordinates are valid
+                  if (typeof node.x !== 'number' || typeof node.y !== 'number') return;
+
                   // clamp label rendering: skip labels when zoomed out to save paint
-                  if (globalScale < 0.85) return;
+                  // use a slightly lower threshold so labels appear when reasonably zoomed
+                  if (globalScale < 0.7) return;
 
-              const BASE = 8;
-              const rawSize = BASE / globalScale;
-              const fontSize = Math.max(6, Math.min(12, rawSize));
+                  // label scaling: prefer using the graph zoom state (if available) to compute a scale
+                  const currentZoom = (internalRef.current && typeof (internalRef.current as any).zoom === 'function') ? (internalRef.current as any).zoom() : 1;
+                  const labelScale = Math.max(currentZoom * 0.6, 0.8);
+                  const fontSize = Math.max(6, Math.min(14, 8 * labelScale));
 
-              ctx.font = `${fontSize}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+                  ctx.font = `${fontSize}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
               ctx.fillStyle = "rgba(255,255,255,0.75)";
               ctx.textAlign = "center";
               ctx.textBaseline = "middle";
@@ -268,6 +283,11 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.fillText(label, node.x! + dx, node.y! + dy);
               ctx.shadowBlur = 0;
           }}
+          // Tunings to encourage spacing and stable layout
+          nodeRelSize={4}
+          nodeVal={(n: any) => 1}
+          linkDistance={60}
+          cooldownTicks={80}
         />
         {/* Dev-only perf overlay for QA */}
         {typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? (
