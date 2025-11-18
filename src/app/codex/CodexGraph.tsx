@@ -190,6 +190,9 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               const isHovered = hover?.id === node.id;
               const isNeighbor = hover ? neighborIds.has(node.id) : false;
 
+              // detect Firefox once per paint callback to avoid redeclaring
+              const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
+
               // radius: hovered > neighbor > default (slightly reduced to avoid billboard-size)
               const radius = isHovered ? 6 : isNeighbor ? 5 : 4;
 
@@ -222,7 +225,6 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.fill();
 
               // subtle halo stroke for hovered node — skip complex halo in Firefox
-              const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
               if (isHovered) {
                 if (!isFirefox) {
                   ctx.beginPath();
@@ -261,7 +263,6 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.textBaseline = "middle";
 
                 // minimize shadow blur unless hovered and zoomed-in (expensive on some browsers)
-                const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
                 ctx.shadowColor = "rgba(0,0,0,0.45)";
                 ctx.shadowBlur = isHovered && globalScale > 0.9 && !isFirefox ? 3 : 0;
               ctx.fillText(label, node.x! + dx, node.y! + dy);
