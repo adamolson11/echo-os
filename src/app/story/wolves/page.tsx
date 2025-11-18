@@ -1,7 +1,7 @@
 import StoryBookshelf from "@/components/StoryBookshelf";
 import StoryRoomFX from "@/components/StoryRoomFX";
 
-export default function StoryRoom() {
+function StoryRoom() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background video */}
