@@ -20,6 +20,7 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     const internalRef = useRef<ForceGraphMethods | null>(null);
     useImperativeHandle(ref, () => internalRef.current as any, [internalRef]);
     const [localHover, setLocalHover] = useState<any | null>(null);
+    const [engineSettled, setEngineSettled] = useState<boolean>(false);
     const hoverThrottleRef = useRef<number>(0);
     
     // activeHover: prefer local hover (from canvas events), fall back to prop
@@ -45,6 +46,9 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
     }, [graphData, activeHover]);
 
     useEffect(() => {
+      // whenever graph data changes, mark engine unsettled until simulation finishes
+      setEngineSettled(false);
+
       const fg = internalRef.current as any;
       if (!fg) return;
 
@@ -102,12 +106,24 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
       };
     }, [graphData]);
 
+    // onEngineStop will be called when the force simulation stabilizes
+    const handleEngineStop = () => {
+      setEngineSettled(true);
+      try {
+        const fg = internalRef.current as any;
+        fg && fg.zoomToFit && fg.zoomToFit(400, 50);
+      } catch (e) {}
+    };
+
     return (
       <div className="absolute inset-0 w-full h-full">
         <ForceGraph2D
           ref={internalRef as any}
           graphData={graphData}
           backgroundColor="#05060a"
+
+          // get notified when the force simulation finishes so we can enable labels
+          onEngineStop={handleEngineStop}
 
           // store hovered node upstream and locally for more reliable rendering
           onNodeHover={(n, prev) => {
@@ -188,12 +204,15 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
                 ctx.stroke();
               }
 
-              // --- label: always-on, but small and only when zoomed in enough ---
+                // --- label: always-on, but small and only when zoomed in enough ---
               const label = node.name ?? node.id;
               if (!label) return;
 
-              // clamp label rendering: skip labels when zoomed out to save paint
-              if (globalScale < 0.85) return;
+                  // Prevent label flash: only render labels after physics engine has settled
+                  if (!engineSettled) return;
+
+                  // clamp label rendering: skip labels when zoomed out to save paint
+                  if (globalScale < 0.85) return;
 
               const BASE = 8;
               const rawSize = BASE / globalScale;
