@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import EchoPanel from '../../ui/EchoPanel'
 
 export default function GatewayHero() {
   return (
@@ -18,15 +19,17 @@ export default function GatewayHero() {
         </div>
 
         <div className="w-full sm:w-1/2 lg:w-2/5">
-          <div className="aspect-[16/9] bg-[url('/images/portal-hero.jpg')] bg-cover bg-center rounded-lg shadow-2xl opacity-95">
-            <div className="w-full h-full bg-gradient-to-b from-transparent to-black/40 rounded-lg flex items-end p-6">
-              <div>
-                <div className="text-sm uppercase tracking-widest text-amber-300">Featured</div>
-                <h3 className="text-2xl font-bold">Wolves — Prologue</h3>
-                <p className="mt-2 text-sm text-slate-200">A Floridian Gothic entrance into the story room.</p>
+          <EchoPanel>
+            <div className="aspect-[16/9] bg-[url('/images/portal-hero.jpg')] bg-cover bg-center rounded-lg shadow-2xl opacity-95 overflow-hidden">
+              <div className="w-full h-full bg-gradient-to-b from-transparent to-black/40 rounded-lg flex items-end p-6">
+                <div>
+                  <div className="text-sm uppercase tracking-widest text-amber-300">Featured</div>
+                  <h3 className="text-2xl font-bold">Wolves — Prologue</h3>
+                  <p className="mt-2 text-sm text-slate-200">A Floridian Gothic entrance into the story room.</p>
+                </div>
               </div>
             </div>
-          </div>
+          </EchoPanel>
         </div>
       </div>
     </section>
