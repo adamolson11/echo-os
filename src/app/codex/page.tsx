@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ForceGraphMethods } from "react-force-graph-2d";
-
 import CodexGraph from "./CodexGraph";
 import CodexHUD from "./CodexHUD";
 import CodexSidebar from "./CodexSidebar";
@@ -215,7 +214,8 @@ export default function CodexPage() {
 
           {/* Graph card below the hero text */}
           <div className="mt-2">
-            <div className="w-full rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden h-[70vh] md:h-[75vh]">
+            {/* Make the graph container intentionally large so the canvas feels like a viewport */}
+            <div className="w-full overflow-hidden h-screen md:h-[85vh]">
               <CodexGraph
                 ref={fgRef as any}
                 graphData={graphDataForView ?? { nodes: [], links: [] }}

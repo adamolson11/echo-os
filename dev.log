@@ -1,0 +1,14 @@
+
+> echo-os@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use by process 7868, using available port 3001 instead.
+   ▲ Next.js 16.0.3 (Turbopack)
+   - Local:         http://localhost:3001
+   - Network:       http://172.16.28.253:3001
+
+ ✓ Starting...
+ ✓ Ready in 4.1s
+ ○ Compiling /codex ...
+ HEAD /codex 200 in 9.3s (compile: 8.9s, render: 378ms)
+^C

@@ -1,14 +1,12 @@
 "use client";
 
-import React, { forwardRef, useEffect, useRef, useState } from "react";
-import { forceManyBody, forceCenter, forceLink } from "d3-force";
-import type { ForceGraphMethods } from "react-force-graph-2d";
+import React, { forwardRef, useEffect, useRef, useImperativeHandle, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { seriesColorMap } from "../../config/codexColors";
+import type { ForceGraphMethods } from "react-force-graph-2d";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
-type Props = {
+type CodexGraphProps = {
   graphData: any;
   hoverNode?: any;
   selectedNode?: any;
@@ -16,268 +14,158 @@ type Props = {
   onNodeClick?: (n: any) => void;
 };
 
-const CodexGraph = forwardRef<ForceGraphMethods, Props>(
-  ({ graphData, hoverNode, selectedNode, onNodeHover = () => {}, onNodeClick = () => {} }, ref) => {
-    // measure container and provide explicit width/height to the canvas
-    const containerRef = useRef<HTMLDivElement | null>(null);
-    const [size, setSize] = useState({ width: 0, height: 0 });
-
-    useEffect(() => {
-      if (!containerRef.current) return;
-
-      const el = containerRef.current;
-      const updateSize = () => {
-        const rect = el.getBoundingClientRect();
-        const w = Math.max(0, Math.floor(rect.width));
-        const h = Math.max(0, Math.floor(rect.height));
-        setSize((prev) => (prev.width !== w || prev.height !== h ? { width: w, height: h } : prev));
-      };
-
-      // Use ResizeObserver for robust measurement (handles layout changes, overlays)
-      const ro = new ResizeObserver(() => updateSize());
-      ro.observe(el);
-
-      // Also run once immediately
-      updateSize();
-
-      // log initial size for dev correlation with Yellow
-      console.debug("[CodexGraph] initial container size", { width: el.clientWidth, height: el.clientHeight });
-
-      // cleanup
-      return () => ro.disconnect();
-    }, []);
-
-    // inner ref so we can call zoomToFit when the engine stops
-    const innerRef = useRef<ForceGraphMethods | null>(null);
-
-    // forward innerRef into the external ref prop when available
-    useEffect(() => {
-      if (!ref) return;
-      try {
-        if (typeof ref === "function") {
-          (ref as any)(innerRef.current);
-        } else if (ref && typeof ref === "object") {
-          (ref as React.MutableRefObject<ForceGraphMethods | null>).current = innerRef.current;
+const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
+  ({ graphData, hoverNode, onNodeHover, onNodeClick }, ref) => {
+    const internalRef = useRef<ForceGraphMethods | null>(null);
+    useImperativeHandle(ref, () => internalRef.current as any, [internalRef]);
+    const [localHover, setLocalHover] = useState<any | null>(null);
+    
+    // activeHover: prefer local hover (from canvas events), fall back to prop
+    const activeHover = localHover || hoverNode;
+    
+    // compute neighbor id set for the active hovered node so we can highlight its thread
+    const neighborIds = useMemo(() => {
+      const set = new Set<string | number>();
+      if (!activeHover || !graphData?.links) return set;
+      const getId = (v: any) => (typeof v === "string" || typeof v === "number" ? v : v?.id);
+      for (const l of graphData.links) {
+        const s = getId(l.source);
+        const t = getId(l.target);
+        if (s === activeHover.id) {
+          set.add(t);
+          set.add(s);
+        } else if (t === activeHover.id) {
+          set.add(s);
+          set.add(t);
         }
-      } catch (e) {
-        // ignore forward errors
       }
-    }, [ref, innerRef.current]);
+      return set;
+    }, [graphData, activeHover]);
 
-    // Configure d3 forces once we have a reference to the graph and a measured size
     useEffect(() => {
-      if (!innerRef.current) return;
-      if (size.width === 0 || size.height === 0) return;
+      const fg = internalRef.current as any;
+      if (!fg) return;
+
+      const nodeCount = (graphData?.nodes?.length as number) || 1;
+      const baseDistance = 80;
+      const scaledDistance = Math.min(260, baseDistance + Math.sqrt(nodeCount) * 8);
 
       try {
-        // link distance to reduce clustering
-        // increase link distance to give nodes more breathing room
-        innerRef.current.d3Force && innerRef.current.d3Force("link", forceLink().distance(100).id((d: any) => d.id));
+        fg.d3Force && fg.d3Force("charge")?.strength(-80);
+        fg.d3Force && fg.d3Force("link")?.distance(scaledDistance);
+        fg.d3AlphaDecay && fg.d3AlphaDecay(0.035);
+        fg.d3VelocityDecay && fg.d3VelocityDecay(0.5);
+        fg.d3ReheatSimulation && fg.d3ReheatSimulation();
 
-        // soften node charge to reduce jitter (less aggressive repulsion)
-        innerRef.current.d3Force && innerRef.current.d3Force("charge", forceManyBody().strength(-15));
-
-        // center force to improve centering behavior
-        innerRef.current.d3Force && innerRef.current.d3Force("center", forceCenter(size.width / 2, size.height / 2));
-
-        // small debug note
-        console.debug("[CodexGraph] applied d3 forces", { linkDistance: 60, charge: -25 });
+        fg.zoomToFit && fg.zoomToFit(400, 50);
       } catch (e) {
-        console.warn("[CodexGraph] failed to apply d3 forces:", e);
+        // ignore if methods unavailable
       }
-    }, [innerRef.current, size.width, size.height]);
-
-    // Debugging info to the browser console
-    const safeData = graphData ?? { nodes: [], links: [] };
-
-    if (typeof window !== "undefined") {
-      console.log("[CodexGraph] graphData:", {
-        hasData: !!(safeData && safeData.nodes && safeData.nodes.length),
-        nodeCount: safeData?.nodes?.length ?? 0,
-        linkCount: safeData?.links?.length ?? 0,
-      });
-    }
-
-    // Log size changes for Yellow correlation
-    useEffect(() => {
-      console.debug("[CodexGraph] measured size", size);
-    }, [size]);
-
-    const nodeColor = (node: any): string => {
-      if (node?.series) return seriesColorMap[node.series] || seriesColorMap.Default;
-
-      switch (node?.type) {
-        case "chapter":
-          return "#4fc3f7";
-        case "character":
-          return "#26c6da";
-        case "symbol":
-          return "#ffd54f";
-        case "event":
-          return "#f48fb1";
-        case "theme":
-          return "#ce93d8";
-        case "location":
-          return "#a5d6a7";
-        case "stub":
-          return "#9e9e9e";
-        default:
-          return seriesColorMap.Default;
-      }
-    };
+    }, [graphData]);
 
     return (
-      <div ref={containerRef} className="absolute inset-0 w-full h-full">
-        {size.width > 0 && size.height > 0 && (
-          <ForceGraph2D
-          ref={innerRef as any}
-          graphData={safeData}
-          width={size.width}
-          height={size.height}
-          backgroundColor="#05050a"
-          cooldownTicks={120}
-          // Dev: ensure the sim runs long enough to settle on complex graphs
-          // (will be tuned further if needed)
-          
-          nodeRelSize={4}
-          linkDirectionalParticles={0}
-          onEngineStop={() => {
-            if (!innerRef.current) return;
-            if (!safeData?.nodes?.length) return;
-            try {
-              innerRef.current.zoomToFit(400, 40);
-            } catch (e) {
-              console.warn("zoomToFit failed (engine stop):", e);
-            }
+      <div className="absolute inset-0 w-full h-full">
+        <ForceGraph2D
+          ref={internalRef as any}
+          graphData={graphData}
+          backgroundColor="#05060a"
+
+          // store hovered node upstream and locally for more reliable rendering
+          onNodeHover={(n, prev) => {
+            setLocalHover(n || null);
+            onNodeHover?.(n || null, prev || null as any);
           }}
-          // When the inner ref is ready, configure d3 forces for better separation
-          onEngineTick={() => {
-            // noop: placeholder so the engine ticks are available for future telemetry
+          onNodeClick={(n) => onNodeClick?.(n)}
+
+          // make links clearly visible and highlight hovered thread
+          linkColor={(link: any) => {
+            const getId = (v: any) => (typeof v === "string" || typeof v === "number" ? v : v?.id);
+            const s = getId(link.source);
+            const t = getId(link.target);
+            const hover = localHover || hoverNode;
+            if (!hover) return "rgba(56, 189, 248, 0.25)";
+            // highlight links attached to the hovered node
+            if (s === hover.id || t === hover.id) return "rgba(56,189,248,0.7)";
+            // de-emphasize unrelated links
+            return "rgba(56,189,248,0.12)";
           }}
           linkWidth={(link: any) => {
-            const s = (link.source as any)?.id;
-            const t = (link.target as any)?.id;
-            const isActive =
-              (hoverNode && (s === hoverNode.id || t === hoverNode.id)) ||
-              (selectedNode && (s === selectedNode.id || t === selectedNode.id));
-
-            return isActive ? 2.4 : 0.8;
+            const getId = (v: any) => (typeof v === "string" || typeof v === "number" ? v : v?.id);
+            const s = getId(link.source);
+            const t = getId(link.target);
+            const hover = localHover || hoverNode;
+            if (!hover) return 0.5;
+            if (s === hover.id || t === hover.id) return 1.2;
+            return 0.25;
           }}
-          linkColor={(link: any) => {
-            const sourceNode = (link.source as any) || {};
-            const targetNode = (link.target as any) || {};
-            const base = seriesColorMap[sourceNode.series] || seriesColorMap.Default;
+          linkOpacity={1}
 
-            const s = sourceNode.id;
-            const t = targetNode.id;
-            const isActive =
-              (hoverNode && (s === hoverNode.id || t === hoverNode.id)) ||
-              (selectedNode && (s === selectedNode.id || t === selectedNode.id));
+          // custom node rendering: always-on tiny labels that scale inversely with zoom
 
-            if (isActive) return base;
-            return base + "55";
-          }}
-          onNodeHover={(node: any) => onNodeHover(node || null)}
-          onNodeClick={(node: any) => onNodeClick(node || null)}
-          nodeCanvasObjectMode={() => "before"}
-          nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-            const typedNode = node as any;
+            nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+              // compute hovered/neighbour status
+              const hover = localHover || hoverNode;
+              const isHovered = hover?.id === node.id;
+              const isNeighbor = hover ? neighborIds.has(node.id) : false;
 
-            const isHovered = hoverNode && hoverNode.id === typedNode.id;
-            const isSelected = selectedNode && selectedNode.id === typedNode.id;
+              // radius: hovered > neighbor > default (slightly reduced to avoid billboard-size)
+              const radius = isHovered ? 6 : isNeighbor ? 5 : 4;
 
-            const isNeighbor =
-              hoverNode &&
-              (safeData?.links ?? []).some(
-                (l: any) =>
-                  (l.source?.id === hoverNode.id && l.target?.id === typedNode.id) ||
-                  (l.target?.id === hoverNode.id && l.source?.id === typedNode.id)
-              );
+              // color
+              const color = isHovered ? "rgba(45,212,191,0.95)" : isNeighbor ? "rgba(56,189,248,0.95)" : "rgba(37,99,235,0.9)";
 
-            let alpha = 0.35;
-            if (hoverNode || selectedNode) {
-              if (isHovered || isSelected) alpha = 1;
-              else if (isNeighbor) alpha = 0.8;
-              else alpha = 0.07;
-            }
+              // subtle time-based wobble to make hovered nodes 'dance'
+              const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+              const freq = 0.0045; // speed of wobble
+              const idStr = String(node.id ?? '0');
+              let idHash = 0;
+              for (let i = 0; i < idStr.length; i++) idHash = (idHash * 31 + idStr.charCodeAt(i)) >>> 0;
+              const phase = idHash % 1000;
+              const ampBase = isHovered ? 2.0 : isNeighbor ? 0.9 : 0;
+              const amp = ampBase * Math.min(1, globalScale);
+              const dx = Math.sin(now * freq + phase) * amp;
+              const dy = Math.cos(now * freq + phase) * amp * 0.8;
 
-            const radiusBase = 2.5;
-            const weight = typedNode.weight ?? 1;
-            const radius = radiusBase * weight * (isHovered || isSelected ? 1.8 : isNeighbor ? 1.3 : 1);
+              // --- draw node circle (with wobble) ---
+              ctx.beginPath();
+              ctx.arc(node.x! + dx, node.y! + dy, radius, 0, 2 * Math.PI);
+              ctx.fillStyle = color;
+              ctx.fill();
 
-            const color = nodeColor(typedNode);
+              // subtle halo stroke for hovered node
+              if (isHovered) {
+                ctx.beginPath();
+                const haloRadius = radius + 4 + Math.sin(now * (freq * 1.2) + phase) * 1.2;
+                ctx.arc(node.x! + dx, node.y! + dy, haloRadius, 0, 2 * Math.PI);
+                ctx.strokeStyle = "rgba(45,212,191,0.12)";
+                ctx.lineWidth = 6;
+                ctx.stroke();
+              }
 
-            if (typedNode.x == null || typedNode.y == null) return;
+              // --- label: always-on, but small and only when zoomed in enough ---
+              const label = node.name ?? node.id;
+              if (!label) return;
 
-            const gradientRadius = radius * 4;
-            const gradient = ctx.createRadialGradient(typedNode.x, typedNode.y, radius, typedNode.x, typedNode.y, gradientRadius);
-            gradient.addColorStop(0, `${color}aa`);
-            gradient.addColorStop(1, "rgba(0,0,0,0)");
+              if (globalScale < 0.7) return;
 
-            ctx.save();
-            ctx.globalAlpha = alpha * 0.7;
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(typedNode.x, typedNode.y, gradientRadius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
+              const BASE = 8;
+              const rawSize = BASE / globalScale;
+              const fontSize = Math.max(4, Math.min(10, rawSize));
 
-            // Colored stroke halo
-            ctx.save();
-            ctx.beginPath();
-            const haloRadius = radius + 6;
-            ctx.arc(typedNode.x, typedNode.y, haloRadius, 0, 2 * Math.PI);
-            ctx.strokeStyle = color + "33";
-            ctx.lineWidth = 3;
-            ctx.stroke();
-            ctx.restore();
-
-            // Core node
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(typedNode.x, typedNode.y, radius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
-
-            // Labels: dynamic opacity and font scaling based on zoom and distance
-            const label = typedNode.label || typedNode.id;
-            // compute distance from viewport center (approx)
-            const dx = typedNode.x - size.width / 2;
-            const dy = typedNode.y - size.height / 2;
-            const dist = Math.hypot(dx, dy);
-            const maxDist = Math.max(size.width, size.height) * 0.6;
-            const distanceFactor = Math.min(1, dist / maxDist);
-
-            // label visibility scales with zoom (globalScale) and distance from center
-            const zoomFactor = Math.min(2, Math.max(0.6, globalScale));
-            // tighten fade-in: require slightly larger zoom to show labels
-            const fadeThreshold = 1.4; // labels start to appear above this globalScale
-            const rawOpacity = (globalScale - fadeThreshold) / (2 - fadeThreshold);
-            const labelOpacity = Math.min(1, Math.max(0, rawOpacity * (1 - distanceFactor)));
-            // clamp font size so labels remain legible but not huge
-            const fontSize = Math.min(18, Math.max(10, Math.round(12 * zoomFactor)));
-
-            if (labelOpacity > 0.02) {
-              ctx.save();
-              ctx.globalAlpha = alpha * labelOpacity;
               ctx.font = `${fontSize}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
-              ctx.textAlign = "left";
+              ctx.fillStyle = "rgba(255,255,255,0.75)";
+              ctx.textAlign = "center";
               ctx.textBaseline = "middle";
-              ctx.fillStyle = "rgba(255,255,255,0.9)";
-              ctx.fillText(label, typedNode.x + radius + 4, typedNode.y);
-              ctx.restore();
-            }
+
+              ctx.shadowColor = "rgba(0,0,0,0.5)";
+              ctx.shadowBlur = isHovered ? 4 : 1;
+              ctx.fillText(label, node.x! + dx, node.y! + dy);
+              ctx.shadowBlur = 0;
           }}
-          
-          />
-        )}
+        />
       </div>
     );
   }
 );
-
-CodexGraph.displayName = "CodexGraph";
 
 export default CodexGraph;
