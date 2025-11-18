@@ -6,16 +6,16 @@ export default function GatewayHero() {
       {/* background layer (placeholder) */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-slate-900/40 to-black/40" />
 
-      <div className="relative z-10 max-w-xl space-y-4">
+      <div className="relative z-10 max-w-xl space-y-4 mx-auto text-center sm:text-left">
         <p className="text-xs font-semibold tracking-[0.3em] text-sky-400/80">ECHO OS // LIVING CODEX</p>
         <h1 className="text-3xl md:text-4xl font-semibold text-slate-50">
-          A living brain of stories, threads, and universes.
+          Step into the brain of your universes.
         </h1>
         <p className="text-sm md:text-base text-slate-300/80">
           Enter the Codex graph, step through the Wolves doorway, or descend into the Lab.
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col sm:flex-row gap-3 items-center sm:items-start">
           <Link
             href="/codex"
             className="inline-flex items-center rounded-full bg-sky-500 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-sky-400 transition"

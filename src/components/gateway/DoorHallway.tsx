@@ -42,7 +42,7 @@ export default function DoorHallway() {
         <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Choose a door</h2>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 px-4 md:px-0">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-4 md:px-0">
         {DOORS.map((door) => (
           <DoorCard
             key={door.key}

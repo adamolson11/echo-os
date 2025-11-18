@@ -13,7 +13,7 @@ export default function DoorCard({ href, label, eyebrow, tagline, image }: DoorC
   return (
     <Link
       href={href}
-      className="group relative flex aspect-[2/3] items-end overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 px-4 pb-4 shadow-[0_20px_60px_rgba(0,0,0,0.75)] transition hover:-translate-y-1 hover:border-sky-400/80 hover:shadow-[0_30px_80px_rgba(15,23,42,0.95)]"
+      className="group relative flex aspect-[9/16] sm:aspect-[2/3] items-end overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 px-4 pb-6 shadow-[0_20px_60px_rgba(0,0,0,0.75)] transform transition-transform duration-300 hover:-translate-y-1 hover:scale-105 hover:border-sky-400/80 hover:shadow-[0_30px_90px_rgba(15,23,42,0.95)] w-full"
     >
 
       {/* background image (CSS background fallback) */}
@@ -32,10 +32,10 @@ export default function DoorCard({ href, label, eyebrow, tagline, image }: DoorC
       <div className="pointer-events-none absolute inset-[8%] rounded-2xl border border-slate-600/30 group-hover:border-sky-400/50" />
 
       {/* knob */}
-      <div className="pointer-events-none absolute right-[12%] bottom-[18%] h-3 w-3 rounded-full border border-slate-400/80 bg-slate-900 shadow-[0_0_0_4px_rgba(15,23,42,0.9)] group-hover:border-sky-300 group-hover:bg-sky-400" />
+      <div className="pointer-events-none absolute right-[12%] bottom-[18%] h-3 w-3 rounded-full border border-slate-400/80 bg-slate-900 shadow-[0_0_0_4px_rgba(15,23,42,0.9)] transition-transform duration-300 group-hover:scale-110 group-hover:border-sky-300 group-hover:bg-sky-400 group-hover:shadow-[0_0_12px_rgba(125,211,252,0.18)]" />
 
-      {/* label */}
-      <div className="relative z-10 space-y-1">
+      {/* labels */}
+      <div className="relative z-10 space-y-1 text-center sm:text-left px-2">
         {eyebrow && (
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400/80">{eyebrow}</p>
         )}
