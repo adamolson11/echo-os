@@ -4,6 +4,16 @@ This document is an authored copy of the Door Hallway MVP Playbook (Green + Yell
 
 Follow the phases below in order. Green implements; Yellow verifies after each phase.
 
+> **Note to Yellow — quick reminder:**
+>
+> - You are *Yellow* on this playbook. If you feel confused, pause and remember your role: **verify, report, and provide clear acceptance or issues**.
+> - When Green posts "Phase X ready for QA", reply with either:
+>   - `Phase X OK` — and optionally a 1-line confirmation, or
+>   - `Phase X issues:` followed by a short bulleted list of problems and at least one screenshot or console log if available.
+> - If something seems wrong and you're unsure whether it's a bug or intended, mark it as `Phase X issues` and ask Green for clarification — err on the side of reporting.
+> - If you want a checklist to copy/paste for each phase, use: `loads`, `render count`, `visual sanity`, `keyboard-focus`, `console-errors`.
+
+
 ---
 
 (Full playbook content supplied by Director was pasted here.)
