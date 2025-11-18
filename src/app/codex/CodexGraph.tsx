@@ -49,12 +49,14 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
       if (!fg) return;
 
       const nodeCount = (graphData?.nodes?.length as number) || 1;
-      const baseDistance = 80;
-      // increase link distance by ~20% for extra breathing room
-      const scaledDistance = Math.min(420, (baseDistance + Math.sqrt(nodeCount) * 8) * 1.2);
+      // Physics rebalance (Director): stronger repulsion, larger link spacing
+      // Link distance target in the 120-140 range (adjusts with node count)
+      const baseDistance = 120;
+      const scaledDistance = Math.min(420, baseDistance + Math.sqrt(nodeCount) * 4);
 
-      // stronger negative charge scaled by node count, clamped [-400, -200]
-      const computedCharge = -Math.min(400, Math.max(200, 80 + Math.round(nodeCount * 2)));
+      // Computed charge: encourage more separation. Clamp to [-500, -400]
+      // Default to -400 for small graphs, allow up to -500 for larger graphs.
+      const computedCharge = -Math.min(500, Math.max(400, Math.round(nodeCount * 2)));
 
       // collide radius scaled by sqrt(nodeCount), clamped
       const collideRadius = Math.min(40, Math.max(6, Math.sqrt(nodeCount) * 3));
@@ -69,8 +71,9 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
           // some versions of react-force-graph expose d3Force differently; ignore if unavailable
         }
 
-        fg.d3AlphaDecay && fg.d3AlphaDecay(0.035);
-        fg.d3VelocityDecay && fg.d3VelocityDecay(0.56);
+        // Director-recommended decay values for faster stabilization but stable motion
+        fg.d3AlphaDecay && fg.d3AlphaDecay(0.03);
+        fg.d3VelocityDecay && fg.d3VelocityDecay(0.4);
         fg.d3ReheatSimulation && fg.d3ReheatSimulation();
 
         fg.zoomToFit && fg.zoomToFit(400, 50);
@@ -84,7 +87,7 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
         if (resizeTimer) clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
           try { fg.zoomToFit && fg.zoomToFit(400, 50); } catch (e) {}
-        }, 100);
+        }, 150);
       };
 
       if (typeof window !== 'undefined') {
@@ -157,14 +160,15 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
 
               // subtle time-based wobble to make hovered nodes 'dance'
               const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-              const freq = 0.003; // reduced wobble speed for lower CPU
+              // micro-perf: lower wobble frequency and amplitude to reduce paint churn
+              const freq = 0.002; // slower wobble
               const idStr = String(node.id ?? '0');
               let idHash = 0;
               for (let i = 0; i < idStr.length; i++) idHash = (idHash * 31 + idStr.charCodeAt(i)) >>> 0;
               const phase = idHash % 1000;
-              // reduce amplitude by ~40% to lower motion and paint cost
-              const ampBase = isHovered ? 2.0 : isNeighbor ? 0.9 : 0;
-              const amp = ampBase * 0.6 * Math.min(1, globalScale);
+              // reduce amplitude to lower motion and paint cost
+              const ampBase = isHovered ? 1.6 : isNeighbor ? 0.6 : 0;
+              const amp = ampBase * 0.5 * Math.min(1, globalScale);
               const dx = Math.sin(now * freq + phase) * amp;
               const dy = Math.cos(now * freq + phase) * amp * 0.8;
 
@@ -177,10 +181,10 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               // subtle halo stroke for hovered node
               if (isHovered) {
                 ctx.beginPath();
-                const haloRadius = radius + 4 + Math.sin(now * (freq * 1.2) + phase) * 1.2;
+                const haloRadius = radius + 3 + Math.sin(now * (freq * 1.2) + phase) * 0.9;
                 ctx.arc(node.x! + dx, node.y! + dy, haloRadius, 0, 2 * Math.PI);
-                ctx.strokeStyle = "rgba(45,212,191,0.12)";
-                ctx.lineWidth = 6;
+                ctx.strokeStyle = "rgba(45,212,191,0.10)";
+                ctx.lineWidth = 4;
                 ctx.stroke();
               }
 
@@ -188,11 +192,12 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               const label = node.name ?? node.id;
               if (!label) return;
 
-              if (globalScale < 0.7) return;
+              // clamp label rendering: skip labels when zoomed out to save paint
+              if (globalScale < 0.85) return;
 
               const BASE = 8;
               const rawSize = BASE / globalScale;
-              const fontSize = Math.max(4, Math.min(10, rawSize));
+              const fontSize = Math.max(6, Math.min(12, rawSize));
 
               ctx.font = `${fontSize}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
               ctx.fillStyle = "rgba(255,255,255,0.75)";
@@ -200,8 +205,9 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.textBaseline = "middle";
 
                 // minimize shadow blur unless hovered and zoomed-in (expensive on some browsers)
-                ctx.shadowColor = "rgba(0,0,0,0.5)";
-                ctx.shadowBlur = isHovered && globalScale > 0.9 ? 4 : 0;
+                const isFirefox = typeof navigator !== 'undefined' && /Firefox/.test(navigator.userAgent || '');
+                ctx.shadowColor = "rgba(0,0,0,0.45)";
+                ctx.shadowBlur = isHovered && globalScale > 0.9 && !isFirefox ? 3 : 0;
               ctx.fillText(label, node.x! + dx, node.y! + dy);
               ctx.shadowBlur = 0;
           }}
