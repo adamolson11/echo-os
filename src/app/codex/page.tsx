@@ -1,3 +1,19 @@
+import dynamic from "next/dynamic";
+
+const CodexGraph = dynamic(
+  () => import("@/components/codex/CodexGraph"), // adjust if path differs
+  { ssr: false }
+);
+
+export default function CodexPage() {
+  return (
+    <main className="min-h-screen bg-black text-zinc-50">
+      <section className="w-full h-[calc(100vh-4rem)]">
+        <CodexGraph />
+      </section>
+    </main>
+  );
+}
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
