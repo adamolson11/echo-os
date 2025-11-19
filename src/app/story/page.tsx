@@ -26,25 +26,28 @@ export default function StoryPage() {
             <SeriesCard
               title="The Devil's Trilogy"
               description="Three infernal tales interleaving guilt, redemption, and ink-stained secrets."
-              href="/story/devils"
-              accentColor="#D10023"
-              comingSoon
-            />
+              import React from "react";
 
-            <SeriesCard
-              title="Future Farm Trilogy"
-              description="Optimistic, strange pastoral futures and bio-tech folk tales."
-              href="/story/future-farm"
-              accentColor="#00D97E"
-              comingSoon
-            />
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-}
-// Note: additional story routes (eg. `/story/wolves`) live in their own
-// folders under `src/app/story/*` and should export a single default
-// per file. The StoryRoom component was moved to
-// `src/app/story/wolves/page.tsx` so `/story` remains the hub page.
+              export default function StoryPage() {
+                return (
+                  <main className="min-h-screen bg-black text-zinc-50">
+                    <section className="mx-auto max-w-5xl px-4 py-16 space-y-6">
+                      <header>
+                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300/80 mb-2">
+                          Story Room
+                        </p>
+                        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
+                          Wolves in the Echo House
+                        </h1>
+                        <p className="text-zinc-300 mt-3">
+                          Entry point into the mainline Wolves narrative, fragments, and cinematic chapters.
+                        </p>
+                      </header>
+
+                      <div className="aspect-video w-full rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-800/60 flex items-center justify-center">
+                        <span className="text-zinc-500 text-sm">Wolves hero image / video goes here.</span>
+                      </div>
+                    </section>
+                  </main>
+                );
+              }
