@@ -1,18 +1,22 @@
-"use client";
-
-import Link from "next/link";
-import Image from "next/image";
-import type { CSSProperties } from "react";
+import Link from 'next/link';
+{/* Floating badge */}
+<div className="absolute top-3 right-3 z-10 rounded-md bg-black/60 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-white/80 backdrop-blur-sm border border-white/10">
+  Room
+</div>
 
 type DoorCardProps = {
   label: string;
-  eyebrow?: string;
-  tagline?: string;
+  eyebrow: string;
+  tagline: string;
   href: string;
-  image?: string;
-  bgPosition?: string;
-  style?: CSSProperties;
-  cutout?: boolean;
+  glow: 'cyan' | 'violet' | 'ice' | 'amber';
+};
+
+const glowClasses: Record<DoorCardProps['glow'], string> = {
+  cyan: 'hover:shadow-[0_0_25px_rgba(34,211,238,0.7)]',
+  violet: 'hover:shadow-[0_0_25px_rgba(139,92,246,0.7)]',
+  ice: 'hover:shadow-[0_0_25px_rgba(191,219,254,0.85)]',
+  amber: 'hover:shadow-[0_0_25px_rgba(245,158,11,0.85)]',
 };
 
 export default function DoorCard({
@@ -20,44 +24,39 @@ export default function DoorCard({
   eyebrow,
   tagline,
   href,
-  image,
-  bgPosition,
-  style,
-  cutout,
+  glow,
 }: DoorCardProps) {
-  const src = image || "/images/doors/placeholder-noir.jpg";
+  const glowClass = glowClasses[glow];
+
   return (
     <Link
       href={href}
-      className={`group relative flex aspect-[3/5] items-end overflow-hidden rounded-3xl transform transition-transform duration-200 hover:-translate-y-0.5 hover:scale-102 w-full sm:w-[220px] md:w-[260px] lg:w-[300px] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
-        cutout ? "" : "border border-slate-700/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 shadow-lg"
-      }`}
-      style={style}
-      role="link"
-      aria-label={label}
+      className={`group relative block aspect-[3/5] overflow-hidden rounded-2xl border border-white/10 bg-black/60 shadow-lg transition duration-200 ${glowClass} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`}
     >
-      <div className="relative h-48 sm:h-52 lg:h-56 w-full">
-        <Image
-          src={src}
-          alt={label}
-          fill
-          priority
-          style={bgPosition ? { objectPosition: bgPosition } : undefined}
-          className="object-cover object-center opacity-80 group-hover:opacity-95 transition-opacity duration-300 filter group-hover:brightness-105"
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/55" />
-        <div className="absolute inset-0 transition-all duration-200 ease-out pointer-events-none opacity-0 group-hover:opacity-100 bg-white/10" />
+      {/* Background gradient / subtle door vibe */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black">
+        <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-white/5" />
       </div>
 
-      <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-5">
-        {eyebrow && (
-          <p className="text-xs uppercase tracking-[0.25em] text-cyan-300/80 mb-1">{eyebrow}</p>
-        )}
-        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-zinc-50">{label}</h3>
-        {tagline && (
-          <p className="mt-1 text-xs sm:text-sm text-zinc-300/80 leading-snug">{tagline}</p>
-        )}
+      {/* Bottom overlay for legible text */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+      {/* Content */}
+      <div className="relative flex h-full flex-col justify-end p-4 sm:p-5">
+        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-300/80">
+          {eyebrow}
+        </p>
+        <h2 className="mt-1 text-lg font-semibold sm:text-xl">
+          {label}
+        </h2>
+        <p className="mt-1 text-xs text-slate-200/85 line-clamp-2">
+          {tagline}
+        </p>
+      </div>
+
+      {/* Hover sheen */}
+      <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-200 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.14),_transparent_60%)]" />
       </div>
     </Link>
   );
