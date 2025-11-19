@@ -228,7 +228,14 @@ export default function CodexPage() {
             nodeColor={nodeColor}
           />
 
-          <div className="mt-6 h-[640px] w-full rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+          <div
+            className="mt-6 h-[640px] w-full rounded-2xl border border-slate-800 bg-gradient-to-br from-indigo-900 via-slate-950 to-slate-900 shadow-[0_8px_32px_0_rgba(40,40,80,0.45)] overflow-hidden fade-in"
+            style={{
+              boxShadow:
+                "0 8px 32px 0 rgba(40,40,80,0.45), 0 1.5px 0 0 rgba(80,80,160,0.12)",
+              animation: "fadeIn 1.2s cubic-bezier(.4,0,.2,1)"
+            }}
+          >
             <CodexGraph
               ref={fgRef as any}
               graphData={filteredGraphData}
