@@ -10,6 +10,8 @@ const DOORS = [
     tagline: "The mainline narrative and its echoes.",
     href: "/story",
     image: "/images/gateway/story-door.jpg",
+    bgPosition: "50% 20%",
+    cutout: true,
   },
   {
     key: "codex",
@@ -18,6 +20,7 @@ const DOORS = [
     tagline: "The graph of memory, myth, and recursion.",
     href: "/codex",
     image: "/images/gateway/codex-door.jpg",
+    bgPosition: "50% 30%",
   },
   {
     key: "lab",
@@ -26,6 +29,7 @@ const DOORS = [
     tagline: "Prototypes, dangerous ideas, and systems tests.",
     href: "/lab",
     image: "/images/gateway/lab-door.jpg",
+    bgPosition: "50% 40%",
   },
   {
     key: "archive",
@@ -34,6 +38,7 @@ const DOORS = [
     tagline: "Cases, records, and branches that didn’t make it.",
     href: "/archive",
     image: "/images/gateway/archive-door.jpg",
+    bgPosition: "50% 35%",
   },
 ];
 
@@ -49,6 +54,8 @@ export default function DoorHallway() {
               tagline={door.tagline}
               href={door.href}
               image={door.image}
+              bgPosition={door.bgPosition}
+              cutout={door.cutout}
             />
           </div>
         ))}

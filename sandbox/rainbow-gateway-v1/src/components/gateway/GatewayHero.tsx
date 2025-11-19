@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import EchoPanel from '../../ui/EchoPanel'
+import EchoPanel from '../ui/EchoPanel'
 
 export default function GatewayHero() {
   return (

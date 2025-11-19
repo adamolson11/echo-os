@@ -6,7 +6,7 @@ import CodexPerfOverlay from "@/components/codex/CodexPerfOverlay";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 import { forceCollide } from 'd3-force';
 
-const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
+const ForceGraph2D: any = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
 type CodexGraphProps = {
   graphData: any;
@@ -134,17 +134,18 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
           onEngineStop={handleEngineStop}
 
           // store hovered node upstream and locally for more reliable rendering
-          onNodeHover={(n, prev) => {
+          onNodeHover={(n: any, prev: any) => {
             // Batch hover updates via requestAnimationFrame for smoother rendering
             // (reduces jank in Firefox by aligning to paint)
             pendingHoverRef.current = n || null;
             if (hoverRAFRef.current == null) {
-              hoverRAFRef.current = (typeof window !== 'undefined' ? window.requestAnimationFrame : (cb: any) => setTimeout(cb, 16))(() => {
+              const schedule = typeof window !== 'undefined' ? window.requestAnimationFrame : (cb: any) => setTimeout(cb, 16);
+              hoverRAFRef.current = (schedule(() => {
                 hoverRAFRef.current = null;
                 const value = pendingHoverRef.current;
                 pendingHoverRef.current = null;
                 setLocalHover(value);
-                onNodeHover?.(value || null, prev || null as any);
+                onNodeHover?.(value || null);
                 // If Firefox, compute screen coords for a lightweight DOM overlay
                 try {
                   const fg = internalRef.current as any;
@@ -158,10 +159,10 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
                 } catch (e) {
                   setHoverOverlayPos(null);
                 }
-              });
+              }) as unknown as number);
             }
           }}
-          onNodeClick={(n) => onNodeClick?.(n)}
+          onNodeClick={(n: any) => onNodeClick?.(n)}
 
           // make links clearly visible and highlight hovered thread
           linkColor={(link: any) => {
@@ -184,7 +185,7 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
             if (s === hover.id || t === hover.id) return 1.2;
             return 0.25;
           }}
-          linkOpacity={1}
+          
 
           // physics/spacing tuned per node count
           linkDistance={scaledDistance}
@@ -283,11 +284,6 @@ const CodexGraph = forwardRef<ForceGraphMethods | null, CodexGraphProps>(
               ctx.fillText(label, node.x! + dx, node.y! + dy);
               ctx.shadowBlur = 0;
           }}
-          // Tunings to encourage spacing and stable layout
-          nodeRelSize={4}
-          nodeVal={(n: any) => 1}
-          linkDistance={60}
-          cooldownTicks={80}
         />
         {/* Dev-only perf overlay for QA */}
         {typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? (
