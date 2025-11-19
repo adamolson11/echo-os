@@ -29,7 +29,7 @@ export default function DoorCard({
   return (
     <Link
       href={href}
-      className={`group relative flex aspect-[9/14] sm:aspect-[9/16] items-end overflow-hidden rounded-3xl px-4 pb-6 transform transition-transform duration-300 hover:-translate-y-1 hover:scale-105 w-full sm:w-[200px] md:w-[240px] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
+      className={`group relative flex aspect-[9/14] sm:aspect-[9/16] items-end overflow-hidden rounded-3xl px-4 pb-6 transform transition-transform duration-200 hover:-translate-y-0.5 hover:scale-102 w-full sm:w-[220px] md:w-[260px] lg:w-[300px] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
         cutout ? "" : "border border-slate-700/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 shadow-lg"
       }`}
       style={style}

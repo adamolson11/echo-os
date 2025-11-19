@@ -40,16 +40,17 @@ const DOORS = [
 export default function DoorHallway() {
   return (
     <section className="w-full">
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid gap-6 justify-center items-start sm:grid-cols-2 lg:grid-cols-4">
         {DOORS.map((door) => (
-          <DoorCard
-            key={door.key}
-            label={door.label}
-            eyebrow={door.eyebrow}
-            tagline={door.tagline}
-            href={door.href}
-            image={door.image}
-          />
+          <div key={door.key} className="flex justify-center">
+            <DoorCard
+              label={door.label}
+              eyebrow={door.eyebrow}
+              tagline={door.tagline}
+              href={door.href}
+              image={door.image}
+            />
+          </div>
         ))}
       </div>
     </section>
