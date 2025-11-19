@@ -26,53 +26,64 @@ export default function DoorCard({ href, label, eyebrow, tagline, image, bgPosit
       aria-label={label}
       tabIndex={0}
       // better keyboard focus styling
-      data-testid="doorcard"
-    >
+      "use client";
 
-      {/* background image (CSS background fallback) */}
-      <div className="absolute inset-0 -z-20 overflow-hidden">
-        <div
-          aria-hidden
-            className={`pointer-events-none absolute inset-0 h-full w-full bg-cover transform transition-transform duration-500 ease-out ${cutout ? '' : 'opacity-60 group-hover:opacity-80 group-focus:opacity-90 group-hover:scale-105 group-focus:scale-102'}`}
-            style={{ backgroundImage: `url(${src})`, backgroundPosition: bgPosition || 'center', backgroundSize: 'cover', willChange: 'transform' }}
-        />
-          {/* subtle glow when hovering (md+) to emphasize portal) */}
-          {!cutout && (
-            <div
-              aria-hidden
-              className="absolute inset-0 pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-70 group-focus:opacity-70"
-              style={{ background: 'radial-gradient(closest-side, rgba(125,211,252,0.08), transparent 40%)', mixBlendMode: 'screen' }}
-            />
-          )}
-      </div>
+      import Link from "next/link";
+      import Image from "next/image";
+      // `cn` helper is optional; if your project doesn't export it, the className below
+      // is a plain string. Adjust import if you have a lib/utils with `cn`.
+      const cn = (...args: any[]) => args.filter(Boolean).join(" ");
 
-      {/* subtle overlay so text stays legible */}
-      {!cutout && (
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-black/44" />
-        </div>
-      )}
+      type DoorCardProps = {
+        label: string;
+        eyebrow?: string;
+        tagline?: string;
+        href: string;
+        image: string;
+      };
 
-      {/* door frame */}
-      {!cutout && (
-        <div className="pointer-events-none absolute inset-[8%] rounded-2xl border border-slate-600/30 group-hover:border-sky-400/50" />
-      )}
+      export default function DoorCard({
+        label,
+        eyebrow,
+        tagline,
+        href,
+        image,
+      }: DoorCardProps) {
+        return (
+          <Link
+            href={href}
+            className={cn(
+              "group relative overflow-hidden rounded-2xl border border-zinc-800/70",
+              "bg-zinc-950/80 shadow-lg hover:shadow-xl",
+              "transition-transform transition-shadow duration-300 hover:-translate-y-1",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            )}
+          >
+            {/* Background image */}
+            <div className="relative h-48 sm:h-52 lg:h-56 w-full">
+              <Image
+                src={image}
+                alt={label}
+                fill
+                className="object-cover object-center opacity-70 group-hover:opacity-90 transition-opacity duration-300"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              />
+              {/* Dark gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-black/20" />
+            </div>
 
-      {/* knob */}
-      {!cutout && (
-        <div className="pointer-events-none absolute right-[12%] bottom-[18%] h-3 w-3 rounded-full border border-slate-400/80 bg-slate-900 shadow-[0_0_0_4px_rgba(15,23,42,0.9)] transition-transform duration-300 group-hover:scale-110 group-hover:border-sky-300 group-hover:bg-sky-400 group-hover:shadow-[0_0_12px_rgba(125,211,252,0.18)]" />
-      )}
-
-      {/* labels */}
-      <div className="relative z-10 space-y-1 text-center sm:text-left px-3 py-3">
-        {eyebrow && (
-          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400/80">{eyebrow}</p>
-        )}
-        <p className="text-sm font-semibold text-slate-100 group-hover:text-sky-50">{label}</p>
-        {tagline && (
-          <p className="text-[11px] text-slate-300/80 group-hover:text-slate-100/90">{tagline}</p>
-        )}
-      </div>
-    </Link>
-  );
-}
+            {/* Content overlay */}
+            <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
+              {eyebrow && (
+                <p className="text-xs uppercase tracking-[0.25em] text-cyan-300/80 mb-1">
+                  {eyebrow}
+                </p>
+              )}
+              <h3 className="text-lg sm:text-xl font-semibold text-zinc-50">{label}</h3>
+              {tagline && (
+                <p className="mt-1 text-xs sm:text-sm text-zinc-300/80 leading-snug">{tagline}</p>
+              )}
+            </div>
+          </Link>
+        );
+      }

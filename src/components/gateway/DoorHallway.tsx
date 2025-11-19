@@ -9,63 +9,63 @@ const DOORS = [
     // approximate horizontal position (used for absolute placement)
     left: "14%",
     // background position so the card shows the matching portion of the hallway photo
-    bgPosition: "14% 48%",
-    tagline: "Enter the canon chapters.",
-  },
-  {
-    key: "codex",
-    label: "Living Codex",
-    eyebrow: "Graph",
-    href: "/codex",
-    left: "36%",
-    bgPosition: "36% 48%",
-    tagline: "See the brain behind the stories.",
-  },
-  {
-    key: "lab",
-    label: "Lab",
-    eyebrow: "Experiments",
-    href: "/lab",
-    left: "60%",
-    bgPosition: "60% 48%",
-    tagline: "Prototype, test, and break things.",
-  },
-  {
-    key: "archive",
-    label: "Archive",
-    eyebrow: "Records",
-    href: "/archive",
-    left: "82%",
-    bgPosition: "82% 48%",
-    tagline: "Echoes, logs, and artifacts.",
-  },
-];
+    "use client";
 
-export default function DoorHallway() {
-  return (
-    <section className="mt-10">
-      <div className="mb-4 flex items-center justify-between px-4 md:px-0">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Choose a door</h2>
-      </div>
+    import DoorCard from "./DoorCard";
 
-      {/* Hallway hero: single photo background with positioned door cards (md+), and stacked grid on small screens */}
-      {/* Small screens: show a stacked grid of door cards for easier touch targets */}
-      <div className="mt-6 mx-4 md:mx-0">
-        <div className="md:hidden grid grid-cols-2 gap-4">
-          {DOORS.map((door) => (
-            <DoorCard
-              key={door.key}
-              href={door.href}
-              label={door.label}
-              eyebrow={door.eyebrow}
-              tagline={door.tagline}
-              image={`/images/portal-doors.jpg`}
-              bgPosition={door.bgPosition}
-            />
-          ))}
-        </div>
+    const DOORS = [
+      {
+        key: "story",
+        label: "Story Room",
+        eyebrow: "Enter the Wolves",
+        tagline: "Where the Echo House starts whispering.",
+        href: "/story",
+        image: "/images/gateway/story-door.jpg",
+      },
+      {
+        key: "codex",
+        label: "Codex",
+        eyebrow: "Brain of the House",
+        tagline: "The living map of memory and myth.",
+        href: "/codex",
+        image: "/images/gateway/codex-door.jpg",
+      },
+      {
+        key: "lab",
+        label: "Lab",
+        eyebrow: "Echo Lab",
+        tagline: "Experiment. Iterate. Break reality safely.",
+        href: "/lab",
+        image: "/images/gateway/lab-door.jpg",
+      },
+      {
+        key: "archive",
+        label: "Archive",
+        eyebrow: "Dead Files",
+        tagline: "What remains after memory lets go.",
+        href: "/archive",
+        image: "/images/gateway/archive-door.jpg",
+      },
+    ];
 
-        {/* md+ view: photo hero with transparent cutouts overlaid */}
+    export default function DoorHallway() {
+      return (
+        <section className="w-full py-8 sm:py-12 lg:py-16">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {DOORS.map((door) => (
+              <DoorCard
+                key={door.key}
+                label={door.label}
+                eyebrow={door.eyebrow}
+                tagline={door.tagline}
+                href={door.href}
+                image={door.image}
+              />
+            ))}
+          </div>
+        </section>
+      );
+    }
         <div className="hidden md:block relative rounded-2xl overflow-hidden border border-slate-700/40 shadow-lg">
           <div
             aria-hidden
