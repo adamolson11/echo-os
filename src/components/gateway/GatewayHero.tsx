@@ -1,33 +1,43 @@
-import Link from "next/link";
-import EchoPanel from "@/components/ui/EchoPanel";
+// src/components/gateway/GatewayHero.tsx
 
 export default function GatewayHero() {
   return (
-    <section className="py-16 px-6 sm:px-12 lg:px-20 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl">
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-8">
-        <div className="flex-1">
-          <p className="text-xs font-semibold tracking-[0.3em] text-amber-300/80">ECHO OS // LIVING CODEX</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">Step into the brain of your universes.</h1>
-          <p className="mt-4 text-lg sm:text-xl text-slate-300">Cinematic entry to stories, codex, lab and archives — choose a door and begin.</p>
+    <section className="relative min-h-[60vh] w-full border-b border-white/5 overflow-hidden">
+      {/* Background base */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-black to-slate-950" />
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Link href="/gateway" className="inline-block bg-amber-400 text-slate-900 font-semibold px-5 py-3 rounded-md shadow hover:scale-105 transition-transform">Enter the Hall</Link>
-            <Link href="/read/wolves" className="inline-block border border-slate-300 text-white px-5 py-3 rounded-md hover:bg-slate-700 transition-colors">Read Wolves</Link>
-          </div>
-        </div>
+      {/* Cyan storm band at the top */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.18),_transparent_70%)]" />
 
-        <div className="w-full sm:w-1/2 lg:w-2/5">
-          <EchoPanel>
-            <div className="aspect-[16/9] bg-[url('/images/echo-hero.jpg')] bg-cover bg-center rounded-lg shadow-2xl opacity-95 overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-b from-transparent to-black/40 rounded-lg flex items-end p-6">
-                <div>
-                  <div className="text-sm uppercase tracking-widest text-amber-300">Featured</div>
-                  <h3 className="text-2xl font-bold">Wolves — Prologue</h3>
-                  <p className="mt-2 text-sm text-slate-200">A Floridian Gothic entrance into the story room.</p>
-                </div>
-              </div>
-            </div>
-          </EchoPanel>
+      {/* Subtle vertical pillars to imply hallway depth */}
+      <div className="pointer-events-none absolute inset-0 grid grid-cols-6 opacity-[0.08]">
+        <div className="bg-white/10" />
+        <div />
+        <div className="bg-white/10" />
+        <div />
+        <div className="bg-white/10" />
+        <div />
+      </div>
+
+      {/* Soft fog layer */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+
+      {/* Floor vignette */}
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+
+      {/* Content */}
+      <div className="relative mx-auto flex min-h-[60vh] max-w-6xl items-center px-4 py-20">
+        <div className="max-w-xl space-y-4">
+          <p className="text-xs font-medium tracking-[0.2em] text-cyan-300/70">
+            THE HOUSE OF ECHO
+          </p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold">
+            Choose Your Door.
+          </h1>
+          <p className="text-base sm:text-lg text-slate-200/80 leading-relaxed">
+            A storm-battered coastal house. Every room remembers you differently.
+            The doors below lead to story, codex, lab, and archive.
+          </p>
         </div>
       </div>
     </section>
