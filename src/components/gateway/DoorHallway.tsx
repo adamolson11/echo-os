@@ -6,60 +6,54 @@ const DOORS = [
   {
     key: "story",
     label: "Story Room",
-    eyebrow: "Enter the Wolves",
-    tagline: "The mainline narrative and its echoes.",
+    eyebrow: "The Heart",
+    tagline: "Enter the storm-lit narrative core.",
     href: "/story",
-    image: "/images/gateway/story-door.jpg",
-    bgPosition: "50% 20%",
-    cutout: true,
+    glow: "cyan",
   },
   {
     key: "codex",
-    label: "Codex",
-    eyebrow: "Living Brain",
-    tagline: "The graph of memory, myth, and recursion.",
+    label: "Codex Room",
+    eyebrow: "The Mind",
+    tagline: "View the living map of meaning.",
     href: "/codex",
-    image: "/images/gateway/codex-door.jpg",
-    bgPosition: "50% 30%",
+    glow: "violet",
   },
   {
     key: "lab",
-    label: "Echo Lab",
-    eyebrow: "Experiment Zone",
-    tagline: "Prototypes, dangerous ideas, and systems tests.",
+    label: "Lab",
+    eyebrow: "The Body",
+    tagline: "Experiment with dangerous ideas.",
     href: "/lab",
-    image: "/images/gateway/lab-door.jpg",
-    bgPosition: "50% 40%",
+    glow: "ice",
   },
   {
     key: "archive",
     label: "Archive",
-    eyebrow: "Dead Files",
-    tagline: "Cases, records, and branches that didn’t make it.",
+    eyebrow: "The Soul",
+    tagline: "Descend into the memory stacks.",
     href: "/archive",
-    image: "/images/gateway/archive-door.jpg",
-    bgPosition: "50% 35%",
+    glow: "amber",
   },
 ];
 
 export default function DoorHallway() {
   return (
-    <section className="w-full">
-      <div className="mx-auto grid gap-6 justify-center items-start sm:grid-cols-2 lg:grid-cols-4">
-        {DOORS.map((door) => (
-          <div key={door.key} className="flex justify-center">
-            <DoorCard
-              label={door.label}
-              eyebrow={door.eyebrow}
-              tagline={door.tagline}
-              href={door.href}
-              image={door.image}
-              bgPosition={door.bgPosition}
-              cutout={door.cutout}
-            />
-          </div>
-        ))}
+    <div className="space-y-6 pt-0 pb-8">
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Rooms</p>
+
+      {/* 🟦 Light falloff wrapper */}
+      <div className="relative">
+        {/* Soft atmospheric glow behind the doors */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] opacity-80" />
+
+        {/* Actual door grid */}
+        <div className="relative grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {DOORS.map((door) => (
+            <DoorCard key={door.key} {...door} />
+          ))}
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
