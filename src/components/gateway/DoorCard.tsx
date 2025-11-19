@@ -25,7 +25,7 @@ export default function DoorCard({
   style,
   cutout,
 }: DoorCardProps) {
-  const src = image || "/images/portal-doors.jpg";
+  const src = image || "/images/doors/placeholder-noir.jpg";
   return (
     <Link
       href={href}
@@ -41,11 +41,13 @@ export default function DoorCard({
           src={src}
           alt={label}
           fill
+          priority
           style={bgPosition ? { objectPosition: bgPosition } : undefined}
-          className="object-cover object-center opacity-80 group-hover:opacity-95 transition-opacity duration-300"
+          className="object-cover object-center opacity-80 group-hover:opacity-95 transition-opacity duration-300 filter group-hover:brightness-105"
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/55" />
+        <div className="absolute inset-0 transition-all duration-200 ease-out pointer-events-none opacity-0 group-hover:opacity-100 bg-white/10" />
       </div>
 
       <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-5">
