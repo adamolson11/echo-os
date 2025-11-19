@@ -29,7 +29,7 @@ export default function DoorCard({
   return (
     <Link
       href={href}
-      className={`group relative flex aspect-[9/14] sm:aspect-[9/16] items-end overflow-hidden rounded-3xl px-4 pb-6 transform transition-transform duration-200 hover:-translate-y-0.5 hover:scale-102 w-full sm:w-[220px] md:w-[260px] lg:w-[300px] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
+      className={`group relative flex aspect-[3/5] items-end overflow-hidden rounded-3xl transform transition-transform duration-200 hover:-translate-y-0.5 hover:scale-102 w-full sm:w-[220px] md:w-[260px] lg:w-[300px] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
         cutout ? "" : "border border-slate-700/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 shadow-lg"
       }`}
       style={style}
@@ -48,11 +48,11 @@ export default function DoorCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-black/20" />
       </div>
 
-      <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
+      <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-5">
         {eyebrow && (
           <p className="text-xs uppercase tracking-[0.25em] text-cyan-300/80 mb-1">{eyebrow}</p>
         )}
-        <h3 className="text-lg sm:text-xl font-semibold text-zinc-50">{label}</h3>
+        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-zinc-50">{label}</h3>
         {tagline && (
           <p className="mt-1 text-xs sm:text-sm text-zinc-300/80 leading-snug">{tagline}</p>
         )}
