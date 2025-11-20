@@ -1,3 +1,17 @@
+"use client";
+
+import React from "react";
+import RoomShell from "@/components/RoomShell";
+
+export default function LabPage() {
+  return (
+    <RoomShell
+      title="Echo Lab"
+      kicker="Experiment Zone"
+      description="Prototypes, dangerous ideas, and systems tests."
+    />
+  );
+}
 export default function LabPage() {
   return (
     <main className="min-h-screen bg-black text-zinc-50">
