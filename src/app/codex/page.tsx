@@ -1,5 +1,19 @@
 "use client";
 
+import React from "react";
+import RoomShell from "@/components/RoomShell";
+
+export default function CodexPage() {
+  return (
+    <RoomShell
+      title="Codex Room"
+      kicker="Echo OS"
+      description="A minimal codex placeholder for MVP. The full graph is preserved in backup."
+    />
+  );
+}
+"use client";
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ForceGraphMethods } from "react-force-graph-2d";
 import CodexGraph from "./CodexGraph";
