@@ -12,7 +12,7 @@ const fs = require('fs');
     await new Promise(res => setTimeout(res, 5000));
 
     // full page screenshot
-    try { fs.mkdirSync('tmp', { recursive: true }); } catch (e) {}
+    try { fs.mkdirSync('tmp', { recursive: true }); } catch {}
     await page.screenshot({ path: 'tmp/codex_full.png', fullPage: true });
 
     // find first canvas and screenshot clipped to its bounding rect

@@ -13,7 +13,7 @@ const fs = require('fs');
       if (msg.type() === 'error') out.consoleErrors.push(text);
       else if (msg.type() === 'warning') out.consoleWarnings.push(text);
       else out.consoleLogs.push(text);
-    } catch (e) {
+    } catch {
       // ignore
     }
   });
@@ -38,7 +38,7 @@ const fs = require('fs');
 
     const screenshotPath = 'tmp/codex.png';
     // ensure tmp dir
-    try { fs.mkdirSync('tmp', { recursive: true }); } catch (e) {}
+    try { fs.mkdirSync('tmp', { recursive: true }); } catch {}
     await page.screenshot({ path: screenshotPath, fullPage: true });
     out.screenshot = screenshotPath;
 

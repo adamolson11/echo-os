@@ -1,30 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-
-interface CodexNode {
-  id: string;
-  label: string;
-  type: string;
-  series?: string;
-  slug?: string;
-  path?: string;
-  tags?: string[];
-  weight?: number;
-  meta?: Record<string, any>;
-}
-
-interface CodexLink {
-  source: string;
-  target: string;
-  type?: string;
-  strength?: number;
-}
-
-interface CodexGraphData {
-  nodes: CodexNode[];
-  links: CodexLink[];
-}
+import type { CodexGraphData } from "@/types/codexGraph";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -43,7 +20,7 @@ export async function GET(req: NextRequest) {
     }
 
     const rawJson = fs.readFileSync(codexJsonPath, "utf8");
-    const graph: CodexGraphData = JSON.parse(rawJson);
+    const graph = JSON.parse(rawJson) as CodexGraphData;
 
     const node = graph.nodes.find((n) => n.id === id);
 
@@ -73,8 +50,9 @@ export async function GET(req: NextRequest) {
       meta: node.meta ?? {},
       markdown: mdContent,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[/api/codex] Error:", err);
-    return NextResponse.json({ error: "Internal error", details: String(err?.message ?? err) }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: "Internal error", details: message }, { status: 500 });
   }
 }

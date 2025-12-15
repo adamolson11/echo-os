@@ -3,19 +3,21 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { seriesColorMap } from "../../config/codexColors";
+import type { CodexNode } from "@/types/codexGraph";
+
+type IndexedNode = Pick<CodexNode, "id" | "label" | "type" | "series">;
 
 type Props = {
-  selectedNode: any;
-  onSelectNode: (node: any) => void;
-  indexedNodes: any[];
+  selectedNode: CodexNode | null;
+  onSelectNode: (id: string) => void;
+  indexedNodes: IndexedNode[];
   indexSearch: string;
   setIndexSearch: (v: string) => void;
-  loadFullNote: (n: any) => void;
+  loadFullNote: (n: CodexNode) => void;
   isLoadingNote?: boolean;
   noteError?: string | null;
   selectedNoteMarkdown?: string | null;
-  nodeColor?: (n: any) => string;
-  fgRef?: any;
+  nodeColor?: (n: CodexNode) => string;
 };
 
 export default function CodexSidebar({
@@ -29,7 +31,6 @@ export default function CodexSidebar({
   noteError,
   selectedNoteMarkdown,
   nodeColor,
-  fgRef,
 }: Props) {
   return (
     <aside className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-64 flex-col border-l border-white/10 bg-black/70 backdrop-blur">
@@ -53,7 +54,7 @@ export default function CodexSidebar({
               <p className="mt-2 text-[10px] text-gray-600">File: <span className="font-mono">{selectedNode.path}</span></p>
             )}
 
-            {selectedNode.meta?.summary && (
+            {typeof selectedNode.meta?.summary === "string" && (
               <p className="mt-3 text-[11px] text-gray-300">{selectedNode.meta.summary}</p>
             )}
 
@@ -94,14 +95,7 @@ export default function CodexSidebar({
               <button
                 key={node.id}
                 onClick={() => {
-                  onSelectNode(node);
-                  if (fgRef && fgRef.current && (node as any).x != null && (node as any).y != null) {
-                    const { x, y } = node as any;
-                    try {
-                      fgRef.current.centerAt(x, y, 400);
-                      fgRef.current.zoom(4, 400);
-                    } catch (err) {}
-                  }
+                  onSelectNode(node.id);
                 }}
                 className="flex w-full items-center justify-between rounded-md px-2 py-1 text-left transition hover:bg-white/5"
               >
