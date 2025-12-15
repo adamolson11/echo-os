@@ -1,17 +1,18 @@
 "use client";
 
 import React from "react";
-import { seriesColorMap } from "../../config/codexColors";
+import type { ForceGraphMethods } from "react-force-graph-2d";
+import type { CodexNode } from "@/types/codexGraph";
 
 type Props = {
   activeTypes: Record<string, boolean>;
-  setActiveTypes: (v: any) => void;
+  setActiveTypes: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   seriesLegend: { id: string; label: string; color: string }[];
   activeSeries: Record<string, boolean>;
-  setActiveSeries: (v: any) => void;
-  fgRef?: any;
-  hoverNode?: any;
-  nodeColor?: (n: any) => string;
+  setActiveSeries: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  fgRef?: React.RefObject<ForceGraphMethods | null>;
+  hoverNode?: CodexNode | null;
+  nodeColor?: (n: CodexNode) => string;
 };
 
 export default function CodexHUD({
@@ -39,7 +40,7 @@ export default function CodexHUD({
                 key={type}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveTypes((prev: any) => ({ ...prev, [type]: !isOn }));
+                  setActiveTypes((prev) => ({ ...prev, [type]: !isOn }));
                 }}
                 className={`rounded-full border px-2 py-1 capitalize ${
                   isOn
@@ -61,7 +62,7 @@ export default function CodexHUD({
                 key={item.id}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveSeries((prev: any) => ({ ...prev, [item.id]: !isOn }));
+                  setActiveSeries((prev) => ({ ...prev, [item.id]: !isOn }));
                 }}
                 className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 transition ${
                   isOn
@@ -85,7 +86,9 @@ export default function CodexHUD({
             try {
               const current = fgRef.current.zoom();
               fgRef.current.zoom(current * 1.2, 200);
-            } catch (err) {}
+            } catch {
+              // ignore
+            }
           }}
           className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
           title="Zoom in"
@@ -100,7 +103,9 @@ export default function CodexHUD({
             try {
               const current = fgRef.current.zoom();
               fgRef.current.zoom(current / 1.2, 200);
-            } catch (err) {}
+            } catch {
+              // ignore
+            }
           }}
           className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
           title="Zoom out"
@@ -114,7 +119,9 @@ export default function CodexHUD({
             if (!fgRef?.current) return;
             try {
               fgRef.current.zoomToFit(400, 40);
-            } catch (err) {}
+            } catch {
+              // ignore
+            }
           }}
           className="rounded-full border border-white/20 bg-white/5 px-2 py-1"
           title="Reset zoom / fit"

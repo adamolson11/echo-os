@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 
 const PORT = process.env.PORT || 3000;
 const BASE = `http://localhost:${PORT}`;
-const ROUTES = ['/gateway', '/story', '/lab', '/archive', '/codex'];
+const ROUTES = ['/', '/gateway', '/hub', '/story', '/archive', '/lab', '/codex', '/map', '/about', '/blog'];
 const REPORT_DIR = path.resolve(__dirname, '../../lab_sys/v1/reports');
 const SCREEN_DIR = path.join(REPORT_DIR, 'screenshots');
 
@@ -18,7 +18,7 @@ function waitForServer(timeout = 30000) {
         res.resume();
         resolve();
       });
-      req.on('error', (err) => {
+      req.on('error', () => {
         if (Date.now() - start > timeout) return reject(new Error('Timeout waiting for server'));
         setTimeout(check, 500);
       });
@@ -32,8 +32,17 @@ function waitForServer(timeout = 30000) {
   if (!fs.existsSync(SCREEN_DIR)) fs.mkdirSync(SCREEN_DIR, { recursive: true });
 
   // Spawn Next.js directly via the installed binary to avoid relying on a shell `npm` executable.
+  // Explicitly bind the chosen PORT so this script can run alongside `next dev`.
   const nextBin = path.join(__dirname, '..', '..', 'node_modules', 'next', 'dist', 'bin', 'next');
-  const server = spawn(process.execPath, [nextBin, 'start'], { stdio: ['ignore', 'pipe', 'pipe'], cwd: path.resolve(__dirname, '../..') });
+  const server = spawn(
+    process.execPath,
+    [nextBin, 'start', '-p', String(PORT)],
+    {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      cwd: path.resolve(__dirname, '../..'),
+      env: { ...process.env, PORT: String(PORT) },
+    }
+  );
   server.stdout.on('data', (d) => process.stdout.write(`[next] ${d}`));
   server.stderr.on('data', (d) => process.stderr.write(`[next-err] ${d}`));
 
@@ -91,7 +100,7 @@ function waitForServer(timeout = 30000) {
     await browser.close();
 
     const reportMd = [];
-    reportMd.push('# Yellow Automated Smoke QA — Gateway Focus');
+    reportMd.push('# Yellow Automated Smoke QA — Routes + Console Errors');
     reportMd.push(`Timestamp: ${new Date().toISOString()}`);
     reportMd.push('');
     reportMd.push('## Summary');

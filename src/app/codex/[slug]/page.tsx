@@ -83,6 +83,21 @@ export default async function CodexNodePage({ params }: Props) {
           className="prose prose-invert max-w-none prose-headings:scroll-mt-24 prose-a:underline-offset-4 prose-a:hover:underline"
           dangerouslySetInnerHTML={{ __html: node.contentHtml }}
         />
+
+        {node.backlinks.length > 0 && (
+          <section className="border-t border-white/10 pt-6">
+            <h2 className="text-sm font-semibold tracking-[0.14em] uppercase text-white/60">Backlinks</h2>
+            <ul className="mt-3 space-y-2 text-sm">
+              {node.backlinks.map((b) => (
+                <li key={b.id}>
+                  <Link href={`/codex/${encodeURIComponent(b.slug)}`} className="underline-offset-4 hover:underline">
+                    {b.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </section>
     </main>
   );

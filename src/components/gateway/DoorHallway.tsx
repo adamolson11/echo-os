@@ -49,13 +49,9 @@ export default function DoorHallway() {
         {DOORS.map((door) => (
           <div key={door.key} className="flex justify-center">
             <DoorCard
-              label={door.label}
-              eyebrow={door.eyebrow}
-              tagline={door.tagline}
               href={door.href}
-              image={door.image}
-              bgPosition={door.bgPosition}
-              cutout={door.cutout}
+              label={door.label}
+              subtitle={door.tagline}
             />
           </div>
         ))}

@@ -1,64 +1,21 @@
 "use client";
 
-import React from "react";
-import RoomShell from "@/components/RoomShell";
-
-export default function CodexPage() {
-  return (
-    <RoomShell
-      title="Codex Room"
-      kicker="Echo OS"
-      description="A minimal codex placeholder for MVP. The full graph is preserved in backup."
-    />
-  );
-}
-"use client";
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ForceGraphMethods } from "react-force-graph-2d";
+import { useRouter } from "next/navigation";
 import CodexGraph from "./CodexGraph";
 import CodexHUD from "./CodexHUD";
 import CodexSidebar from "./CodexSidebar";
 import { seriesColorMap } from "@/config/codexColors";
 
-type CodexNodeType =
-  | "chapter"
-  | "character"
-  | "theme"
-  | "location"
-  | "event"
-  | "symbol"
-  | "stub";
+import type { CodexGraphData, CodexNode } from "@/types/codexGraph";
 
-export type CodexNode = {
-  id: string;
-  label: string;
-  type: CodexNodeType | string;
-  series?: string;
-  meta?: Record<string, any>;
-  x?: number;
-  y?: number;
-};
-
-export type CodexLink = {
-  source: string | CodexNode;
-  target: string | CodexNode;
-};
-
-type CodexGraphData = {
-  nodes: CodexNode[];
-  links: CodexLink[];
-};
-
-type CodexIndexedNode = {
-  id: string;
-  label: string;
-  type: CodexNodeType | string;
-};
+type CodexIndexedNode = Pick<CodexNode, "id" | "label" | "type" | "series">;
 
 const emptyGraph: CodexGraphData = { nodes: [], links: [] };
 
 export default function CodexPage() {
+  const router = useRouter();
   const [graphData, setGraphData] = useState<CodexGraphData>(emptyGraph);
   const [hoverNode, setHoverNode] = useState<CodexNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<CodexNode | null>(null);
@@ -80,21 +37,40 @@ export default function CodexPage() {
 
   // Load codex.json from /public
   useEffect(() => {
+    const controller = new AbortController();
+    let isPageHiding = false;
+
+    const handlePageHide = () => {
+      isPageHiding = true;
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handlePageHide);
+
     async function loadCodex() {
       try {
-        const res = await fetch("/codex.json");
+        const res = await fetch("/codex.json", { signal: controller.signal });
         if (!res.ok) {
           console.error("Failed to fetch codex.json:", res.status);
           return;
         }
         const json = (await res.json()) as CodexGraphData;
-        setGraphData(json);
-      } catch (err) {
+        if (!controller.signal.aborted) setGraphData(json);
+      } catch (err: unknown) {
+        if (controller.signal.aborted || isPageHiding) return;
+        if (err instanceof DOMException && err.name === "AbortError") return;
         console.error("Error loading codex.json", err);
       }
     }
 
     loadCodex();
+
+    return () => {
+      isPageHiding = true;
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handlePageHide);
+      controller.abort();
+    };
   }, []);
 
   const seriesLegend = useMemo(() => {
@@ -123,8 +99,18 @@ export default function CodexPage() {
     const nodeIds = new Set(nodes.map((n) => n.id));
 
     const links = graphData.links.filter((link) => {
-      const srcId = typeof link.source === "string" ? link.source : link.source.id;
-      const tgtId = typeof link.target === "string" ? link.target : link.target.id;
+      const srcId =
+        typeof link.source === "string"
+          ? link.source
+          : typeof link.source === "number"
+            ? String(link.source)
+            : link.source.id;
+      const tgtId =
+        typeof link.target === "string"
+          ? link.target
+          : typeof link.target === "number"
+            ? String(link.target)
+            : link.target.id;
       return nodeIds.has(srcId) && nodeIds.has(tgtId);
     });
 
@@ -134,7 +120,7 @@ export default function CodexPage() {
   const fullGraphData = graphData;
   const graphDataForView = filteredGraphData && filteredGraphData.nodes?.length ? filteredGraphData : fullGraphData;
 
-  const nodeColor = (node: any): string => {
+  const nodeColor = (node: CodexNode): string => {
     if (node?.series) return seriesColorMap[node.series] || seriesColorMap.Default;
 
     switch (node?.type) {
@@ -184,7 +170,8 @@ export default function CodexPage() {
 
   const handleGraphNodeClick = (node: CodexNode) => {
     if (!node) return;
-    focusNode(node);
+    const slug = node.slug || node.id;
+    router.push(`/codex/${encodeURIComponent(slug)}`);
   };
 
   const handleIndexSelect = (id: string) => {
@@ -231,7 +218,8 @@ export default function CodexPage() {
             {/* Make the graph container intentionally large so the canvas feels like a viewport */}
             <div className="w-full overflow-hidden h-screen md:h-[85vh]">
               <CodexGraph
-                ref={fgRef as any}
+                key={`${graphDataForView?.nodes?.length ?? 0}:${graphDataForView?.links?.length ?? 0}`}
+                ref={fgRef}
                 graphData={graphDataForView ?? { nodes: [], links: [] }}
                 hoverNode={hoverNode}
                 selectedNode={selectedNode}
@@ -251,9 +239,10 @@ export default function CodexPage() {
           indexSearch={indexSearch}
           setIndexSearch={setIndexSearch}
           onSelectNode={handleIndexSelect}
-          loadFullNote={() => {}}
+          loadFullNote={() => {
+            // note loading wired later
+          }}
           nodeColor={nodeColor}
-          fgRef={fgRef}
         />
       </aside>
     </div>

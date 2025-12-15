@@ -4,7 +4,8 @@ import {
   getChapterBySlug,
   type ChapterMeta,
 } from "@/data/chapters";
-import { Suspense } from "react";
+import { Suspense, createElement } from "react";
+import type { ComponentType } from "react";
 
 type ReaderPageProps = {
   params: Promise<{ slug: string }>;
@@ -18,9 +19,8 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
   // For Phase 2 we avoid importing MDX modules at build time to keep the
   // production build simple. The reader will show either a wired chapter
   // (when available in the chapter metadata) or a small placeholder.
-  // Use a permissive type here for Phase 2 so build doesn't fail
-  // if MDX components are not wired. We'll refine typing later.
-  let Content: any = null;
+  // Phase 2: chapters may later become dynamically wired components.
+  const Content: ComponentType | null = null;
 
   return (
     <main className="min-h-screen bg-black text-slate-100">
@@ -51,7 +51,7 @@ export default async function ReaderPage({ params }: ReaderPageProps) {
         <article className="space-y-4 text-base leading-relaxed text-slate-200 md:text-lg">
           {Content ? (
             <Suspense fallback={<p>Loading chapter…</p>}>
-              <Content />
+              {createElement(Content)}
             </Suspense>
           ) : (
             <>

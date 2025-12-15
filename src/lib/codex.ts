@@ -3,173 +3,158 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
-
-export type CodexNodeType =
-  | "index"
-  | "story"
-  | "log"
-  | "theory"
-  | "character"
-  | "meta";
+import type { CodexGraphData, CodexNode as GraphNode, CodexLink } from "@/types/codexGraph";
 
 export type CodexNode = {
+  id: string;
   slug: string;
   title: string;
-  type: CodexNodeType;
+  type?: string;
   tags: string[];
   obsidianFile?: string;
   obsidianVault?: string;
   contentHtml: string;
+  backlinks: Array<{ id: string; slug: string; title: string }>;
 };
 
-const codexDirectory = path.join(process.cwd(), "content", "codex");
+const rootDir = process.cwd();
+const graphPath = path.join(rootDir, "public", "codex.json");
 
-function getAllCodexFilenames(): string[] {
-  if (!fs.existsSync(codexDirectory)) return [];
-  return fs
-    .readdirSync(codexDirectory)
-    .filter((file) => file.endsWith(".md") || file.endsWith(".mdx"));
+function readCodexGraph(): CodexGraphData {
+  if (!fs.existsSync(graphPath)) {
+    throw new Error('codex.json not found. Run "npm run build:codex" first.');
+  }
+  const raw = fs.readFileSync(graphPath, "utf8");
+  return JSON.parse(raw) as CodexGraphData;
+}
+
+function nodeSlug(node: GraphNode): string {
+  return (typeof node.slug === "string" && node.slug) || node.id;
+}
+
+function resolveNodeBySlug(graph: CodexGraphData, slug: string): GraphNode | undefined {
+  const normalized = String(slug);
+  return graph.nodes.find((n) => nodeSlug(n) === normalized || n.id === normalized);
+}
+
+function linkEndpointId(value: CodexLink["source"] | CodexLink["target"]): string {
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return String(value);
+  return value.id;
+}
+
+function replaceWikiLinks(markdown: string, idToSlug: Map<string, string>): string {
+  // Supports:
+  // - [[Target]]
+  // - [[Target|Alias]]
+  const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
+  return markdown.replace(regex, (_full, rawTarget: string, rawAlias: string | undefined) => {
+    const targetId = String(rawTarget).trim();
+    const alias = typeof rawAlias === "string" ? rawAlias.trim() : "";
+
+    const slug = idToSlug.get(targetId) || targetId;
+    const href = `/codex/${encodeURIComponent(slug)}`;
+    const label = alias || targetId;
+
+    return `[${label}](${href})`;
+  });
 }
 
 export function getCodexSlugs(): string[] {
-  const filenames = getAllCodexFilenames();
-  return filenames.map((filename) => filename.replace(/\.mdx?$/, ""));
+  const graph = readCodexGraph();
+  return graph.nodes
+    .filter((n) => !!n.path)
+    .map((n) => nodeSlug(n));
 }
 
 export async function getCodexNode(slug: string): Promise<CodexNode> {
-  // NOTE: temporary debug logging removed. Keep the minimal falsy-slug
-  // guard below to avoid hard prerender failures if runtime unexpectedly
-  // calls this with an undefined slug during metadata collection.
-
-  // Minimal guard: if slug is falsy, return a harmless stub node so
-  // prerendering doesn't fail hard. This avoids build breakages when
-  // the app runtime unexpectedly calls this with undefined during
-  // metadata collection. Keep this minimal and safe.
   if (!slug) {
     return {
+      id: "unknown",
       slug: "unknown",
       title: "Untitled",
       type: "meta",
       tags: [],
       contentHtml: "",
-    } as CodexNode;
-  }
-  const fullPathMd = path.join(codexDirectory, `${slug}.md`);
-  const fullPathMdx = path.join(codexDirectory, `${slug}.mdx`);
-
-  const fullPath = fs.existsSync(fullPathMd) ? fullPathMd : fullPathMdx;
-
-  let resolvedPath = fullPath;
-
-  // If the direct path doesn't exist (for example when frontmatter defines
-  // a different slug than the filename), try to find a matching file by
-  // scanning the directory for a file whose frontmatter `slug` or
-  // filename (case-insensitive) matches the requested slug.
-  if (!resolvedPath || !fs.existsSync(resolvedPath)) {
-    const filenames = getAllCodexFilenames();
-    for (const filename of filenames) {
-      const candidatePath = path.join(codexDirectory, filename);
-      try {
-        const fileContents = fs.readFileSync(candidatePath, "utf8");
-        const { data } = matter(fileContents);
-        const fmSlug = data?.slug;
-        const filenameSlug = filename.replace(/\.mdx?$/, "");
-
-        if (
-          (typeof fmSlug === "string" && fmSlug === slug) ||
-          filenameSlug.toLowerCase() === String(slug).toLowerCase()
-        ) {
-          resolvedPath = candidatePath;
-          break;
-        }
-      } catch (err) {
-        // ignore parse errors here; we'll skip malformed files
-        continue;
-      }
-    }
+      backlinks: [],
+    };
   }
 
-  if (!resolvedPath || !fs.existsSync(resolvedPath)) {
-    throw new Error(`Codex node not found: ${slug}`);
+  const graph = readCodexGraph();
+  const graphNode = resolveNodeBySlug(graph, slug);
+  if (!graphNode) throw new Error(`Codex node not found: ${slug}`);
+
+  if (!graphNode.path) {
+    throw new Error(`Codex node "${graphNode.id}" has no file path associated.`);
   }
 
-  const fileContents = fs.readFileSync(resolvedPath, "utf8");
-  const { data, content } = matter(fileContents);
+  const absPath = path.join(rootDir, graphNode.path);
+  if (!fs.existsSync(absPath)) {
+    throw new Error(`Markdown file not found for path "${graphNode.path}"`);
+  }
 
-  const processedContent = await remark().use(html).process(content);
+  const rawMd = fs.readFileSync(absPath, "utf8");
+  const { data, content } = matter(rawMd);
+
+  const idToSlug = new Map<string, string>();
+  for (const n of graph.nodes) idToSlug.set(n.id, nodeSlug(n));
+
+  const preprocessed = replaceWikiLinks(content || "", idToSlug);
+  const processedContent = await remark().use(html).process(preprocessed);
   const contentHtml = processedContent.toString();
 
-  const {
-    title,
-    type = "meta",
-    tags = [],
-    obsidianFile,
-    obsidianVault,
-    slug: frontmatterSlug,
-  } = data as {
-    title?: string;
-    type?: CodexNodeType;
-    tags?: string[] | string;
-    obsidianFile?: string;
-    obsidianVault?: string;
-    slug?: string;
-  };
+  const fm = (data || {}) as Record<string, unknown>;
+  const fmTitle = typeof fm.title === "string" ? fm.title : undefined;
+  const fmType = typeof fm.type === "string" ? fm.type : undefined;
+  const fmTags = fm.tags;
+  const obsidianFile = typeof fm.obsidianFile === "string" ? fm.obsidianFile : undefined;
+  const obsidianVault = typeof fm.obsidianVault === "string" ? fm.obsidianVault : undefined;
 
-  const effectiveSlug = frontmatterSlug || slug;
-
-  // Normalize tags: accept array or comma-separated string
   let normalizedTags: string[] = [];
-  if (Array.isArray(tags)) {
-    normalizedTags = tags.map((t) => String(t).trim()).filter(Boolean);
-  } else if (typeof tags === "string") {
-    normalizedTags = tags
+  if (Array.isArray(fmTags)) {
+    normalizedTags = fmTags.map((t) => String(t).trim()).filter(Boolean);
+  } else if (typeof fmTags === "string") {
+    normalizedTags = fmTags
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
+  } else if (Array.isArray(graphNode.tags)) {
+    normalizedTags = graphNode.tags.map((t) => String(t).trim()).filter(Boolean);
   }
 
-  // Validate type; default to 'meta' if unknown
-  const allowedTypes: CodexNodeType[] = [
-    "index",
-    "story",
-    "log",
-    "theory",
-    "character",
-    "meta",
-  ];
-  const effectiveType: CodexNodeType = allowedTypes.includes(type as CodexNodeType)
-    ? (type as CodexNodeType)
-    : "meta";
+  const backlinks = graph.links
+    .filter((l) => linkEndpointId(l.target) === graphNode.id)
+    .map((l) => linkEndpointId(l.source))
+    .map((sourceId) => graph.nodes.find((n) => n.id === sourceId))
+    .filter((n): n is GraphNode => !!n && !!n.path)
+    .map((n) => ({ id: n.id, slug: nodeSlug(n), title: n.label || n.id }));
 
-  if (!title) {
-    throw new Error(`Codex node "${slug}" is missing a 'title' in frontmatter.`);
-  }
+  const uniqueBacklinks = Array.from(
+    new Map(backlinks.map((b) => [b.id, b])).values()
+  ).sort((a, b) => a.title.localeCompare(b.title));
 
   return {
-    slug: effectiveSlug,
-    title,
-    type: effectiveType,
+    id: graphNode.id,
+    slug: nodeSlug(graphNode),
+    title: fmTitle || graphNode.label || graphNode.id,
+    type: fmType || (typeof graphNode.type === "string" ? graphNode.type : undefined),
     tags: normalizedTags,
     obsidianFile,
     obsidianVault,
     contentHtml,
+    backlinks: uniqueBacklinks,
   };
 }
 
 export async function getAllCodexNodes(): Promise<CodexNode[]> {
-  const filenames = getAllCodexFilenames();
-
+  const slugs = getCodexSlugs();
   const nodes: CodexNode[] = [];
-  for (const filename of filenames) {
-    const slug = filename.replace(/\.mdx?$/, "");
+
+  for (const slug of slugs) {
     try {
-      const node = await getCodexNode(slug);
-      nodes.push(node);
+      nodes.push(await getCodexNode(slug));
     } catch (err) {
-      // Skip malformed files instead of failing the entire build.
-      // eslint-disable-next-line no-console
-      console.warn(`[codex] skipping file during getAllCodexNodes: ${filename}`, err);
-      continue;
+      console.warn(`[codex] skipping node during getAllCodexNodes: ${slug}`, err);
     }
   }
 
