@@ -83,13 +83,15 @@ function waitForServer(timeout = 30000) {
       // Desktop
       await page.setViewport(desktopViewport);
       const desktopUrl = BASE + route;
-      await page.goto(desktopUrl, { waitUntil: 'networkidle2', timeout: 30000 }).catch(e => errors.push('goto-error: '+e.message));
+      await page.goto(desktopUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(e => errors.push('goto-error: '+e.message));
+      await new Promise((r) => setTimeout(r, 750));
       const desktopScreenshot = path.join(SCREEN_DIR, `${route.replace(/\//g,'') || 'root'}-desktop.png`);
       await page.screenshot({ path: desktopScreenshot, fullPage: true }).catch(e => errors.push('screenshot-error: '+e.message));
 
       // Mobile
       await page.setViewport(mobileViewport);
-      await page.goto(desktopUrl, { waitUntil: 'networkidle2', timeout: 30000 }).catch(e => errors.push('goto-error-mobile: '+e.message));
+      await page.goto(desktopUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(e => errors.push('goto-error-mobile: '+e.message));
+      await new Promise((r) => setTimeout(r, 750));
       const mobileScreenshot = path.join(SCREEN_DIR, `${route.replace(/\//g,'') || 'root'}-mobile.png`);
       await page.screenshot({ path: mobileScreenshot, fullPage: true }).catch(e => errors.push('screenshot-error-mobile: '+e.message));
 

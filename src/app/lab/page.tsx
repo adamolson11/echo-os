@@ -1,6 +1,9 @@
+import ExitDoor from "@/components/rooms/ExitDoor";
+
 export default function LabPage() {
   return (
     <main className="min-h-screen bg-black text-zinc-50">
+      <ExitDoor />
       <section className="mx-auto max-w-5xl px-4 py-16 space-y-6">
         <header>
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-300/80 mb-2">Echo Lab</p>

@@ -7,6 +7,7 @@ import CodexGraph from "./CodexGraph";
 import CodexHUD from "./CodexHUD";
 import CodexSidebar from "./CodexSidebar";
 import { seriesColorMap } from "@/config/codexColors";
+import ExitDoor from "@/components/rooms/ExitDoor";
 
 import type { CodexGraphData, CodexNode } from "@/types/codexGraph";
 
@@ -181,6 +182,7 @@ export default function CodexPage() {
 
   return (
     <div className="flex min-h-[100vh]">
+      <ExitDoor />
       {/* LEFT NAV */}
       <aside className="w-64 shrink-0 p-6 border-r border-white/5">
         <h1 className="text-xs font-semibold tracking-[0.25em] text-slate-400">ECHO OS</h1>
